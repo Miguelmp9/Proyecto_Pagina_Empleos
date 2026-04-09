@@ -1,0 +1,31 @@
+{
+  "name": "proyecto_empleos",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Miguelmp9/Proyecto_Pagina_Empleos#readme",
+  "bugs": {
+    "url": "https://github.com/Miguelmp9/Proyecto_Pagina_Empleos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miguelmp9/Proyecto_Pagina_Empleos.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.21.0",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
