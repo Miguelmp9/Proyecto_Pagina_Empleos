@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as usuariosController from '../Controller/UsuarioController.js';
+import { createUserValidators, runValidations } from '../Middlewares/validators.js';            
 
 const router = Router();
 
@@ -19,10 +20,10 @@ router.get('/buscarPorNombre/:nombre', usuariosController.getUsuarioPorNombre);
 router.get('/buscarPorSector/:sector', usuariosController.getUsuarioPorSector);
 
 // Crear usuario
-router.post('/', usuariosController.postCrearUsuario);
+router.post('/',runValidations(createUserValidators), usuariosController.postCrearUsuario);
 
 // Actualizar usuario
-router.put('/:id', usuariosController.putActualizarUsuario);
+router.put('/:id',runValidations(updateUserValidators), usuariosController.putActualizarUsuario);
 
 // Eliminar usuario
 router.delete('/:id', usuariosController.deleteEliminarUsuario);
