@@ -7,9 +7,6 @@ import dotenv from 'dotenv';
 //Cargamos las variables
 dotenv.config();
 
-// Desestructuramos Pool del paquete 'pg'
-
-
 //creacion del pool y exportamos la conexion a la base de datos
 export const pool = mysql.createPool({
     host: process.env.DB_HOST,
