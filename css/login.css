@@ -1,0 +1,196 @@
+/* CSS para la pagina de login y registro */
+
+.contenedor-auth {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Lado izquierdo - formulario */
+.auth-izquierda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background-color: var(--fondo);
+}
+
+.auth-tarjeta {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-grande);
+    padding: 2rem;
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.auth-logo-fila {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.auth-logo-fila span {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.auth-subtitulo {
+    color: var(--texto2);
+    font-size: 0.9rem;
+}
+
+/* Tabs de login/registro */
+.auth-tabs {
+    display: flex;
+    background-color: var(--tarjeta2);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    color: var(--texto2);
+}
+
+.auth-tab.activo {
+    background-color: var(--morado);
+    color: #fff;
+}
+
+/* Grupos de inputs */
+.grupo-input {
+    margin-bottom: 1rem;
+}
+
+.grupo-input label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--texto2);
+    margin-bottom: 6px;
+}
+
+.input-con-icono {
+    position: relative;
+}
+
+.input-con-icono .input {
+    padding-left: 36px;
+}
+
+.input-con-icono .icono-input {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--texto3);
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.link-olvidaste {
+    text-align: right;
+    margin-bottom: 1.25rem;
+}
+
+.link-olvidaste a {
+    color: var(--morado);
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.btn-ancho-completo {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.texto-link-auth {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--texto2);
+}
+
+.texto-link-auth a {
+    color: var(--morado);
+    text-decoration: none;
+}
+
+.texto-terminos {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--texto3);
+    margin-top: 1.25rem;
+}
+
+/* Lado derecho - imagen de fondo */
+.auth-derecha {
+    background-color: var(--fondo2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Simular imagen de fondo con CSS */
+.auth-fondo-img {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+    opacity: 0.8;
+}
+
+.auth-fondo-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(124,111,239,0.03) 40px,
+        rgba(124,111,239,0.03) 41px
+    ),
+    repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        rgba(124,111,239,0.03) 40px,
+        rgba(124,111,239,0.03) 41px
+    );
+}
+
+.auth-texto-fondo {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-texto-fondo h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.auth-texto-fondo p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+}

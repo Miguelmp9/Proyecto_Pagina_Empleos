@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Mi Perfil</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<nav>
+    <a href="home.html" class="nav-logo">
+        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+    </a>
+    <div class="nav-links">
+        <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+        <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
+        <a href="perfil.html" class="nav-link activo"><i data-lucide="user"></i> Mi Perfil</a>
+        <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+    </div>
+</nav>
+
+<div class="contenido-perfil">
+
+    <!-- Header del perfil -->
+    <div class="perfil-header">
+        <div class="perfil-avatar">👤</div>
+        <div class="perfil-info">
+            <h1>Ana García Rodríguez</h1>
+            <p class="perfil-cargo">Senior Frontend Developer</p>
+            <div class="perfil-contacto">
+                <span>📍 Madrid, España</span>
+                <span>✉ ana.garcia@email.com</span>
+                <span>📞 +34 600 123 456</span>
+                <span>💼 5+ años de experiencia</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats del perfil -->
+    <div class="perfil-stats">
+        <div><div class="perfil-stat-numero">342</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
+        <div><div class="perfil-stat-numero">18</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
+        <div><div class="perfil-stat-numero">8</div><div class="perfil-stat-label">Empleos Guardados</div></div>
+        <div><div class="perfil-stat-numero">92%</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
+    </div>
+
+    <!-- Tarjeta con tabs -->
+    <div class="tarjeta">
+        <div class="tabs">
+            <div class="tab activo" onclick="cambiarTab(this)">Vista General</div>
+            <div class="tab" onclick="cambiarTab(this)">Editar Perfil</div>
+            <div class="tab" onclick="cambiarTab(this)">Mis Postulaciones</div>
+            <div class="tab" onclick="cambiarTab(this)">Habilidades</div>
+            <div class="tab" onclick="cambiarTab(this)">Mis Valoraciones</div>
+            <div class="tab" onclick="cambiarTab(this)">Alertas</div>
+        </div>
+
+        <!-- Vista general (contenido por defecto) -->
+        <div class="seccion-perfil">
+            <h3>Sobre Mí</h3>
+            <p>Desarrolladora Frontend apasionada con más de 5 años de experiencia creando aplicaciones web modernas y escalables. Especializada en React, TypeScript y desarrollo de interfaces de usuario intuitivas. Me encanta aprender nuevas tecnologías y colaborar con equipos multidisciplinarios.</p>
+        </div>
+
+        <div class="seccion-perfil">
+            <h3>Currículum</h3>
+            <div class="tarjeta-cv">
+                <div class="cv-icono-wrap">
+                    <div class="cv-icono"><i data-lucide="file-text"></i></div>
+                    <div>
+                        <div class="cv-nombre">CV_Ana_Garcia_2026.pdf</div>
+                        <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
+                    </div>
+                </div>
+                <button class="btn btn-borde btn-pequeno">↑ Actualizar CV</button>
+            </div>
+        </div>
+
+        <div class="seccion-perfil">
+            <h3>Experiencia Laboral</h3>
+            <div class="experiencia-item">
+                <h4>Senior Frontend Developer</h4>
+                <p class="experiencia-empresa">TechCorp Inc. • 2023 – Presente</p>
+                <p class="experiencia-desc">Desarrollo de aplicaciones web utilizando React y TypeScript. Liderazgo de equipo y mentoría de developers junior.</p>
+            </div>
+            <div class="experiencia-item antigua" style="margin-top: 1rem;">
+                <h4>Frontend Developer</h4>
+                <p class="experiencia-empresa">StartupXYZ • 2021 – 2023</p>
+                <p class="experiencia-desc">Desarrollo de features para plataforma SaaS. Colaboración con diseñadores y backend developers.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+
+<script>
+    lucide.createIcons();
+
+    function cambiarTab(elemento) {
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function(t) { t.classList.remove('activo'); });
+        elemento.classList.add('activo');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div class="contenedor-auth">
+
+    <!-- Lado izquierdo: formulario -->
+    <div class="auth-izquierda">
+        <div class="auth-tarjeta">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                <div class="auth-logo-fila">
+                    <img src="../logo.png" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                    <span>Shovel</span>
+                </div>
+                <p class="auth-subtitulo" id="subtitulo">Bienvenido de vuelta</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab activo" id="tab-login" onclick="cambiarTab('login')">Iniciar Sesión</div>
+                <div class="auth-tab" id="tab-registro" onclick="cambiarTab('registro')">Registrarse</div>
+            </div>
+
+            <!-- Formulario de Login -->
+            <div id="form-login">
+                <div class="grupo-input">
+                    <label>Correo electrónico</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="mail" class="icono-input"></i>
+                        <input class="input" type="email" placeholder="tu@email.com">
+                    </div>
+                </div>
+
+                <div class="grupo-input">
+                    <label>Contraseña</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="lock" class="icono-input"></i>
+                        <input class="input" type="password" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="link-olvidaste">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <a href="home.html" class="btn btn-primario btn-ancho-completo">Iniciar Sesión</a>
+
+                <p class="texto-link-auth">
+                    ¿No tienes cuenta? <a href="#" onclick="cambiarTab('registro')">Regístrate aquí</a>
+                </p>
+            </div>
+
+            <!-- Formulario de Registro (oculto por defecto) -->
+            <div id="form-registro" style="display: none;">
+                <div class="grupo-input">
+                    <label>Nombre completo</label>
+                    <input class="input" type="text" placeholder="Juan Pérez">
+                </div>
+
+                <div class="grupo-input">
+                    <label>Correo electrónico</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="mail" class="icono-input"></i>
+                        <input class="input" type="email" placeholder="tu@email.com">
+                    </div>
+                </div>
+
+                <div class="grupo-input">
+                    <label>Contraseña</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="lock" class="icono-input"></i>
+                        <input class="input" type="password" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="grupo-input">
+                    <label>Confirmar contraseña</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="lock" class="icono-input"></i>
+                        <input class="input" type="password" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <a href="home.html" class="btn btn-primario btn-ancho-completo">Crear Cuenta</a>
+
+                <p class="texto-link-auth">
+                    ¿Ya tienes cuenta? <a href="#" onclick="cambiarTab('login')">Inicia sesión</a>
+                </p>
+            </div>
+
+            <p class="texto-terminos">
+                Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Lado derecho: imagen decorativa -->
+    <div class="auth-derecha">
+        <div class="auth-fondo-img"></div>
+        <div class="auth-texto-fondo">
+            <h2>Encuentra el trabajo de<br>tus sueños</h2>
+            <p>Miles de oportunidades laborales esperan por ti</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Inicializar iconos de Lucide
+    lucide.createIcons();
+
+    // Funcion para cambiar entre login y registro
+    function cambiarTab(tab) {
+        var tabLogin = document.getElementById('tab-login');
+        var tabRegistro = document.getElementById('tab-registro');
+        var formLogin = document.getElementById('form-login');
+        var formRegistro = document.getElementById('form-registro');
+        var subtitulo = document.getElementById('subtitulo');
+
+        if (tab === 'login') {
+            tabLogin.classList.add('activo');
+            tabRegistro.classList.remove('activo');
+            formLogin.style.display = 'block';
+            formRegistro.style.display = 'none';
+            subtitulo.textContent = 'Bienvenido de vuelta';
+        } else {
+            tabRegistro.classList.add('activo');
+            tabLogin.classList.remove('activo');
+            formLogin.style.display = 'none';
+            formRegistro.style.display = 'block';
+            subtitulo.textContent = 'Comienza tu búsqueda laboral';
+        }
+    }
+</script>
+
+</body>
+</html>

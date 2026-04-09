@@ -1,0 +1,248 @@
+/* Estilos globales que se usan en todas las paginas */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fondo: #0d0d1a;
+    --fondo2: #13131f;
+    --tarjeta: #1e1e30;
+    --tarjeta2: #252538;
+    --borde: rgba(255, 255, 255, 0.08);
+    --borde2: rgba(255, 255, 255, 0.13);
+    --texto: #f0f0f5;
+    --texto2: #a0a0b8;
+    --texto3: #666680;
+    --morado: #7c6fef;
+    --morado2: #6158d4;
+    --morado-claro: rgba(124, 111, 239, 0.15);
+    --verde: #22c55e;
+    --rojo: #ef4444;
+    --amarillo: #f59e0b;
+    --radio: 10px;
+    --radio-grande: 14px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+/* Navbar */
+nav {
+    background-color: var(--fondo2);
+    border-bottom: 1px solid var(--borde);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--texto);
+    text-decoration: none;
+}
+
+.logo-icono {
+    width: 34px;
+    height: 34px;
+    background-color: var(--morado);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icono svg {
+    width: 18px;
+    height: 18px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    color: var(--texto2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover {
+    color: var(--texto);
+    background-color: rgba(124, 111, 239, 0.08);
+}
+
+.nav-link.activo {
+    color: var(--morado);
+}
+
+.nav-link i {
+    width: 14px;
+    height: 14px;
+    display: flex;
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primario {
+    background-color: var(--morado);
+    color: #fff;
+}
+
+.btn-primario:hover {
+    background-color: var(--morado2);
+}
+
+.btn-borde {
+    background-color: transparent;
+    color: var(--texto);
+    border: 1px solid var(--borde2);
+}
+
+.btn-borde:hover {
+    background-color: var(--tarjeta2);
+}
+
+.btn-pequeno {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+}
+
+/* Tarjetas */
+.tarjeta {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-grande);
+    padding: 1.25rem;
+}
+
+/* Inputs */
+.input {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: var(--tarjeta2);
+    border: 1px solid var(--borde2);
+    border-radius: 8px;
+    color: var(--texto);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: 'Inter', sans-serif;
+}
+
+.input:focus {
+    border-color: var(--morado);
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-morado { background-color: var(--morado-claro); color: var(--morado); }
+.badge-verde  { background-color: rgba(34,197,94,0.15); color: var(--verde); }
+.badge-amarillo { background-color: rgba(245,158,11,0.15); color: var(--amarillo); }
+.badge-rojo   { background-color: rgba(239,68,68,0.15); color: var(--rojo); }
+
+/* Footer */
+footer {
+    background-color: var(--fondo2);
+    border-top: 1px solid var(--borde);
+    padding: 2.5rem 2rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+}
+
+.footer-col h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--texto);
+}
+
+.footer-col a {
+    font-size: 0.8rem;
+    color: var(--texto2);
+    display: block;
+    margin-bottom: 6px;
+    text-decoration: none;
+}
+
+.footer-col a:hover { color: var(--morado); }
+
+.footer-col p {
+    font-size: 0.8rem;
+    color: var(--texto2);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--borde);
+    padding-top: 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--texto3);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Icono de Lucide - tamaño base */
+i[data-lucide] svg {
+    width: inherit;
+    height: inherit;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
