@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Admin</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<nav>
+    <a href="home.html" class="nav-logo">
+        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+    </a>
+    <div class="nav-links">
+        <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+        <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
+        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+        <a href="admin.html" class="nav-link activo"><i data-lucide="layout-grid"></i> Admin</a>
+    </div>
+</nav>
+
+<div class="layout-admin">
+
+    <!-- Sidebar admin -->
+    <div class="sidebar-admin">
+        <h3>Panel Admin</h3>
+        <a class="nav-admin-item activo" id="nav-dashboard" onclick="mostrarVista('dashboard')"><i data-lucide="layout-grid"></i> Dashboard</a>
+        <a class="nav-admin-item" id="nav-usuarios" onclick="mostrarVista('usuarios')"><i data-lucide="users"></i> Usuarios</a>
+        <a class="nav-admin-item" id="nav-empresas" onclick="mostrarVista('empresas')"><i data-lucide="briefcase"></i> Empresas</a>
+        <a class="nav-admin-item" id="nav-vacantes" onclick="mostrarVista('vacantes')"><i data-lucide="file-text"></i> Vacantes</a>
+        <a class="nav-admin-item" id="nav-moderacion" onclick="mostrarVista('moderacion')"><i data-lucide="shield"></i> Moderación</a>
+        <a class="nav-admin-item" id="nav-estadisticas" onclick="mostrarVista('estadisticas')"><i data-lucide="bar-chart-2"></i> Estadísticas</a>
+        <a class="nav-admin-item" id="nav-configuracion" onclick="mostrarVista('configuracion')"><i data-lucide="settings"></i> Configuración</a>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="contenido-admin">
+
+        <!-- Vista Dashboard -->
+        <div id="vista-dashboard">
+            <h1>Dashboard Principal</h1>
+            <div class="grid-stats-admin">
+                <div class="stat-admin">
+                    <div class="stat-admin-cabecera">
+                        <div class="stat-admin-icono"><i data-lucide="users"></i></div>
+                        <span class="tendencia">↗</span>
+                    </div>
+                    <div class="numero">150,342</div>
+                    <div class="etiqueta">Usuarios Totales</div>
+                    <div class="crecimiento">+12% este mes</div>
+                </div>
+                <div class="stat-admin">
+                    <div class="stat-admin-cabecera">
+                        <div class="stat-admin-icono"><i data-lucide="briefcase"></i></div>
+                        <span class="tendencia">↗</span>
+                    </div>
+                    <div class="numero">5,120</div>
+                    <div class="etiqueta">Empresas Activas</div>
+                    <div class="crecimiento">+8% este mes</div>
+                </div>
+                <div class="stat-admin">
+                    <div class="stat-admin-cabecera">
+                        <div class="stat-admin-icono"><i data-lucide="file-text"></i></div>
+                        <span class="tendencia">↗</span>
+                    </div>
+                    <div class="numero">12,580</div>
+                    <div class="etiqueta">Empleos Publicados</div>
+                    <div class="crecimiento">+15% este mes</div>
+                </div>
+                <div class="stat-admin">
+                    <div class="stat-admin-cabecera">
+                        <div class="stat-admin-icono"><i data-lucide="eye"></i></div>
+                        <span class="tendencia">↗</span>
+                    </div>
+                    <div class="numero">2.4M</div>
+                    <div class="etiqueta">Vistas Totales</div>
+                    <div class="crecimiento">+20% este mes</div>
+                </div>
+            </div>
+
+            <div class="grid-graficas">
+                <div class="tarjeta-grafica">
+                    <h3>Crecimiento de Usuarios y Empresas</h3>
+                    <canvas id="graficaCrecimiento" height="200"></canvas>
+                </div>
+                <div class="tarjeta-grafica">
+                    <h3>Empleos por Categoría</h3>
+                    <canvas id="graficaCategorias" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-listas">
+                <div class="lista-reciente">
+                    <h3>Usuarios Recientes</h3>
+                    <div class="fila-lista">
+                        <div><div class="fila-usuario-nombre">Ana García</div><div class="fila-usuario-email">ana@email.com</div></div>
+                        <div class="fila-der"><div class="fila-tiempo">Hoy</div><span class="badge badge-verde">Activo</span></div>
+                    </div>
+                    <div class="fila-lista">
+                        <div><div class="fila-usuario-nombre">Carlos Martínez</div><div class="fila-usuario-email">carlos@email.com</div></div>
+                        <div class="fila-der"><div class="fila-tiempo">Ayer</div><span class="badge badge-verde">Activo</span></div>
+                    </div>
+                    <div class="fila-lista">
+                        <div><div class="fila-usuario-nombre">Laura Sánchez</div><div class="fila-usuario-email">laura@email.com</div></div>
+                        <div class="fila-der"><div class="fila-tiempo">Hace 2 días</div><span class="badge badge-amarillo">Pendiente</span></div>
+                    </div>
+                </div>
+                <div class="lista-reciente">
+                    <h3>Empresas Recientes</h3>
+                    <div class="fila-lista">
+                        <div><div class="fila-empresa-nombre">TechCorp Inc. ✓</div><div class="fila-empresa-sector">Tecnología</div></div>
+                        <div class="fila-empleos">12 empleos<br>publicados</div>
+                    </div>
+                    <div class="fila-lista">
+                        <div><div class="fila-empresa-nombre">DesignHub ✓</div><div class="fila-empresa-sector">Diseño</div></div>
+                        <div class="fila-empleos">8 empleos<br>publicados</div>
+                    </div>
+                    <div class="fila-lista">
+                        <div><div class="fila-empresa-nombre">StartupXYZ</div><div class="fila-empresa-sector">Marketing</div></div>
+                        <div class="fila-empleos">5 empleos<br>publicados</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vista Usuarios -->
+        <div id="vista-usuarios" style="display:none;">
+            <div class="encabezado-tabla">
+                <h1>Gestión de Usuarios</h1>
+                <input class="input" style="max-width:240px;" placeholder="Buscar usuarios...">
+            </div>
+            <div class="tabla-contenedor">
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Fecha Registro</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="font-weight:500;">Ana García</td><td style="color:var(--texto2);">ana@email.com</td><td style="color:var(--texto2);">Hoy</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                        <tr><td style="font-weight:500;">Carlos Martínez</td><td style="color:var(--texto2);">carlos@email.com</td><td style="color:var(--texto2);">Ayer</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                        <tr><td style="font-weight:500;">Laura Sánchez</td><td style="color:var(--texto2);">laura@email.com</td><td style="color:var(--texto2);">Hace 2 días</td><td><span class="badge badge-amarillo">Pendiente</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                        <tr><td style="font-weight:500;">Miguel Torres</td><td style="color:var(--texto2);">miguel@email.com</td><td style="color:var(--texto2);">Hace 3 días</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                        <tr><td style="font-weight:500;">Sara Ruiz</td><td style="color:var(--texto2);">sara@email.com</td><td style="color:var(--texto2);">Hace 5 días</td><td><span class="badge badge-rojo">Inactivo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vista Empresas -->
+        <div id="vista-empresas" style="display:none;">
+            <h1>Gestión de Empresas</h1>
+            <div class="tabla-contenedor" style="margin-top:1rem;">
+                <table class="tabla-datos">
+                    <thead><tr><th>Empresa</th><th>Sector</th><th>Empleos</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        <tr><td style="font-weight:500;">TechCorp Inc.</td><td style="color:var(--texto2);">Tecnología</td><td>12</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
+                        <tr><td style="font-weight:500;">DesignHub</td><td style="color:var(--texto2);">Diseño</td><td>8</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
+                        <tr><td style="font-weight:500;">Growth Marketing</td><td style="color:var(--texto2);">Marketing</td><td>5</td><td><span class="badge badge-amarillo">Pendiente</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
+                        <tr><td style="font-weight:500;">DataInsights</td><td style="color:var(--texto2);">Tecnología</td><td>3</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Otras vistas placeholder -->
+        <div id="vista-vacantes" style="display:none;"><h1>Gestión de Vacantes</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
+        <div id="vista-moderacion" style="display:none;"><h1>Moderación</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
+        <div id="vista-estadisticas" style="display:none;"><h1>Estadísticas</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
+        <div id="vista-configuracion" style="display:none;"><h1>Configuración</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
+
+    </div>
+</div>
+
+<footer><div style="text-align:center; padding:0.75rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+
+<script>
+    lucide.createIcons();
+
+    // Lista de todas las vistas del admin
+    var vistas = ['dashboard', 'usuarios', 'empresas', 'vacantes', 'moderacion', 'estadisticas', 'configuracion'];
+
+    function mostrarVista(vista) {
+        // Ocultar todas las vistas
+        vistas.forEach(function(v) {
+            document.getElementById('vista-' + v).style.display = 'none';
+            document.getElementById('nav-' + v).classList.remove('activo');
+        });
+
+        // Mostrar la vista seleccionada
+        document.getElementById('vista-' + vista).style.display = 'block';
+        document.getElementById('nav-' + vista).classList.add('activo');
+
+        // Si es el dashboard, inicializar las graficas
+        if (vista === 'dashboard') {
+            inicializarGraficas();
+        }
+    }
+
+    var graficasCreadas = false;
+
+    function inicializarGraficas() {
+        // Solo crear las graficas una vez
+        if (graficasCreadas) return;
+        graficasCreadas = true;
+
+        // Grafica de lineas - crecimiento
+        var ctxLinea = document.getElementById('graficaCrecimiento').getContext('2d');
+        new Chart(ctxLinea, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'usuarios',
+                        data: [2000, 3500, 5000, 7000, 9500, 12000],
+                        borderColor: '#7c6fef',
+                        backgroundColor: 'rgba(124,111,239,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'empresas',
+                        data: [300, 600, 1000, 1500, 2200, 3000],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34,197,94,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: '#a0a0b8', font: { size: 11 } } }
+                },
+                scales: {
+                    x: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                }
+            }
+        });
+
+        // Grafica de dona - categorias
+        var ctxDona = document.getElementById('graficaCategorias').getContext('2d');
+        new Chart(ctxDona, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tecnología', 'Marketing', 'Diseño', 'Finanzas', 'Otros'],
+                datasets: [{
+                    data: [2400, 1500, 1200, 1300, 800],
+                    backgroundColor: ['#7c6fef', '#6158d4', '#22c55e', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#a0a0b8', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // Inicializar graficas cuando carga la pagina
+    inicializarGraficas();
+</script>
+
+</body>
+</html>

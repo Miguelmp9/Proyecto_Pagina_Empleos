@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Foros</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/foros.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<nav>
+    <a href="home.html" class="nav-logo">
+        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+    </a>
+    <div class="nav-links">
+        <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+        <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
+        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+        <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+    </div>
+</nav>
+
+<div class="encabezado-foros">
+    <div>
+        <h1>Foros de Discusión</h1>
+        <p>Únete a la comunidad y comparte experiencias con otros profesionales</p>
+    </div>
+    <button class="btn btn-primario">+ Nueva Discusión</button>
+</div>
+
+<div class="barra-busqueda-foros">
+    <i data-lucide="search"></i>
+    <input type="text" placeholder="Buscar en los foros...">
+</div>
+
+<div class="grid-stats-foros">
+    <div class="stat-foro"><div class="numero">245</div><div class="etiqueta">Discusiones</div></div>
+    <div class="stat-foro"><div class="numero">1,240</div><div class="etiqueta">Miembros</div></div>
+    <div class="stat-foro"><div class="numero">3,890</div><div class="etiqueta">Respuestas</div></div>
+    <div class="stat-foro"><div class="numero">156</div><div class="etiqueta">Hoy</div></div>
+</div>
+
+<div class="contenido-foros">
+    <!-- Sidebar categorias -->
+    <div class="sidebar-categorias">
+        <div class="tarjeta">
+            <div class="titulo-categorias"><i data-lucide="filter"></i> Categorías</div>
+            <div class="categoria-item activo">Todos <span class="badge badge-morado">245</span></div>
+            <div class="categoria-item">Tecnología <span style="color:var(--texto3); font-size:0.82rem;">89</span></div>
+            <div class="categoria-item">Marketing <span style="color:var(--texto3); font-size:0.82rem;">45</span></div>
+            <div class="categoria-item">Diseño <span style="color:var(--texto3); font-size:0.82rem;">38</span></div>
+            <div class="categoria-item">Finanzas <span style="color:var(--texto3); font-size:0.82rem;">32</span></div>
+            <div class="categoria-item">Recursos Humanos <span style="color:var(--texto3); font-size:0.82rem;">41</span></div>
+        </div>
+    </div>
+
+    <!-- Lista de posts -->
+    <div class="lista-posts">
+        <div class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar" style="background:rgba(124,111,239,0.2); color:var(--morado);">AG</div>
+                <div class="post-contenido">
+                    <div class="post-badges"><span class="badge badge-morado">⭐ Destacado</span><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Finanzas</span></div>
+                    <p class="post-titulo">¿Cuál es el mejor momento para negociar un aumento de sueldo?</p>
+                    <div class="post-hashtags"><span class="post-hashtag">#Salario</span><span class="post-hashtag">#Negociación</span><span class="post-hashtag">#Carrera</span></div>
+                    <div class="post-footer">
+                        <span class="post-autor">Ana García · Hace 2 horas</span>
+                        <div class="post-stats"><span>👍 56</span><span>💬 24</span><span>👁 320 vistas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar" style="background:rgba(34,197,94,0.2); color:var(--verde);">CM</div>
+                <div class="post-contenido">
+                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Tecnología</span></div>
+                    <p class="post-titulo">Consejos para transición de carrera a desarrollo web</p>
+                    <div class="post-hashtags"><span class="post-hashtag">#DesarrolloWeb</span><span class="post-hashtag">#Carrera</span><span class="post-hashtag">#Aprendizaje</span></div>
+                    <div class="post-footer">
+                        <span class="post-autor">Carlos Martínez · Hace 5 horas</span>
+                        <div class="post-stats"><span>👍 42</span><span>💬 18</span><span>👁 280 vistas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar" style="background:rgba(245,158,11,0.2); color:var(--amarillo);">LF</div>
+                <div class="post-contenido">
+                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Recursos Humanos</span></div>
+                    <p class="post-titulo">¿Qué habilidades blandas son más valoradas por los empleadores?</p>
+                    <div class="post-hashtags"><span class="post-hashtag">#Habilidades</span><span class="post-hashtag">#SoftSkills</span><span class="post-hashtag">#Empleabilidad</span></div>
+                    <div class="post-footer">
+                        <span class="post-autor">Laura Fernández · Hace 1 día</span>
+                        <div class="post-stats"><span>👍 78</span><span>💬 31</span><span>👁 450 vistas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar" style="background:rgba(239,68,68,0.2); color:var(--rojo);">DM</div>
+                <div class="post-contenido">
+                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Marketing</span></div>
+                    <p class="post-titulo">Estrategias de marketing digital para freelancers</p>
+                    <div class="post-hashtags"><span class="post-hashtag">#Freelance</span><span class="post-hashtag">#MarketingDigital</span><span class="post-hashtag">#Estrategia</span></div>
+                    <div class="post-footer">
+                        <span class="post-autor">David Martín · Hace 1 día</span>
+                        <div class="post-stats"><span>👍 35</span><span>💬 15</span><span>👁 190 vistas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar" style="background:rgba(124,111,239,0.2); color:var(--morado);">MT</div>
+                <div class="post-contenido">
+                    <div class="post-badges"><span class="badge badge-morado">⭐ Destacado</span><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Tecnología</span></div>
+                    <p class="post-titulo">Experiencias con entrevistas remotas en empresas internacionales</p>
+                    <div class="post-hashtags"><span class="post-hashtag">#Entrevistas</span><span class="post-hashtag">#Remoto</span><span class="post-hashtag">#Internacional</span></div>
+                    <div class="post-footer">
+                        <span class="post-autor">Miguel Torres · Hace 3 días</span>
+                        <div class="post-stats"><span>👍 92</span><span>💬 38</span><span>👁 520 vistas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="centro-boton">
+            <button class="btn btn-borde">Cargar Más Discusiones</button>
+        </div>
+    </div>
+</div>
+
+<footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+
+<script>
+    lucide.createIcons();
+
+    // Click en categorias
+    var categorias = document.querySelectorAll('.categoria-item');
+    categorias.forEach(function(cat) {
+        cat.addEventListener('click', function() {
+            categorias.forEach(function(c) { c.classList.remove('activo'); });
+            this.classList.add('activo');
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+/* CSS para la pagina de foros */
+
+.encabezado-foros {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 1rem;
+}
+
+.encabezado-foros h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.encabezado-foros p {
+    font-size: 0.875rem;
+    color: var(--texto2);
+}
+
+.barra-busqueda-foros {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 1.5rem;
+}
+
+.barra-busqueda-foros i {
+    position: absolute;
+    left: 2.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--texto3);
+    pointer-events: none;
+}
+
+.barra-busqueda-foros input {
+    width: 100%;
+    background-color: var(--tarjeta2);
+    border: 1px solid var(--borde2);
+    border-radius: 8px;
+    padding: 10px 14px 10px 36px;
+    color: var(--texto);
+    font-size: 0.9rem;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.grid-stats-foros {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 1.5rem;
+}
+
+.stat-foro {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 1rem;
+}
+
+.stat-foro .numero {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.stat-foro .etiqueta {
+    font-size: 0.8rem;
+    color: var(--texto2);
+    margin-top: 2px;
+}
+
+.contenido-foros {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 2rem;
+}
+
+.sidebar-categorias {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.sidebar-categorias .tarjeta {
+    padding: 1rem;
+}
+
+.titulo-categorias {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.titulo-categorias i {
+    width: 14px;
+    height: 14px;
+}
+
+.categoria-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--texto2);
+    transition: all 0.15s;
+}
+
+.categoria-item:hover {
+    background-color: var(--tarjeta2);
+    color: var(--texto);
+}
+
+.categoria-item.activo {
+    background-color: var(--morado-claro);
+    color: var(--morado);
+}
+
+.lista-posts {
+    flex: 1;
+}
+
+.tarjeta-post {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.15s;
+}
+
+.tarjeta-post:hover {
+    border-color: var(--borde2);
+}
+
+.post-cabecera {
+    display: flex;
+    gap: 12px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.post-contenido {
+    flex: 1;
+}
+
+.post-badges {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.post-titulo {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.post-titulo:hover {
+    color: var(--morado);
+}
+
+.post-hashtags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.post-hashtag {
+    font-size: 0.75rem;
+    color: var(--morado);
+}
+
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post-autor {
+    font-size: 0.82rem;
+    color: var(--texto2);
+}
+
+.post-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--texto2);
+}
+
+.centro-boton {
+    text-align: center;
+    padding: 1rem 0 2rem;
+}
