@@ -33,6 +33,7 @@ CREATE TABLE empresas (
 CREATE TABLE usuarios (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre_completo VARCHAR(255),
+    contrasena varchar(255),
     email VARCHAR(255),
     telefono VARCHAR(50),
     ubicacion VARCHAR(255),
