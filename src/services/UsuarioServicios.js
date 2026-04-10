@@ -37,7 +37,7 @@ export const getUsuarioBySector = async (sector) => {
 // Crear usuario
 export const createUsuario = async (usuario) => {
     const {
-        nombre_completo, email, telefono, ubicacion, titulo_profesional,
+        nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
         anios_experiencia, sobre_mi, foto_perfil, foto_portada, linkedin_url,
         github_url, sitio_web, tipo_empleo_deseado, rango_salarial_esperado,
         disponibilidad, sector_preferido, perfil_publico, mostrar_email,
@@ -46,14 +46,14 @@ export const createUsuario = async (usuario) => {
 
     const [result] = await pool.query(
         `INSERT INTO usuarios (
-            nombre_completo, email, telefono, ubicacion, titulo_profesional,
+            nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
             anios_experiencia, sobre_mi, foto_perfil, foto_portada, linkedin_url,
             github_url, sitio_web, tipo_empleo_deseado, rango_salarial_esperado,
             disponibilidad, sector_preferido, perfil_publico, mostrar_email,
             recibir_notificaciones, fecha_registro, estado
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)`,
         [
-            nombre_completo, email, telefono, ubicacion, titulo_profesional,
+            nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
             anios_experiencia, sobre_mi, foto_perfil, foto_portada, linkedin_url,
             github_url, sitio_web, tipo_empleo_deseado, rango_salarial_esperado,
             disponibilidad, sector_preferido, perfil_publico, mostrar_email,
@@ -66,7 +66,7 @@ export const createUsuario = async (usuario) => {
 // Actualizar usuario
 export const updateUsuario = async (id, usuario) => {
     const {
-        nombre_completo, email, telefono, ubicacion, titulo_profesional,
+        nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
         anios_experiencia, sobre_mi, foto_perfil, foto_portada, linkedin_url,
         github_url, sitio_web, tipo_empleo_deseado, rango_salarial_esperado,
         disponibilidad, sector_preferido, perfil_publico, mostrar_email,
@@ -75,7 +75,7 @@ export const updateUsuario = async (id, usuario) => {
 
     const [result] = await pool.query(
         `UPDATE usuarios SET
-            nombre_completo = ?, email = ?, telefono = ?, ubicacion = ?,
+            nombre_completo = ?, contrasena = ?, email = ?, telefono = ?, ubicacion = ?,
             titulo_profesional = ?, anios_experiencia = ?, sobre_mi = ?,
             foto_perfil = ?, foto_portada = ?, linkedin_url = ?, github_url = ?,
             sitio_web = ?, tipo_empleo_deseado = ?, rango_salarial_esperado = ?,
@@ -83,7 +83,7 @@ export const updateUsuario = async (id, usuario) => {
             mostrar_email = ?, recibir_notificaciones = ?, estado = ?
         WHERE id = ?`,
         [
-            nombre_completo, email, telefono, ubicacion, titulo_profesional,
+            nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
             anios_experiencia, sobre_mi, foto_perfil, foto_portada, linkedin_url,
             github_url, sitio_web, tipo_empleo_deseado, rango_salarial_esperado,
             disponibilidad, sector_preferido, perfil_publico, mostrar_email,

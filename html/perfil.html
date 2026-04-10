@@ -12,7 +12,7 @@
 <body>
 <nav>
     <a href="home.html" class="nav-logo">
-        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
     </a>
     <div class="nav-links">
         <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
@@ -30,13 +30,13 @@
     <div class="perfil-header">
         <div class="perfil-avatar">👤</div>
         <div class="perfil-info">
-            <h1>Ana García Rodríguez</h1>
-            <p class="perfil-cargo">Senior Frontend Developer</p>
+            <h1 id="perfil-nombre">Cargando...</h1>
+            <p class="perfil-cargo" id="perfil-cargo">-</p>
             <div class="perfil-contacto">
-                <span>📍 Madrid, España</span>
-                <span>✉ ana.garcia@email.com</span>
-                <span>📞 +34 600 123 456</span>
-                <span>💼 5+ años de experiencia</span>
+                <span id="perfil-ubicacion">📍 -</span>
+                <span id="perfil-email">✉ -</span>
+                <span id="perfil-telefono">📞 -</span>
+                <span id="perfil-experiencia">💼 -</span>
             </div>
         </div>
     </div>
@@ -60,10 +60,10 @@
             <div class="tab" onclick="cambiarTab(this)">Alertas</div>
         </div>
 
-        <!-- Vista general (contenido por defecto) -->
+        <!-- Vista general -->
         <div class="seccion-perfil">
             <h3>Sobre Mí</h3>
-            <p>Desarrolladora Frontend apasionada con más de 5 años de experiencia creando aplicaciones web modernas y escalables. Especializada en React, TypeScript y desarrollo de interfaces de usuario intuitivas. Me encanta aprender nuevas tecnologías y colaborar con equipos multidisciplinarios.</p>
+            <p id="perfil-sobre-mi">-</p>
         </div>
 
         <div class="seccion-perfil">
@@ -72,7 +72,7 @@
                 <div class="cv-icono-wrap">
                     <div class="cv-icono"><i data-lucide="file-text"></i></div>
                     <div>
-                        <div class="cv-nombre">CV_Ana_Garcia_2026.pdf</div>
+                        <div class="cv-nombre">CV_2026.pdf</div>
                         <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
                     </div>
                 </div>
@@ -83,16 +83,12 @@
         <div class="seccion-perfil">
             <h3>Experiencia Laboral</h3>
             <div class="experiencia-item">
-                <h4>Senior Frontend Developer</h4>
-                <p class="experiencia-empresa">TechCorp Inc. • 2023 – Presente</p>
-                <p class="experiencia-desc">Desarrollo de aplicaciones web utilizando React y TypeScript. Liderazgo de equipo y mentoría de developers junior.</p>
-            </div>
-            <div class="experiencia-item antigua" style="margin-top: 1rem;">
-                <h4>Frontend Developer</h4>
-                <p class="experiencia-empresa">StartupXYZ • 2021 – 2023</p>
-                <p class="experiencia-desc">Desarrollo de features para plataforma SaaS. Colaboración con diseñadores y backend developers.</p>
+                <h4 id="perfil-titulo">-</h4>
+                <p class="experiencia-empresa" id="perfil-sector">-</p>
+                <p class="experiencia-desc" id="perfil-disponibilidad">-</p>
             </div>
         </div>
+
     </div>
 
 </div>
@@ -100,13 +96,51 @@
 <footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
 
 <script>
+
+    
     lucide.createIcons();
+
+    // Obtenemos el usuario del localStorage
+    // Ocultar boton admin si no es admin
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin) {
+            if (!usuario || usuario.rol !== 'admin') {
+                btnAdmin.style.display = 'none';
+            }
+        }
+
+    // Si no hay usuario redirigimos al login
+    if (!usuario) {
+        window.location.href = 'login.html';
+    } else {
+        // Cargamos los datos básicos del localStorage
+        document.getElementById('perfil-nombre').textContent = usuario.nombre_completo || '-';
+        document.getElementById('perfil-email').textContent = '✉ ' + (usuario.email || '-');
+
+        // Buscamos el resto de datos completos desde la API
+        fetch(`http://localhost:3000/usuarios/${usuario.id}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('perfil-cargo').textContent = data.titulo_profesional || '-';
+                document.getElementById('perfil-ubicacion').textContent = '📍 ' + (data.ubicacion || '-');
+                document.getElementById('perfil-telefono').textContent = '📞 ' + (data.telefono || '-');
+                document.getElementById('perfil-experiencia').textContent = '💼 ' + (data.anios_experiencia || '0') + ' años de experiencia';
+                document.getElementById('perfil-sobre-mi').textContent = data.sobre_mi || '-';
+                document.getElementById('perfil-titulo').textContent = data.titulo_profesional || '-';
+                document.getElementById('perfil-sector').textContent = data.sector_preferido || '-';
+                document.getElementById('perfil-disponibilidad').textContent = 'Disponibilidad: ' + (data.disponibilidad || '-');
+            })
+            .catch(error => console.error('Error al cargar perfil:', error));
+    }
 
     function cambiarTab(elemento) {
         var tabs = document.querySelectorAll('.tab');
         tabs.forEach(function(t) { t.classList.remove('activo'); });
         elemento.classList.add('activo');
     }
+
+    
 </script>
 </body>
 </html>

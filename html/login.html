@@ -13,24 +13,25 @@
 
 <div class="contenedor-auth">
 
-    <!-- Lado izquierdo: formulario -->
     <div class="auth-izquierda">
         <div class="auth-tarjeta">
 
-            <!-- Logo -->
             <div class="auth-logo">
                 <div class="auth-logo-fila">
-                    <img src="../logo.png" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                    <img src="../contenido_multimedia/logo.png" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
                     <span>Shovel</span>
                 </div>
                 <p class="auth-subtitulo" id="subtitulo">Bienvenido de vuelta</p>
             </div>
 
-            <!-- Tabs -->
-            <div class="auth-tabs">
+            <!-- Tabs (se ocultan en recuperar contraseña) -->
+            <div class="auth-tabs" id="auth-tabs">
                 <div class="auth-tab activo" id="tab-login" onclick="cambiarTab('login')">Iniciar Sesión</div>
                 <div class="auth-tab" id="tab-registro" onclick="cambiarTab('registro')">Registrarse</div>
             </div>
+
+            <!-- Mensaje de error/éxito -->
+            <div id="mensaje" style="display:none; padding: 10px; border-radius: 6px; margin-bottom: 10px; text-align:center; font-size: 14px;"></div>
 
             <!-- Formulario de Login -->
             <div id="form-login">
@@ -38,7 +39,7 @@
                     <label>Correo electrónico</label>
                     <div class="input-con-icono">
                         <i data-lucide="mail" class="icono-input"></i>
-                        <input class="input" type="email" placeholder="tu@email.com">
+                        <input class="input" type="email" id="login-email" placeholder="tu@email.com">
                     </div>
                 </div>
 
@@ -46,33 +47,33 @@
                     <label>Contraseña</label>
                     <div class="input-con-icono">
                         <i data-lucide="lock" class="icono-input"></i>
-                        <input class="input" type="password" placeholder="••••••••">
+                        <input class="input" type="password" id="login-contrasena" placeholder="••••••••">
                     </div>
                 </div>
 
                 <div class="link-olvidaste">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <a href="#" onclick="cambiarTab('recuperar')">¿Olvidaste tu contraseña?</a>
                 </div>
 
-                <a href="home.html" class="btn btn-primario btn-ancho-completo">Iniciar Sesión</a>
+                <button class="btn btn-primario btn-ancho-completo" onclick="iniciarSesion()">Iniciar Sesión</button>
 
                 <p class="texto-link-auth">
                     ¿No tienes cuenta? <a href="#" onclick="cambiarTab('registro')">Regístrate aquí</a>
                 </p>
             </div>
 
-            <!-- Formulario de Registro (oculto por defecto) -->
+            <!-- Formulario de Registro -->
             <div id="form-registro" style="display: none;">
                 <div class="grupo-input">
                     <label>Nombre completo</label>
-                    <input class="input" type="text" placeholder="Juan Pérez">
+                    <input class="input" type="text" id="registro-nombre" placeholder="Juan Pérez">
                 </div>
 
                 <div class="grupo-input">
                     <label>Correo electrónico</label>
                     <div class="input-con-icono">
                         <i data-lucide="mail" class="icono-input"></i>
-                        <input class="input" type="email" placeholder="tu@email.com">
+                        <input class="input" type="email" id="registro-email" placeholder="tu@email.com">
                     </div>
                 </div>
 
@@ -80,7 +81,7 @@
                     <label>Contraseña</label>
                     <div class="input-con-icono">
                         <i data-lucide="lock" class="icono-input"></i>
-                        <input class="input" type="password" placeholder="••••••••">
+                        <input class="input" type="password" id="registro-contrasena" placeholder="••••••••">
                     </div>
                 </div>
 
@@ -88,14 +89,47 @@
                     <label>Confirmar contraseña</label>
                     <div class="input-con-icono">
                         <i data-lucide="lock" class="icono-input"></i>
-                        <input class="input" type="password" placeholder="••••••••">
+                        <input class="input" type="password" id="registro-confirmar" placeholder="••••••••">
                     </div>
                 </div>
 
-                <a href="home.html" class="btn btn-primario btn-ancho-completo">Crear Cuenta</a>
+                <button class="btn btn-primario btn-ancho-completo" onclick="registrarse()">Crear Cuenta</button>
 
                 <p class="texto-link-auth">
                     ¿Ya tienes cuenta? <a href="#" onclick="cambiarTab('login')">Inicia sesión</a>
+                </p>
+            </div>
+
+            <!-- Formulario de Recuperar Contraseña -->
+            <div id="form-recuperar" style="display: none;">
+                <div class="grupo-input">
+                    <label>Correo electrónico</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="mail" class="icono-input"></i>
+                        <input class="input" type="email" id="recuperar-email" placeholder="tu@email.com">
+                    </div>
+                </div>
+
+                <div class="grupo-input">
+                    <label>Nueva contraseña</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="lock" class="icono-input"></i>
+                        <input class="input" type="password" id="recuperar-contrasena" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="grupo-input">
+                    <label>Confirmar nueva contraseña</label>
+                    <div class="input-con-icono">
+                        <i data-lucide="lock" class="icono-input"></i>
+                        <input class="input" type="password" id="recuperar-confirmar" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button class="btn btn-primario btn-ancho-completo" onclick="recuperarContrasena()">Cambiar Contraseña</button>
+
+                <p class="texto-link-auth">
+                    <a href="#" onclick="cambiarTab('login')">← Volver al inicio de sesión</a>
                 </p>
             </div>
 
@@ -106,7 +140,6 @@
         </div>
     </div>
 
-    <!-- Lado derecho: imagen decorativa -->
     <div class="auth-derecha">
         <div class="auth-fondo-img"></div>
         <div class="auth-texto-fondo">
@@ -118,31 +151,185 @@
 </div>
 
 <script>
-    // Inicializar iconos de Lucide
+    const API = 'http://localhost:3000';
+
     lucide.createIcons();
 
-    // Funcion para cambiar entre login y registro
+    function mostrarMensaje(texto, tipo) {
+        const msg = document.getElementById('mensaje');
+        msg.textContent = texto;
+        msg.style.display = 'block';
+        msg.style.backgroundColor = tipo === 'error' ? '#ff4d4d33' : '#4CAF5033';
+        msg.style.color = tipo === 'error' ? '#ff4d4d' : '#4CAF50';
+        msg.style.border = tipo === 'error' ? '1px solid #ff4d4d' : '1px solid #4CAF50';
+    }
+
     function cambiarTab(tab) {
-        var tabLogin = document.getElementById('tab-login');
-        var tabRegistro = document.getElementById('tab-registro');
-        var formLogin = document.getElementById('form-login');
-        var formRegistro = document.getElementById('form-registro');
-        var subtitulo = document.getElementById('subtitulo');
+        document.getElementById('mensaje').style.display = 'none';
+        document.getElementById('form-login').style.display = 'none';
+        document.getElementById('form-registro').style.display = 'none';
+        document.getElementById('form-recuperar').style.display = 'none';
+        document.getElementById('auth-tabs').style.display = 'flex';
+
+        document.getElementById('tab-login').classList.remove('activo');
+        document.getElementById('tab-registro').classList.remove('activo');
 
         if (tab === 'login') {
-            tabLogin.classList.add('activo');
-            tabRegistro.classList.remove('activo');
-            formLogin.style.display = 'block';
-            formRegistro.style.display = 'none';
-            subtitulo.textContent = 'Bienvenido de vuelta';
-        } else {
-            tabRegistro.classList.add('activo');
-            tabLogin.classList.remove('activo');
-            formLogin.style.display = 'none';
-            formRegistro.style.display = 'block';
-            subtitulo.textContent = 'Comienza tu búsqueda laboral';
+            const f = document.getElementById('form-login');
+            f.style.display = 'block';
+            f.classList.add('form-animado');
+            document.getElementById('tab-login').classList.add('activo');
+            document.getElementById('subtitulo').textContent = 'Bienvenido de vuelta';
+        } else if (tab === 'registro') {
+            const f = document.getElementById('form-registro');
+            f.style.display = 'block';
+            f.classList.add('form-animado');
+            document.getElementById('tab-registro').classList.add('activo');
+            document.getElementById('subtitulo').textContent = 'Comienza tu búsqueda laboral';
+        } else if (tab === 'recuperar') {
+            const f = document.getElementById('form-recuperar');
+            f.style.display = 'block';
+            f.classList.add('form-animado');
+            document.getElementById('auth-tabs').style.display = 'none';
+            document.getElementById('subtitulo').textContent = 'Recupera tu contraseña';
         }
     }
+
+    async function iniciarSesion() {
+        const email = document.getElementById('login-email').value.trim();
+        const contrasena = document.getElementById('login-contrasena').value.trim();
+        const btn = event.target;
+
+        if (!email || !contrasena) {
+            mostrarMensaje('Por favor completa todos los campos', 'error');
+            return;
+        }
+
+        // Mostrar spinner
+        btn.disabled = true;
+        btn.innerHTML = '<span class="btn-spinner"></span> Iniciando sesión...';
+
+        try {
+            const res = await fetch(`${API}/usuarios/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, contrasena })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                mostrarMensaje(data.error || 'Error al iniciar sesión', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Iniciar Sesión';
+                return;
+            }
+
+            btn.innerHTML = '✓ Entrando...';
+            localStorage.setItem('usuario', JSON.stringify(data.usuario));
+            setTimeout(() => window.location.href = 'home.html', 800);
+
+        } catch (error) {
+            mostrarMensaje('No se pudo conectar con el servidor', 'error');
+            btn.disabled = false;
+            btn.innerHTML = 'Iniciar Sesión';
+        }
+
+        async function registrarse() {
+            const nombre_completo = document.getElementById('registro-nombre').value.trim();
+            const email = document.getElementById('registro-email').value.trim();
+            const contrasena = document.getElementById('registro-contrasena').value.trim();
+            const confirmar = document.getElementById('registro-confirmar').value.trim();
+
+            if (!nombre_completo || !email || !contrasena || !confirmar) {
+                mostrarMensaje('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            if (contrasena !== confirmar) {
+                mostrarMensaje('Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/usuarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre_completo, email, contrasena })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    mostrarMensaje(data.error || 'Error al crear la cuenta', 'error');
+                    return;
+                }
+
+                mostrarMensaje('Cuenta creada exitosamente, ya puedes iniciar sesión', 'exito');
+                cambiarTab('login');
+
+            } catch (error) {
+                mostrarMensaje('No se pudo conectar con el servidor', 'error');
+            }
+        }
+
+        async function recuperarContrasena() {
+            const email = document.getElementById('recuperar-email').value.trim();
+            const contrasena = document.getElementById('recuperar-contrasena').value.trim();
+            const confirmar = document.getElementById('recuperar-confirmar').value.trim();
+
+            if (!email || !contrasena || !confirmar) {
+                mostrarMensaje('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            if (contrasena !== confirmar) {
+                mostrarMensaje('Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            try {
+                // Primero buscamos el usuario por email para obtener su ID
+                const buscar = await fetch(`${API}/usuarios/buscarPorEmail/${email}`);
+
+                if (!buscar.ok) {
+                    mostrarMensaje('No existe una cuenta con ese correo', 'error');
+                    return;
+                }
+
+                const usuario = await buscar.json();
+
+                // Luego actualizamos la contraseña con el PUT
+                const res = await fetch(`${API}/usuarios/${usuario.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contrasena })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    mostrarMensaje(data.error || 'Error al cambiar la contraseña', 'error');
+                    return;
+                }
+
+                mostrarMensaje('Contraseña actualizada exitosamente', 'exito');
+                setTimeout(() => cambiarTab('login'), 2000);
+
+            } catch (error) {
+                mostrarMensaje('No se pudo conectar con el servidor', 'error');
+            }
+        }
+    }    
+
+    // Ocultar boton admin si no es admin
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin) {
+            if (!usuario || usuario.rol !== 'admin') {
+                btnAdmin.style.display = 'none';
+            }
+        }
 </script>
 
 </body>

@@ -1,5 +1,6 @@
 // importacion del express (manejo de rutas y pecticiones)
 import express from 'express';
+import cors from 'cors';
 
 //importacion del router de usuarios
 import UsuarioRoutes from './routes/Usuarios.js';
@@ -9,6 +10,7 @@ import { errorHandler } from './Middlewares/errorhandler.js';
 
 //Importacion de la conexion a la base de datos
 import { pool } from './db.js';
+
 //Importacion de las variables de entorno desde el archivo .env
 import dotenv from 'dotenv';
 dotenv.config();
@@ -18,6 +20,9 @@ const app = express();
 
 //Middleware para interpretar JSON en las peticiones
 app.use(express.json());
+
+//Middleware para permitir peticiones desde el HTML
+app.use(cors());
 
 //ruta get en la raiz del servidor
 app.get('/', (req, res) => {

@@ -1,4 +1,5 @@
 import * as usuariosServices from '../services/UsuarioServicios.js';
+import bcrypt from 'bcrypt';
 
 // Obtener todos los usuarios
 export const getTodosLosUsuarios = async (req, res) => {
@@ -55,7 +56,12 @@ export const getUsuarioPorSector = async (req, res) => {
 // Crear usuario
 export const postCrearUsuario = async (req, res) => {
     try {
-        const result = await usuariosServices.createUsuario(req.body);
+        const { contrasena, ...resto } = req.body;
+
+        // Encriptamos la contraseña antes de guardar
+        const contrasenaHash = await bcrypt.hash(contrasena, 10);
+
+        const result = await usuariosServices.createUsuario({ ...resto, contrasena: contrasenaHash });
         res.status(201).json({ mensaje: 'Usuario creado', id: result.insertId });
     } catch (error) {
         res.status(500).json({ error: 'Error al crear el usuario' });
@@ -65,7 +71,16 @@ export const postCrearUsuario = async (req, res) => {
 // Actualizar usuario
 export const putActualizarUsuario = async (req, res) => {
     try {
-        const result = await usuariosServices.updateUsuario(req.params.id, req.body);
+        const { contrasena, ...resto } = req.body;
+        let datos = resto;
+
+        // Si manda nueva contraseña la encriptamos
+        if (contrasena) {
+            const contrasenaHash = await bcrypt.hash(contrasena, 10);
+            datos = { ...resto, contrasena: contrasenaHash };
+        }
+
+        const result = await usuariosServices.updateUsuario(req.params.id, datos);
         if (result.affectedRows === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
         res.json({ mensaje: 'Usuario actualizado' });
     } catch (error) {
@@ -81,5 +96,30 @@ export const deleteEliminarUsuario = async (req, res) => {
         res.json({ mensaje: 'Usuario eliminado' });
     } catch (error) {
         res.status(500).json({ error: 'Error al eliminar el usuario' });
+    }
+};
+
+// Login
+export const postLogin = async (req, res) => {
+    try {
+        const { email, contrasena } = req.body;
+
+        const usuario = await usuariosServices.getUsuarioByEmail(email);
+        if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+        const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!contrasenaValida) return res.status(401).json({ error: 'Contraseña incorrecta' });
+
+        res.json({ 
+            mensaje: 'Login exitoso', 
+            usuario: { 
+                id: usuario.id, 
+                nombre_completo: usuario.nombre_completo, 
+                email: usuario.email,
+                rol: usuario.rol
+            } 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al iniciar sesión' });
     }
 };

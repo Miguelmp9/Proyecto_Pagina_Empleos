@@ -12,7 +12,7 @@
 <body>
 <nav>
     <a href="home.html" class="nav-logo">
-        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
     </a>
     <div class="nav-links">
         <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
@@ -154,6 +154,15 @@
             this.classList.add('activo');
         });
     });
+
+    // Ocultar boton admin si no es admin
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin) {
+            if (!usuario || usuario.rol !== 'admin') {
+                btnAdmin.style.display = 'none';
+            }
+        }
 </script>
 </body>
 </html>

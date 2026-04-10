@@ -23,6 +23,19 @@
     padding: 2rem;
     width: 100%;
     max-width: 440px;
+    animation: fadeSlideUp 0.4s ease;
+}
+
+/* Animacion de entrada de la tarjeta */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .auth-logo {
@@ -45,6 +58,7 @@
 .auth-subtitulo {
     color: var(--texto2);
     font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
 /* Tabs de login/registro */
@@ -64,13 +78,35 @@
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.15s;
+    transition: all 0.25s ease;
     color: var(--texto2);
+}
+
+.auth-tab:hover:not(.activo) {
+    color: var(--texto);
+    background-color: rgba(124, 111, 239, 0.1);
 }
 
 .auth-tab.activo {
     background-color: var(--morado);
     color: #fff;
+    box-shadow: 0 2px 8px rgba(124, 111, 239, 0.4);
+}
+
+/* Animacion de formularios al cambiar tab */
+.form-animado {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Grupos de inputs */
@@ -83,6 +119,11 @@
     font-size: 0.85rem;
     color: var(--texto2);
     margin-bottom: 6px;
+    transition: color 0.2s;
+}
+
+.grupo-input:focus-within label {
+    color: var(--morado);
 }
 
 .input-con-icono {
@@ -91,6 +132,7 @@
 
 .input-con-icono .input {
     padding-left: 36px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-con-icono .icono-input {
@@ -102,6 +144,37 @@
     width: 16px;
     height: 16px;
     pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input-con-icono:focus-within .icono-input {
+    color: var(--morado);
+}
+
+/* Inputs con error y éxito */
+.input.error {
+    border-color: #ff4d4d !important;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.15);
+}
+
+.input.exito {
+    border-color: #4CAF50 !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+.input:focus {
+    border-color: var(--morado);
+    box-shadow: 0 0 0 3px rgba(124, 111, 239, 0.2);
+    outline: none;
+}
+
+/* Mensaje de error debajo del input */
+.input-error-msg {
+    font-size: 0.75rem;
+    color: #ff4d4d;
+    margin-top: 4px;
+    display: none;
+    animation: fadeIn 0.2s ease;
 }
 
 .link-olvidaste {
@@ -113,11 +186,49 @@
     color: var(--morado);
     font-size: 0.85rem;
     text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.link-olvidaste a:hover {
+    opacity: 0.75;
 }
 
 .btn-ancho-completo {
     width: 100%;
     margin-bottom: 1rem;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.btn-ancho-completo:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 111, 239, 0.4);
+}
+
+.btn-ancho-completo:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-ancho-completo:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Spinner de carga dentro del boton */
+.btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .texto-link-auth {
@@ -129,6 +240,11 @@
 .texto-link-auth a {
     color: var(--morado);
     text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.texto-link-auth a:hover {
+    opacity: 0.75;
 }
 
 .texto-terminos {
@@ -136,6 +252,16 @@
     font-size: 0.75rem;
     color: var(--texto3);
     margin-top: 1.25rem;
+}
+
+/* Mensaje de error/exito animado */
+#mensaje {
+    animation: fadeIn 0.3s ease;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
 }
 
 /* Lado derecho - imagen de fondo */
@@ -149,12 +275,13 @@
     overflow: hidden;
 }
 
-/* Simular imagen de fondo con CSS */
 .auth-fondo-img {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
-    opacity: 0.8;
+    background: 
+        linear-gradient(180deg, rgba(13,13,26,0.5) 0%, rgba(13,13,26,0.8) 100%),
+        url('../contenido_multimedia/mejor-trabajo.jpg') center/cover no-repeat;
+    opacity: 1;
 }
 
 .auth-fondo-img::before {
@@ -175,6 +302,25 @@
         rgba(124,111,239,0.03) 40px,
         rgba(124,111,239,0.03) 41px
     );
+}
+
+/* Particulas decorativas en el lado derecho */
+.auth-fondo-img::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,111,239,0.15) 0%, transparent 70%);
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: pulso 4s ease-in-out infinite;
+}
+
+@keyframes pulso {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateX(-50%) scale(1.2); opacity: 1; }
 }
 
 .auth-texto-fondo {

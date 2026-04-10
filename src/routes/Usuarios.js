@@ -19,11 +19,14 @@ router.get('/buscarPorNombre/:nombre', usuariosController.getUsuarioPorNombre);
 // Buscar usuarios por sector preferido
 router.get('/buscarPorSector/:sector', usuariosController.getUsuarioPorSector);
 
+// Login
+router.post('/login', usuariosController.postLogin);
+
 // Crear usuario
-router.post('/',runValidations(createUserValidators), usuariosController.postCrearUsuario);
+router.post('/', runValidations(createUserValidators), usuariosController.postCrearUsuario);
 
 // Actualizar usuario
-router.put('/:id',runValidations(updateUserValidators), usuariosController.putActualizarUsuario);
+router.put('/:id', runValidations(updateUserValidators), usuariosController.putActualizarUsuario);
 
 // Eliminar usuario
 router.delete('/:id', usuariosController.deleteEliminarUsuario);
