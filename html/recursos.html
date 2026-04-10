@@ -31,7 +31,7 @@
 
 <div class="barra-busqueda-recursos">
     <i data-lucide="search"></i>
-    <input type="text" placeholder="Buscar artículos, tutoriales, videos...">
+    <input type="text" placeholder="Buscar artículos, tutoriales, videos..." id="buscador-recursos">
 </div>
 
 <div class="categorias-recursos">
@@ -44,10 +44,10 @@
 </div>
 
 <div class="contenido-recursos">
-    <h2>Videos Destacados</h2>
-    <div class="grid-videos">
+    <h2 id="titulo-videos">Videos Destacados</h2>
+    <div class="grid-videos" id="seccion-videos">
 
-        <div class="tarjeta-video">
+        <div class="tarjeta-video" data-categoria="videos entrevistas">
             <a href="https://www.youtube.com/watch?v=N_eOfwNmdx4" target="_blank" class="video-link">
                 <img src="https://img.youtube.com/vi/N_eOfwNmdx4/hqdefault.jpg" alt="Entrevista Virtual">
                 <div class="play-overlay">
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <div class="tarjeta-video">
+        <div class="tarjeta-video" data-categoria="videos carrera profesional">
             <a href="https://www.youtube.com/watch?v=McfYGVLsPDo" target="_blank" class="video-link">
                 <img src="https://img.youtube.com/vi/McfYGVLsPDo/hqdefault.jpg" alt="Portfolio Profesional">
                 <div class="play-overlay">
@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <div class="tarjeta-video">
+        <div class="tarjeta-video" data-categoria="videos carrera profesional">
             <a href="https://www.youtube.com/watch?v=lDhOVbR_4Kg" target="_blank" class="video-link">
                 <img src="https://img.youtube.com/vi/lDhOVbR_4Kg/hqdefault.jpg" alt="Networking">
                 <div class="play-overlay">
@@ -91,10 +91,10 @@
 
     </div>
 
-    <h2>Artículos y Guías</h2>
+    <h2 id="titulo-articulos">Artículos y Guías</h2>
     <div class="grid-articulos">
 
-        <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
@@ -107,7 +107,7 @@
             </div>
         </a>
 
-        <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link" data-categoria="curriculum">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
@@ -120,7 +120,7 @@
             </div>
         </a>
 
-        <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
@@ -133,7 +133,7 @@
             </div>
         </a>
 
-        <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
@@ -146,12 +146,11 @@
             </div>
         </a>
 
-        <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link" data-categoria="habilidades">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
                     <span class="badge badge-morado">Habilidades</span>
-                    <span class="badge badge-morado">Video</span>
                 </div>
                 <p class="articulo-titulo">Desarrolla tu Marca Personal en LinkedIn</p>
                 <div class="articulo-meta"><span>🕐 15 min</span><span>👁 1560</span></div>
@@ -159,7 +158,7 @@
             </div>
         </a>
 
-        <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link">
+        <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
             <div class="tarjeta-articulo">
                 <div class="articulo-thumb"><i data-lucide="download"></i></div>
                 <div class="articulo-tags">
@@ -184,21 +183,126 @@
     </div>
 </div>
 
-<footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+<footer>
+    <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+</footer>
 
 <script>
     lucide.createIcons();
 
-    var pills = document.querySelectorAll('.categoria-pill');
+    const pills = document.querySelectorAll('.categoria-pill');
+    const articulos = document.querySelectorAll('.tarjeta-articulo-link');
+    const videos = document.querySelectorAll('.tarjeta-video');
+    const buscador = document.getElementById('buscador-recursos');
+    const tituloVideos = document.getElementById('titulo-videos');
+    const seccionVideos = document.getElementById('seccion-videos');
+    const tituloArticulos = document.getElementById('titulo-articulos');
+
+    let categoriaActiva = 'todos';
+
+    function normalizarTexto(texto) {
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function obtenerCategoriaBoton(textoBoton) {
+        const texto = normalizarTexto(textoBoton);
+
+        if (texto === 'todos') return 'todos';
+        if (texto === 'carrera profesional') return 'carrera profesional';
+        if (texto === 'entrevistas') return 'entrevistas';
+        if (texto === 'curriculum') return 'curriculum';
+        if (texto === 'habilidades') return 'habilidades';
+        if (texto === 'videos') return 'videos';
+
+        return texto;
+    }
+
+    function coincideBusqueda(texto, busqueda) {
+        return normalizarTexto(texto).includes(normalizarTexto(busqueda));
+    }
+
+    function filtrarRecursos() {
+        const textoBusqueda = buscador.value.trim();
+        let articulosVisibles = 0;
+        let videosVisibles = 0;
+
+        articulos.forEach(function(articulo) {
+            const categorias = articulo.dataset.categoria || '';
+            const titulo = articulo.querySelector('.articulo-titulo')?.textContent || '';
+            const autor = articulo.querySelector('.articulo-autor')?.textContent || '';
+            const tags = articulo.querySelector('.articulo-tags')?.textContent || '';
+
+            const coincideCategoria =
+                categoriaActiva === 'todos' ||
+                categorias.includes(categoriaActiva);
+
+            const coincideTexto =
+                textoBusqueda === '' ||
+                coincideBusqueda(titulo, textoBusqueda) ||
+                coincideBusqueda(autor, textoBusqueda) ||
+                coincideBusqueda(tags, textoBusqueda);
+
+            if (coincideCategoria && coincideTexto) {
+                articulo.style.display = 'block';
+                articulosVisibles++;
+            } else {
+                articulo.style.display = 'none';
+            }
+        });
+
+        videos.forEach(function(video) {
+            const categorias = video.dataset.categoria || '';
+            const titulo = video.querySelector('.video-info p')?.textContent || '';
+            const descripcion = video.querySelector('.video-info span')?.textContent || '';
+
+            const coincideCategoria =
+                categoriaActiva === 'todos' ||
+                categoriaActiva === 'videos' ||
+                categorias.includes(categoriaActiva);
+
+            const coincideTexto =
+                textoBusqueda === '' ||
+                coincideBusqueda(titulo, textoBusqueda) ||
+                coincideBusqueda(descripcion, textoBusqueda);
+
+            if (coincideCategoria && coincideTexto) {
+                video.style.display = 'block';
+                videosVisibles++;
+            } else {
+                video.style.display = 'none';
+            }
+        });
+
+        tituloVideos.style.display = videosVisibles > 0 ? 'block' : 'none';
+        seccionVideos.style.display = videosVisibles > 0 ? 'grid' : 'none';
+        tituloArticulos.style.display = articulosVisibles > 0 ? 'block' : 'none';
+    }
+
     pills.forEach(function(pill) {
         pill.addEventListener('click', function() {
-            pills.forEach(function(p) { p.classList.remove('activo'); });
+            pills.forEach(function(p) {
+                p.classList.remove('activo');
+            });
+
             this.classList.add('activo');
+            categoriaActiva = obtenerCategoriaBoton(this.textContent);
+            filtrarRecursos();
         });
     });
 
+    buscador.addEventListener('input', function() {
+        filtrarRecursos();
+    });
+
+    filtrarRecursos();
+
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     const btnAdmin = document.querySelector('a[href="admin.html"]');
+
     if (btnAdmin) {
         if (!usuario || usuario.rol !== 'admin') {
             btnAdmin.style.display = 'none';
