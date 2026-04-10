@@ -33,7 +33,7 @@
 <body>
 <nav>
     <a href="home.html" class="nav-logo">
-        <img src="../logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
         Shovel
     </a>
     <div class="nav-links">
@@ -104,6 +104,14 @@
 <footer><div style="text-align:center; padding:1rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los derechos reservados.</div></footer>
 
 <script>
+    // Ocultar boton admin si no es admin
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin) {
+            if (!usuario || usuario.rol !== 'admin') {
+                btnAdmin.style.display = 'none';
+            }
+        }
     lucide.createIcons();
     function mostrarFormulario() { document.getElementById('vista-panel').style.display='none'; document.getElementById('vista-formulario').style.display='block'; }
     function mostrarPanel() { document.getElementById('vista-formulario').style.display='none'; document.getElementById('vista-panel').style.display='block'; }

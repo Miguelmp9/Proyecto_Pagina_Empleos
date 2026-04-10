@@ -33,6 +33,7 @@ CREATE TABLE empresas (
 CREATE TABLE usuarios (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre_completo VARCHAR(255),
+    contrasena VARCHAR(255),
     email VARCHAR(255),
     telefono VARCHAR(50),
     ubicacion VARCHAR(255),
@@ -52,78 +53,84 @@ CREATE TABLE usuarios (
     mostrar_email BOOLEAN,
     recibir_notificaciones BOOLEAN,
     fecha_registro DATETIME,
-    estado VARCHAR(50)
+    estado VARCHAR(50),
+    rol VARCHAR(50) DEFAULT 'usuario'
 );
 
-#usuario de prueba
 INSERT INTO usuarios (
-nombre_completo, email, telefono, ubicacion, titulo_profesional,
-anios_experiencia, sobre_mi, foto_perfil, foto_portada,
-linkedin_url, github_url, sitio_web, tipo_empleo_deseado,
-rango_salarial_esperado, disponibilidad, sector_preferido,
-perfil_publico, mostrar_email, recibir_notificaciones,
-fecha_registro, estado
+    nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
+    anios_experiencia, sobre_mi, foto_perfil, foto_portada,
+    linkedin_url, github_url, sitio_web, tipo_empleo_deseado,
+    rango_salarial_esperado, disponibilidad, sector_preferido,
+    perfil_publico, mostrar_email, recibir_notificaciones,
+    fecha_registro, estado, rol
 ) VALUES
 
-('Carlos Mendoza', 'carlos.mendoza@gmail.com', '7890-1234', 'San Salvador', 'Desarrollador Web',
-3, 'Apasionado por el desarrollo frontend.', 'perfil1.jpg', 'portada1.jpg',
-'https://linkedin.com/carlos', 'https://github.com/carlos', 'https://carlos.dev',
+('Carlos Mendoza', '1234', 'carlos@gmail.com', '7890-1234', 'San Salvador', 'Desarrollador Web',
+3, 'Frontend y React.', 'perfil1.jpg', 'portada1.jpg',
+'', 'https://github.com/carlos', '',
 'Tiempo completo', 1200.00, 'Inmediata', 'Tecnología',
-TRUE, TRUE, TRUE, NOW(), 'Activo'),
+TRUE, TRUE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Ana López', 'ana.lopez@gmail.com', '7123-4567', 'Santa Ana', 'Diseñadora UX/UI',
-4, 'Diseñadora enfocada en experiencia de usuario.', 'perfil2.jpg', 'portada2.jpg',
-'https://linkedin.com/ana', 'https://github.com/ana', 'https://ana.design',
+('Ana López', '1234', 'ana@gmail.com', '7123-4567', 'Santa Ana', 'Diseñadora UX/UI',
+4, 'Diseño centrado en usuario.', 'perfil2.jpg', 'portada2.jpg',
+'https://linkedin.com/ana', '', '',
 'Remoto', 1400.00, '2 semanas', 'Diseño',
-TRUE, FALSE, TRUE, NOW(), 'Activo'),
+TRUE, FALSE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Luis Martínez', 'luis.m@gmail.com', '7456-7890', 'San Miguel', 'Backend Developer',
-5, 'Especialista en APIs y bases de datos.', 'perfil3.jpg', 'portada3.jpg',
-'https://linkedin.com/luis', 'https://github.com/luis', '',
+('Luis Martínez', '1234', 'luis@gmail.com', '7456-7890', 'San Miguel', 'Backend Developer',
+5, 'APIs y bases de datos.', 'perfil3.jpg', 'portada3.jpg',
+'', 'https://github.com/luis', '',
 'Tiempo completo', 1600.00, 'Inmediata', 'Tecnología',
-TRUE, TRUE, TRUE, NOW(), 'Activo'),
+TRUE, TRUE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('María Hernández', 'maria.h@gmail.com', '7987-6543', 'La Libertad', 'Project Manager',
-6, 'Gestión de proyectos ágiles.', 'perfil4.jpg', 'portada4.jpg',
+('María Hernández', '1234', 'maria@gmail.com', '7987-6543', 'La Libertad', 'Project Manager',
+6, 'Gestión ágil.', 'perfil4.jpg', 'portada4.jpg',
 'https://linkedin.com/maria', '', '',
 'Tiempo completo', 1800.00, '1 mes', 'Administración',
-TRUE, TRUE, FALSE, NOW(), 'Activo'),
+TRUE, TRUE, FALSE, NOW(), 'Activo', 'usuario'),
 
-('José Ramírez', 'jose.r@gmail.com', '7012-3456', 'Sonsonate', 'QA Tester',
-2, 'Pruebas de software manuales y automatizadas.', 'perfil5.jpg', 'portada5.jpg',
+('José Ramírez', '1234', 'jose@gmail.com', '7012-3456', 'Sonsonate', 'QA Tester',
+2, 'Testing manual y automático.', 'perfil5.jpg', 'portada5.jpg',
 '', 'https://github.com/jose', '',
 'Medio tiempo', 900.00, 'Inmediata', 'Tecnología',
-TRUE, FALSE, TRUE, NOW(), 'Activo'),
+TRUE, FALSE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Sofía Torres', 'sofia.t@gmail.com', '7222-3344', 'San Salvador', 'Data Analyst',
-3, 'Análisis de datos y visualización.', 'perfil6.jpg', 'portada6.jpg',
+('Sofía Torres', '1234', 'sofia@gmail.com', '7222-3344', 'San Salvador', 'Data Analyst',
+3, 'Análisis de datos.', 'perfil6.jpg', 'portada6.jpg',
 'https://linkedin.com/sofia', 'https://github.com/sofia', '',
 'Remoto', 1500.00, '2 semanas', 'Finanzas',
-TRUE, TRUE, TRUE, NOW(), 'Activo'),
+TRUE, TRUE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Miguel Castro', 'miguel.c@gmail.com', '7333-4455', 'Usulután', 'DevOps Engineer',
-4, 'Automatización y despliegue continuo.', 'perfil7.jpg', 'portada7.jpg',
-'https://linkedin.com/miguel', 'https://github.com/miguel', '',
+('Miguel Castro', '1234', 'miguel@gmail.com', '7333-4455', 'Usulután', 'DevOps Engineer',
+4, 'CI/CD y automatización.', 'perfil7.jpg', 'portada7.jpg',
+'', 'https://github.com/miguel', '',
 'Tiempo completo', 1700.00, 'Inmediata', 'Tecnología',
-TRUE, TRUE, TRUE, NOW(), 'Activo'),
+TRUE, TRUE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Laura Pérez', 'laura.p@gmail.com', '7444-5566', 'Santa Tecla', 'Marketing Digital',
-5, 'Estrategias de marketing online.', 'perfil8.jpg', 'portada8.jpg',
-'https://linkedin.com/laura', '', 'https://lauramkt.com',
+('Laura Pérez', '1234', 'laura@gmail.com', '7444-5566', 'Santa Tecla', 'Marketing Digital',
+5, 'Marketing online.', 'perfil8.jpg', 'portada8.jpg',
+'https://linkedin.com/laura', '', 'https://laura.com',
 'Freelance', 1300.00, '1 semana', 'Marketing',
-TRUE, FALSE, TRUE, NOW(), 'Activo'),
+TRUE, FALSE, TRUE, NOW(), 'Activo', 'usuario'),
 
-('Andrés Gómez', 'andres.g@gmail.com', '7555-6677', 'Chalatenango', 'Soporte Técnico',
-2, 'Resolución de problemas técnicos.', 'perfil9.jpg', 'portada9.jpg',
+('Andrés Gómez', '1234', 'andres@gmail.com', '7555-6677', 'Chalatenango', 'Soporte Técnico',
+2, 'Soporte IT.', 'perfil9.jpg', 'portada9.jpg',
 '', '', '',
 'Tiempo completo', 800.00, 'Inmediata', 'Soporte',
-TRUE, TRUE, FALSE, NOW(), 'Activo'),
+TRUE, TRUE, FALSE, NOW(), 'Activo', 'usuario'),
 
-('Daniela Ruiz', 'daniela.r@gmail.com', '7666-7788', 'San Vicente', 'Full Stack Developer',
-4, 'Desarrollo completo de aplicaciones web.', 'perfil10.jpg', 'portada10.jpg',
-'https://linkedin.com/daniela', 'https://github.com/daniela', 'https://daniela.dev',
+('Daniela Ruiz', '1234', 'daniela@gmail.com', '7666-7788', 'San Vicente', 'Full Stack Developer',
+4, 'Frontend y backend.', 'perfil10.jpg', 'portada10.jpg',
+'https://linkedin.com/daniela', 'https://github.com/daniela', '',
 'Remoto', 1800.00, '2 semanas', 'Tecnología',
-TRUE, TRUE, TRUE, NOW(), 'Activo');
+TRUE, TRUE, TRUE, NOW(), 'Activo', 'usuario'),
+
+('Administrador', '1234', 'admin@shovel.com', '0000-0000', 'San Salvador',
+'Administrador del Sistema', 0, 'Cuenta de administración del sistema.',
+'', '', '', '', '',
+'Tiempo completo', 0.00, 'Inmediata', 'Tecnología',
+FALSE, FALSE, FALSE, NOW(), 'Activo', 'admin');
 
 CREATE TABLE habilidades (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -286,4 +293,5 @@ CREATE TABLE discusion_etiquetas (
     FOREIGN KEY (discusion_id) REFERENCES discusiones(id),
     FOREIGN KEY (etiqueta_id) REFERENCES etiquetas(id)
 );
+
 

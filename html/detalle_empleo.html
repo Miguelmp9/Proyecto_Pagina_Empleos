@@ -139,6 +139,15 @@
 </footer>
 
 <script>
+
+    // Ocultar boton admin si no es admin
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin) {
+            if (!usuario || usuario.rol !== 'admin') {
+                btnAdmin.style.display = 'none';
+            }
+        }
     lucide.createIcons();
 
     // Los mismos datos de empleos que en buscar.html
@@ -335,6 +344,7 @@
     // Cargar el empleo cuando la pagina carga
     cargarEmpleo();
 </script>
+
 
 </body>
 </html>
