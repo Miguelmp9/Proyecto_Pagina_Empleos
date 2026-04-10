@@ -31,7 +31,7 @@
 
 <div class="barra-busqueda-recursos">
     <i data-lucide="search"></i>
-    <input type="text" placeholder="Buscar artículos, tutoriales, videos...">
+    <input type="text" placeholder="Buscar artículos, tutoriales, videos..." id="buscador-recursos">
 </div>
 
 <div class="categorias-recursos">
@@ -44,84 +44,133 @@
 </div>
 
 <div class="contenido-recursos">
-    <h2>Videos Destacados</h2>
-    <div class="grid-videos">
-        <div class="tarjeta-video">
-            <div class="video-thumb">
-                <button class="btn-play"><i data-lucide="play"></i></button>
-                <span class="video-duracion">12:45</span>
-            </div>
+    <h2 id="titulo-videos">Videos Destacados</h2>
+    <div class="grid-videos" id="seccion-videos">
+
+        <div class="tarjeta-video" data-categoria="videos entrevistas">
+            <a href="https://www.youtube.com/watch?v=N_eOfwNmdx4" target="_blank" class="video-link">
+                <img src="https://img.youtube.com/vi/N_eOfwNmdx4/hqdefault.jpg" alt="Entrevista Virtual">
+                <div class="play-overlay">
+                    <div class="play-btn">&#9654;</div>
+                </div>
+                <span class="video-duracion">Video 1</span>
+            </a>
             <div class="video-info">
                 <p>Cómo Prepararte para una Entrevista Virtual</p>
-                <span>5,600 vistas</span>
+                <span>Recurso recomendado</span>
             </div>
         </div>
-        <div class="tarjeta-video">
-            <div class="video-thumb">
-                <button class="btn-play"><i data-lucide="play"></i></button>
-                <span class="video-duracion">18:30</span>
-            </div>
+
+        <div class="tarjeta-video" data-categoria="videos carrera profesional">
+            <a href="https://www.youtube.com/watch?v=McfYGVLsPDo" target="_blank" class="video-link">
+                <img src="https://img.youtube.com/vi/McfYGVLsPDo/hqdefault.jpg" alt="Portfolio Profesional">
+                <div class="play-overlay">
+                    <div class="play-btn">&#9654;</div>
+                </div>
+                <span class="video-duracion">Video 2</span>
+            </a>
             <div class="video-info">
                 <p>Construye tu Portfolio Profesional</p>
-                <span>3,200 vistas</span>
+                <span>Recurso recomendado</span>
             </div>
         </div>
-        <div class="tarjeta-video">
-            <div class="video-thumb">
-                <button class="btn-play"><i data-lucide="play"></i></button>
-                <span class="video-duracion">10:20</span>
-            </div>
+
+        <div class="tarjeta-video" data-categoria="videos carrera profesional">
+            <a href="https://www.youtube.com/watch?v=lDhOVbR_4Kg" target="_blank" class="video-link">
+                <img src="https://img.youtube.com/vi/lDhOVbR_4Kg/hqdefault.jpg" alt="Networking">
+                <div class="play-overlay">
+                    <div class="play-btn">&#9654;</div>
+                </div>
+                <span class="video-duracion">Video 3</span>
+            </a>
             <div class="video-info">
                 <p>Networking Efectivo para Encontrar Empleo</p>
-                <span>4,100 vistas</span>
+                <span>Recurso recomendado</span>
             </div>
         </div>
+
     </div>
 
-    <h2>Artículos y Guías</h2>
+    <h2 id="titulo-articulos">Artículos y Guías</h2>
     <div class="grid-articulos">
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Entrevistas</span><span class="badge badge-morado">Artículo</span></div>
-            <p class="articulo-titulo">10 Consejos para Triunfar en tu Próxima Entrevista de Trabajo</p>
-            <div class="articulo-meta"><span>🕐 8 min</span><span>👁 1240</span></div>
-            <p class="articulo-autor">María López — 10 Mar 2026</p>
-        </div>
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Currículum</span><span class="badge badge-morado">Guía</span></div>
-            <p class="articulo-titulo">Cómo Crear un Currículum que Destaque en 2026</p>
-            <div class="articulo-meta"><span>🕐 12 min</span><span>👁 2350</span></div>
-            <p class="articulo-autor">Carlos Ruiz — 8 Mar 2026</p>
-        </div>
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Carrera</span><span class="badge badge-morado">Artículo</span></div>
-            <p class="articulo-titulo">Las Habilidades Más Demandadas en el Mercado Laboral</p>
-            <div class="articulo-meta"><span>🕐 6 min</span><span>👁 1890</span></div>
-            <p class="articulo-autor">Ana García — 5 Mar 2026</p>
-        </div>
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Carrera</span><span class="badge badge-morado">Tutorial</span></div>
-            <p class="articulo-titulo">Negociación Salarial: Estrategias para Conseguir el Mejor Sueldo</p>
-            <div class="articulo-meta"><span>🕐 10 min</span><span>👁 3120</span></div>
-            <p class="articulo-autor">David Martín — 3 Mar 2026</p>
-        </div>
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Habilidades</span><span class="badge badge-morado">Video</span></div>
-            <p class="articulo-titulo">Desarrolla tu Marca Personal en LinkedIn</p>
-            <div class="articulo-meta"><span>🕐 15 min</span><span>👁 1560</span></div>
-            <p class="articulo-autor">Laura Sánchez — 1 Mar 2026</p>
-        </div>
-        <div class="tarjeta-articulo">
-            <div class="articulo-thumb"><i data-lucide="book-open"></i></div>
-            <div class="articulo-tags"><span class="badge badge-morado">Entrevistas</span><span class="badge badge-morado">Artículo</span></div>
-            <p class="articulo-titulo">Preguntas Frecuentes en Entrevistas Técnicas</p>
-            <div class="articulo-meta"><span>🕐 7 min</span><span>👁 2890</span></div>
-            <p class="articulo-autor">Pedro Gómez — 28 Feb 2026</p>
-        </div>
+
+        <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Entrevistas</span>
+                    <span class="badge badge-morado">Artículo</span>
+                </div>
+                <p class="articulo-titulo">10 Consejos para Triunfar en tu Próxima Entrevista de Trabajo</p>
+                <div class="articulo-meta"><span>🕐 8 min</span><span>👁 1240</span></div>
+                <p class="articulo-autor">María López — 10 Mar 2026</p>
+            </div>
+        </a>
+
+        <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link" data-categoria="curriculum">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Currículum</span>
+                    <span class="badge badge-morado">Guía</span>
+                </div>
+                <p class="articulo-titulo">Cómo Crear un Currículum que Destaque en 2026</p>
+                <div class="articulo-meta"><span>🕐 12 min</span><span>👁 2350</span></div>
+                <p class="articulo-autor">Carlos Ruiz — 8 Mar 2026</p>
+            </div>
+        </a>
+
+        <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Carrera</span>
+                    <span class="badge badge-morado">Artículo</span>
+                </div>
+                <p class="articulo-titulo">Las Habilidades Más Demandadas en el Mercado Laboral</p>
+                <div class="articulo-meta"><span>🕐 6 min</span><span>👁 1890</span></div>
+                <p class="articulo-autor">Ana García — 5 Mar 2026</p>
+            </div>
+        </a>
+
+        <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Carrera</span>
+                    <span class="badge badge-morado">Tutorial</span>
+                </div>
+                <p class="articulo-titulo">Negociación Salarial: Estrategias para Conseguir el Mejor Sueldo</p>
+                <div class="articulo-meta"><span>🕐 10 min</span><span>👁 3120</span></div>
+                <p class="articulo-autor">David Martín — 3 Mar 2026</p>
+            </div>
+        </a>
+
+        <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link" data-categoria="habilidades">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Habilidades</span>
+                </div>
+                <p class="articulo-titulo">Desarrolla tu Marca Personal en LinkedIn</p>
+                <div class="articulo-meta"><span>🕐 15 min</span><span>👁 1560</span></div>
+                <p class="articulo-autor">Laura Sánchez — 1 Mar 2026</p>
+            </div>
+        </a>
+
+        <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
+            <div class="tarjeta-articulo">
+                <div class="articulo-thumb"><i data-lucide="download"></i></div>
+                <div class="articulo-tags">
+                    <span class="badge badge-morado">Entrevistas</span>
+                    <span class="badge badge-morado">Artículo</span>
+                </div>
+                <p class="articulo-titulo">Preguntas Frecuentes en Entrevistas Técnicas</p>
+                <div class="articulo-meta"><span>🕐 7 min</span><span>👁 2890</span></div>
+                <p class="articulo-autor">Pedro Gómez — 28 Feb 2026</p>
+            </div>
+        </a>
+
     </div>
 
     <div class="newsletter">
@@ -134,28 +183,131 @@
     </div>
 </div>
 
-<footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+<footer>
+    <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+</footer>
 
 <script>
     lucide.createIcons();
 
-    // Cambiar categoria activa
-    var pills = document.querySelectorAll('.categoria-pill');
+    const pills = document.querySelectorAll('.categoria-pill');
+    const articulos = document.querySelectorAll('.tarjeta-articulo-link');
+    const videos = document.querySelectorAll('.tarjeta-video');
+    const buscador = document.getElementById('buscador-recursos');
+    const tituloVideos = document.getElementById('titulo-videos');
+    const seccionVideos = document.getElementById('seccion-videos');
+    const tituloArticulos = document.getElementById('titulo-articulos');
+
+    let categoriaActiva = 'todos';
+
+    function normalizarTexto(texto) {
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function obtenerCategoriaBoton(textoBoton) {
+        const texto = normalizarTexto(textoBoton);
+
+        if (texto === 'todos') return 'todos';
+        if (texto === 'carrera profesional') return 'carrera profesional';
+        if (texto === 'entrevistas') return 'entrevistas';
+        if (texto === 'curriculum') return 'curriculum';
+        if (texto === 'habilidades') return 'habilidades';
+        if (texto === 'videos') return 'videos';
+
+        return texto;
+    }
+
+    function coincideBusqueda(texto, busqueda) {
+        return normalizarTexto(texto).includes(normalizarTexto(busqueda));
+    }
+
+    function filtrarRecursos() {
+        const textoBusqueda = buscador.value.trim();
+        let articulosVisibles = 0;
+        let videosVisibles = 0;
+
+        articulos.forEach(function(articulo) {
+            const categorias = articulo.dataset.categoria || '';
+            const titulo = articulo.querySelector('.articulo-titulo')?.textContent || '';
+            const autor = articulo.querySelector('.articulo-autor')?.textContent || '';
+            const tags = articulo.querySelector('.articulo-tags')?.textContent || '';
+
+            const coincideCategoria =
+                categoriaActiva === 'todos' ||
+                categorias.includes(categoriaActiva);
+
+            const coincideTexto =
+                textoBusqueda === '' ||
+                coincideBusqueda(titulo, textoBusqueda) ||
+                coincideBusqueda(autor, textoBusqueda) ||
+                coincideBusqueda(tags, textoBusqueda);
+
+            if (coincideCategoria && coincideTexto) {
+                articulo.style.display = 'block';
+                articulosVisibles++;
+            } else {
+                articulo.style.display = 'none';
+            }
+        });
+
+        videos.forEach(function(video) {
+            const categorias = video.dataset.categoria || '';
+            const titulo = video.querySelector('.video-info p')?.textContent || '';
+            const descripcion = video.querySelector('.video-info span')?.textContent || '';
+
+            const coincideCategoria =
+                categoriaActiva === 'todos' ||
+                categoriaActiva === 'videos' ||
+                categorias.includes(categoriaActiva);
+
+            const coincideTexto =
+                textoBusqueda === '' ||
+                coincideBusqueda(titulo, textoBusqueda) ||
+                coincideBusqueda(descripcion, textoBusqueda);
+
+            if (coincideCategoria && coincideTexto) {
+                video.style.display = 'block';
+                videosVisibles++;
+            } else {
+                video.style.display = 'none';
+            }
+        });
+
+        tituloVideos.style.display = videosVisibles > 0 ? 'block' : 'none';
+        seccionVideos.style.display = videosVisibles > 0 ? 'grid' : 'none';
+        tituloArticulos.style.display = articulosVisibles > 0 ? 'block' : 'none';
+    }
+
     pills.forEach(function(pill) {
         pill.addEventListener('click', function() {
-            pills.forEach(function(p) { p.classList.remove('activo'); });
+            pills.forEach(function(p) {
+                p.classList.remove('activo');
+            });
+
             this.classList.add('activo');
+            categoriaActiva = obtenerCategoriaBoton(this.textContent);
+            filtrarRecursos();
         });
     });
 
-    // Ocultar boton admin si no es admin
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
-            }
+    buscador.addEventListener('input', function() {
+        filtrarRecursos();
+    });
+
+    filtrarRecursos();
+
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const btnAdmin = document.querySelector('a[href="admin.html"]');
+
+    if (btnAdmin) {
+        if (!usuario || usuario.rol !== 'admin') {
+            btnAdmin.style.display = 'none';
         }
+    }
 </script>
 </body>
 </html>
