@@ -34,7 +34,6 @@ app.use('/usuarios', UsuarioRoutes);
 
 //Agregamos el middleware de manejo de errores 
 app.use(errorHandler);
-
 //inicio del servidor en el puerto definido en la varibale de entorno
 app.listen(process.env.PORT || 3000, () => {    
     console.log(`Servidor corriendo en http://localhost:${process.env.PORT || 3000}`);

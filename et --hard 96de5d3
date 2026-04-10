@@ -1,0 +1,21 @@
+[33m2e6af58[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDeveloper[m[33m)[m funcionamiento del login completo
+[33m96de5d3[m recursos funciona elnabvar
+[33m42666a4[m documentos nuevos y videos en recursos
+[33m505273a[m[33m ([m[1;31morigin/recursos[m[33m, [m[1;31morigin/buscador_Empleos[m[33m, [m[1;32mrecursos[m[33m, [m[1;32mbuscador_Empleos[m[33m)[m funcionamiento del login y parte del perfil, ademas de agregado de funciones de usuario
+[33m623e04c[m base de datos
+[33mdf6922d[m la base de datos usuarios
+[33m5a23305[m nuevo cosa para funcionamiento javascript
+[33m3a74d21[m solucion de bug del validators.js y Usuarios.js
+[33m5d53968[m Seagrego funcionamiento al validator del Middlewares, para el caso de fallas al momento de hacer put o post al usuario
+[33m76ba983[m post: se me olvido agregar lo ultimo modificado del db.js xd
+[33mbd64e06[m funcionamiento del usuario, post y de mas, falta las pruebas y funcionamiento con el html login
+[33m6702c76[m proyecto principal html y css hecho
+[33m06082ad[m prueba de subida
+[33ma8f62a6[m[33m ([m[1;31morigin/pruebas-1[m[33m, [m[1;32mmaster[m[33m)[m otravez
+[33m4f1dbfe[m prueba2 para que hagas pull
+[33m373b476[m prueba para que hagas un pull
+[33mac3c990[m holaXd
+[33m689ea71[m subida de prueba p
+[33m54d00f8[m borrado de pruebas
+[33m20e4576[m segundo html que subo
+[33maaa3883[m agregue hoy si un html de prueba pe
