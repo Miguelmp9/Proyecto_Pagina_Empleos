@@ -1,4 +1,4 @@
-// Importamos el paquete 'pg'
+// Importamos el paquete 'mysql2'
 import mysql from 'mysql2/promise';
 
 //importamos dotenv para leer las variables 
