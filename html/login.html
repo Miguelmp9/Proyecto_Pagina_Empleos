@@ -205,7 +205,6 @@
             return;
         }
 
-        // Mostrar spinner
         btn.disabled = true;
         btn.innerHTML = '<span class="btn-spinner"></span> Iniciando sesión...';
 
@@ -234,102 +233,91 @@
             btn.disabled = false;
             btn.innerHTML = 'Iniciar Sesión';
         }
+    }
 
-        async function registrarse() {
-            const nombre_completo = document.getElementById('registro-nombre').value.trim();
-            const email = document.getElementById('registro-email').value.trim();
-            const contrasena = document.getElementById('registro-contrasena').value.trim();
-            const confirmar = document.getElementById('registro-confirmar').value.trim();
+    async function registrarse() {
+        const nombre_completo = document.getElementById('registro-nombre').value.trim();
+        const email = document.getElementById('registro-email').value.trim();
+        const contrasena = document.getElementById('registro-contrasena').value.trim();
+        const confirmar = document.getElementById('registro-confirmar').value.trim();
 
-            if (!nombre_completo || !email || !contrasena || !confirmar) {
-                mostrarMensaje('Por favor completa todos los campos', 'error');
-                return;
-            }
-
-            if (contrasena !== confirmar) {
-                mostrarMensaje('Las contraseñas no coinciden', 'error');
-                return;
-            }
-
-            try {
-                const res = await fetch(`${API}/usuarios`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nombre_completo, email, contrasena })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    mostrarMensaje(data.error || 'Error al crear la cuenta', 'error');
-                    return;
-                }
-
-                mostrarMensaje('Cuenta creada exitosamente, ya puedes iniciar sesión', 'exito');
-                cambiarTab('login');
-
-            } catch (error) {
-                mostrarMensaje('No se pudo conectar con el servidor', 'error');
-            }
+        if (!nombre_completo || !email || !contrasena || !confirmar) {
+            mostrarMensaje('Por favor completa todos los campos', 'error');
+            return;
         }
 
-        async function recuperarContrasena() {
-            const email = document.getElementById('recuperar-email').value.trim();
-            const contrasena = document.getElementById('recuperar-contrasena').value.trim();
-            const confirmar = document.getElementById('recuperar-confirmar').value.trim();
+        if (contrasena !== confirmar) {
+            mostrarMensaje('Las contraseñas no coinciden', 'error');
+            return;
+        }
 
-            if (!email || !contrasena || !confirmar) {
-                mostrarMensaje('Por favor completa todos los campos', 'error');
+        try {
+            const res = await fetch(`${API}/usuarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre_completo, email, contrasena })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                mostrarMensaje(data.error || 'Error al crear la cuenta', 'error');
                 return;
             }
 
-            if (contrasena !== confirmar) {
-                mostrarMensaje('Las contraseñas no coinciden', 'error');
+            mostrarMensaje('Cuenta creada exitosamente, ya puedes iniciar sesión', 'exito');
+            setTimeout(() => cambiarTab('login'), 2000);
+
+        } catch (error) {
+            mostrarMensaje('No se pudo conectar con el servidor', 'error');
+        }
+    }
+
+    async function recuperarContrasena() {
+        const email = document.getElementById('recuperar-email').value.trim();
+        const contrasena = document.getElementById('recuperar-contrasena').value.trim();
+        const confirmar = document.getElementById('recuperar-confirmar').value.trim();
+
+        if (!email || !contrasena || !confirmar) {
+            mostrarMensaje('Por favor completa todos los campos', 'error');
+            return;
+        }
+
+        if (contrasena !== confirmar) {
+            mostrarMensaje('Las contraseñas no coinciden', 'error');
+            return;
+        }
+
+        try {
+            const buscar = await fetch(`${API}/usuarios/buscarPorEmail/${email}`);
+
+            if (!buscar.ok) {
+                mostrarMensaje('No existe una cuenta con ese correo', 'error');
                 return;
             }
 
-            try {
-                // Primero buscamos el usuario por email para obtener su ID
-                const buscar = await fetch(`${API}/usuarios/buscarPorEmail/${email}`);
+            const usuario = await buscar.json();
 
-                if (!buscar.ok) {
-                    mostrarMensaje('No existe una cuenta con ese correo', 'error');
-                    return;
-                }
+            const res = await fetch(`${API}/usuarios/${usuario.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contrasena })
+            });
 
-                const usuario = await buscar.json();
+            const data = await res.json();
 
-                // Luego actualizamos la contraseña con el PUT
-                const res = await fetch(`${API}/usuarios/${usuario.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contrasena })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    mostrarMensaje(data.error || 'Error al cambiar la contraseña', 'error');
-                    return;
-                }
-
-                mostrarMensaje('Contraseña actualizada exitosamente', 'exito');
-                setTimeout(() => cambiarTab('login'), 2000);
-
-            } catch (error) {
-                mostrarMensaje('No se pudo conectar con el servidor', 'error');
+            if (!res.ok) {
+                mostrarMensaje(data.error || 'Error al cambiar la contraseña', 'error');
+                return;
             }
-        }
-    }    
 
-    // Ocultar boton admin si no es admin
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
-            }
+            mostrarMensaje('Contraseña actualizada exitosamente', 'exito');
+            setTimeout(() => cambiarTab('login'), 2000);
+
+        } catch (error) {
+            mostrarMensaje('No se pudo conectar con el servidor', 'error');
         }
+    }
 </script>
 
 </body>
