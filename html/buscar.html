@@ -30,7 +30,7 @@
 <!-- Encabezado -->
 <div class="encabezado-pagina">
     <h1>Resultados de Búsqueda</h1>
-    <p id="conteo-resultados">Se encontraron 6 empleos que coinciden con tu búsqueda</p>
+    <p id="conteo-resultados">Cargando empleos...</p>
 </div>
 
 <!-- Contenido principal -->
@@ -95,38 +95,43 @@
             </div>
             <div class="input-wrap" style="flex: 0.7;">
                 <i data-lucide="map-pin"></i>
-                <input type="text" placeholder="Ubicación" style="padding-left: 34px;">
+                <input type="text" id="ubicacion-input" placeholder="Ubicación" style="padding-left: 34px;" oninput="buscarEmpleos()">
             </div>
             <button class="btn btn-primario" onclick="buscarEmpleos()">
                 <i data-lucide="search" style="width:14px; height:14px;"></i>
-                Buscar Empleos
+                Buscar
             </button>
         </div>
 
         <!-- Selects de filtro rápido -->
         <div class="filtros-select">
-            <select onchange="buscarEmpleos()">
+            <select id="select-nivel" onchange="buscarEmpleos()">
                 <option value="">Todos los niveles</option>
                 <option>Junior</option>
                 <option>Mid-Level</option>
                 <option>Senior</option>
                 <option>Ejecutivo</option>
             </select>
-            <select onchange="buscarEmpleos()">
+            <select id="select-sector" onchange="buscarEmpleos()">
                 <option value="">Todos los sectores</option>
                 <option>Tecnología</option>
                 <option>Marketing</option>
                 <option>Diseño</option>
                 <option>Finanzas</option>
+                <option>Educación</option>
+                <option>Salud</option>
+                <option>Administración</option>
             </select>
-            <select onchange="buscarEmpleos()">
+            <select id="select-contrato" onchange="buscarEmpleos()">
                 <option value="">Tipo de contrato</option>
-                <option>Tiempo Completo</option>
-                <option>Medio Tiempo</option>
+                <option>Tiempo completo</option>
+                <option>Medio tiempo</option>
                 <option>Remoto</option>
+                <option>Híbrido</option>
                 <option>Freelance</option>
+                <option>Prácticas</option>
             </select>
-            <select onchange="buscarEmpleos()">
+            <select id="select-salario" onchange="buscarEmpleos()">
                 <option value="">Salario</option>
                 <option>$0 - $30k</option>
                 <option>$30k - $60k</option>
@@ -135,8 +140,18 @@
             </select>
         </div>
 
+        <!-- Loading indicator -->
+        <div id="loading" style="display: none; text-align: center; padding: 2rem; color: var(--texto2);">
+            <i data-lucide="loader-2" style="animation: spin 1s linear infinite;"></i> Cargando empleos...
+        </div>
+
         <!-- Lista de empleos -->
         <div id="lista-empleos"></div>
+
+        <!-- Paginación (opcional, para cuando haya muchos resultados) -->
+        <div id="paginacion" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; padding: 1rem;">
+            <!-- Se genera dinámicamente -->
+        </div>
 
     </div>
 </div>
@@ -146,161 +161,409 @@
     <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
 </footer>
 
+<!-- Estilos para animación de loading -->
+<style>
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+
 <script>
+    // Inicializar íconos de Lucide
     lucide.createIcons();
 
-    // Datos de los empleos
-    var empleos = [
-        {
-            id: 1,
-            titulo: "Senior Frontend Developer",
-            empresa: "TechCorp Inc.",
-            ubicacion: "Madrid, España",
-            tipo: "Tiempo Completo",
-            salario: "$60k - $80k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 2 días"
-        },
-        {
-            id: 2,
-            titulo: "UX/UI Designer",
-            empresa: "DesignHub",
-            ubicacion: "Barcelona, España",
-            tipo: "Remoto",
-            salario: "$50k - $70k",
-            nivel: "Mid-Level",
-            sector: "Diseño",
-            tiempo: "Hace 1 día"
-        },
-        {
-            id: 3,
-            titulo: "Marketing Manager",
-            empresa: "Growth Marketing",
-            ubicacion: "Valencia, España",
-            tipo: "Tiempo Completo",
-            salario: "$55k - $75k",
-            nivel: "Senior",
-            sector: "Marketing",
-            tiempo: "Hace 3 días"
-        },
-        {
-            id: 4,
-            titulo: "Data Analyst",
-            empresa: "DataInsights",
-            ubicacion: "Sevilla, España",
-            tipo: "Híbrido",
-            salario: "$45k - $60k",
-            nivel: "Mid-Level",
-            sector: "Tecnología",
-            tiempo: "Hace 5 días"
-        },
-        {
-            id: 5,
-            titulo: "Product Manager",
-            empresa: "InnovateLabs",
-            ubicacion: "Bilbao, España",
-            tipo: "Tiempo Completo",
-            salario: "$70k - $90k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 1 semana"
-        },
-        {
-            id: 6,
-            titulo: "Content Writer",
-            empresa: "ContentPro",
-            ubicacion: "Remoto",
-            tipo: "Freelance",
-            salario: "$30k - $45k",
-            nivel: "Junior",
-            sector: "Marketing",
-            tiempo: "Hace 4 días"
+    // ========================================
+    // CONFIGURACIÓN GLOBAL
+    // ========================================
+    const API_URL = 'http://localhost:3000/api/buscar';
+    let empleosCache = [];
+    let paginacionActual = { pagina: 1, totalPaginas: 1 };
+    
+    // Estado de filtros
+    const filtros = {
+        q: '',
+        ubicacion: '',
+        nivel: '',
+        sector: '',
+        contrato: '',
+        salario: '',
+        pagina: 1
+    };
+
+    // ========================================
+    // FUNCIONES PRINCIPALES
+    // ========================================
+
+    // Cargar empleos desde el backend
+    async function cargarEmpleos() {
+        mostrarLoading(true);
+        
+        try {
+            const params = new URLSearchParams();
+            if (filtros.q) params.append('q', filtros.q);
+            if (filtros.ubicacion) params.append('ubicacion', filtros.ubicacion);
+            if (filtros.nivel) params.append('nivel', filtros.nivel);
+            if (filtros.sector) params.append('sector', filtros.sector);
+            if (filtros.contrato) params.append('contrato', filtros.contrato);
+            if (filtros.salario) params.append('salario', filtros.salario);
+            params.append('pagina', filtros.pagina);
+            params.append('limit', 10);
+
+            const response = await fetch(`${API_URL}?${params.toString()}`, {
+                credentials: 'include' // Para enviar cookies de sesión
+            });
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const result = await response.json();
+
+            if (result.exito) {
+                empleosCache = transformarEmpleos(result.data.empleos);
+                paginacionActual = result.data.paginacion;
+                renderizarEmpleos(empleosCache);
+                actualizarConteo(result.data.paginacion.total);
+                renderizarPaginacion();
+            } else {
+                mostrarError(result.mensaje || 'Error al cargar empleos');
+            }
+        } catch (error) {
+            console.error('❌ Error:', error);
+            mostrarError('No se pudo conectar con el servidor. Verifica que el backend esté corriendo.');
+        } finally {
+            mostrarLoading(false);
         }
-    ];
+    }
 
-    // Renderizar los empleos en el HTML
+    // Transformar datos del backend al formato del frontend
+    function transformarEmpleos(empleosBackend) {
+        return empleosBackend.map(e => ({
+            id: e.id,
+            titulo: e.titulo,
+            empresa: e.empresa || e.empresa_nombre,
+            empresaLogo: e.empresa_logo,
+            empresaVerificada: e.empresa_verificada,
+            ubicacion: e.ubicacion || 'Remoto',
+            tipo: normalizarContrato(e.tipo_contrato),
+            salario: formatearSalario(e.rango_salarial_min, e.rango_salarial_max),
+            nivel: e.nivel_experiencia || 'Mid-Level',
+            sector: e.sector || 'General',
+            tiempo: formatearFechaRelativa(e.fecha_publicacion),
+            descripcion: e.descripcion?.substring(0, 150) + '...',
+            _raw: e // Datos originales para uso interno
+        }));
+    }
+
+    // Normalizar tipo de contrato (frontend ↔ backend)
+    function normalizarContrato(valor) {
+        if (!valor) return 'Tiempo completo';
+        const mapa = {
+            'Tiempo Completo': 'Tiempo completo',
+            'Medio Tiempo': 'Medio tiempo',
+            'tiempo completo': 'Tiempo completo',
+            'medio tiempo': 'Medio tiempo'
+        };
+        return mapa[valor] || valor;
+    }
+
+    // Formatear rango salarial
+    function formatearSalario(min, max) {
+        if (!min && !max) return 'A convenir';
+        const minFmt = min ? `$${Math.round(min)}` : '$0';
+        const maxFmt = max ? `$${Math.round(max)}k` : '+';
+        return max ? `${minFmt} - ${maxFmt}` : `${minFmt}+`;
+    }
+
+    // Formatear fecha relativa
+    function formatearFechaRelativa(fechaISO) {
+        if (!fechaISO) return 'Reciente';
+        const fecha = new Date(fechaISO);
+        const ahora = new Date();
+        const diffMs = ahora - fecha;
+        const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffDias === 0) return 'Hoy';
+        if (diffDias === 1) return 'Hace 1 día';
+        if (diffDias < 7) return `Hace ${diffDias} días`;
+        if (diffDias < 30) return `Hace ${Math.floor(diffDias / 7)} semanas`;
+        return `Hace ${Math.floor(diffDias / 30)} meses`;
+    }
+
+    // Renderizar lista de empleos
     function renderizarEmpleos(lista) {
-        var contenedor = document.getElementById('lista-empleos');
-        var conteo = document.getElementById('conteo-resultados');
-
-        conteo.textContent = 'Se encontraron ' + lista.length + ' empleos que coinciden con tu búsqueda';
-
-        if (lista.length === 0) {
-            contenedor.innerHTML = '<p style="color: var(--texto2); text-align: center; padding: 2rem;">No se encontraron empleos con esos filtros.</p>';
+        const contenedor = document.getElementById('lista-empleos');
+        
+        if (!lista || lista.length === 0) {
+            contenedor.innerHTML = `
+                <div style="text-align: center; padding: 3rem; color: var(--texto2);">
+                    <i data-lucide="inbox" style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>No se encontraron empleos con esos filtros.</p>
+                    <button class="btn btn-borde" onclick="limpiarFiltros()" style="margin-top: 1rem;">
+                        Limpiar filtros
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
             return;
         }
 
-        var html = '';
-        for (var i = 0; i < lista.length; i++) {
-            var empleo = lista[i];
-            html += '<div class="tarjeta-empleo">';
-            html += '  <div class="empleo-cabecera">';
-            html += '    <div>';
-            html += '      <h3>' + empleo.titulo + '</h3>';
-            html += '      <p class="empleo-empresa">' + empleo.empresa + '</p>';
-            html += '    </div>';
-            html += '    <span class="icono-guardar">🔖</span>';
-            html += '  </div>';
-            html += '  <div class="empleo-meta">';
-            html += '    <span>📍 ' + empleo.ubicacion + '</span>';
-            html += '    <span>🕐 ' + empleo.tipo + '</span>';
-            html += '    <span>💰 ' + empleo.salario + '</span>';
-            html += '  </div>';
-            html += '  <div class="empleo-footer">';
-            html += '    <div class="empleo-tags">';
-            html += '      <span class="tag">' + empleo.nivel + '</span>';
-            html += '      <span class="tag">' + empleo.sector + '</span>';
-            html += '    </div>';
-            html += '    <div class="empleo-acciones">';
-            html += '      <span class="empleo-tiempo">' + empleo.tiempo + '</span>';
-            // Este es el boton que redirige a la pagina de detalle
-            html += '      <a href="detalle_empleo.html?id=' + empleo.id + '" class="btn btn-primario btn-pequeno">Información</a>';
-            html += '    </div>';
-            html += '  </div>';
-            html += '</div>';
-        }
-
-        contenedor.innerHTML = html;
+        contenedor.innerHTML = lista.map(empleo => `
+            <div class="tarjeta-empleo">
+                <div class="empleo-cabecera">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        ${empleo.empresaLogo ? 
+                            `<img src="../contenido_multimedia/${empleo.empresaLogo}" 
+                                  style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;" 
+                                  alt="${empleo.empresa}" 
+                                  onerror="this.style.display='none'">` : 
+                            '<div style="width: 40px; height: 40px; background: var(--primario-claro); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primario); font-weight: 600;">' + 
+                            empleo.empresa?.charAt(0) + 
+                            '</div>'
+                        }
+                        <div>
+                            <h3>${empleo.titulo}</h3>
+                            <p class="empleo-empresa">
+                                ${empleo.empresa}
+                                ${empleo.empresaVerificada ? ' <span style="color: #22c55e; font-size: 0.9rem;">✓</span>' : ''}
+                            </p>
+                        </div>
+                    </div>
+                    <button class="icono-guardar" onclick="guardarEmpleo(${empleo.id}, this)" title="Guardar empleo" 
+                            style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--texto2);">
+                        🔖
+                    </button>
+                </div>
+                
+                <div class="empleo-meta">
+                    <span><i data-lucide="map-pin" style="width:14px; height:14px; vertical-align: middle;"></i> ${empleo.ubicacion}</span>
+                    <span><i data-lucide="clock" style="width:14px; height:14px; vertical-align: middle;"></i> ${empleo.tipo}</span>
+                    <span><i data-lucide="dollar-sign" style="width:14px; height:14px; vertical-align: middle;"></i> ${empleo.salario}</span>
+                </div>
+                
+                ${empleo.descripcion ? `<p style="color: var(--texto2); font-size: 0.9rem; margin: 0.5rem 0;">${empleo.descripcion}</p>` : ''}
+                
+                <div class="empleo-footer">
+                    <div class="empleo-tags">
+                        <span class="tag">${empleo.nivel}</span>
+                        <span class="tag">${empleo.sector}</span>
+                    </div>
+                    <div class="empleo-acciones">
+                        <span class="empleo-tiempo">${empleo.tiempo}</span>
+                        <a href="detalle_empleo.html?id=${empleo.id}" class="btn btn-primario btn-pequeno">
+                            Ver detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        lucide.createIcons();
     }
 
-    // Buscar empleos por texto
+    // Actualizar contador de resultados
+    function actualizarConteo(total) {
+        const el = document.getElementById('conteo-resultados');
+        if (el) {
+            el.textContent = total > 0 
+                ? `Se encontraron ${total} empleo${total !== 1 ? 's' : ''}` 
+                : 'No se encontraron empleos';
+        }
+    }
+
+    // Mostrar/ocultar loading
+    function mostrarLoading(mostrar) {
+        const el = document.getElementById('loading');
+        if (el) el.style.display = mostrar ? 'block' : 'none';
+        const lista = document.getElementById('lista-empleos');
+        if (lista && mostrar) lista.innerHTML = '';
+    }
+
+    // Mostrar mensaje de error
+    function mostrarError(mensaje) {
+        document.getElementById('lista-empleos').innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                <i data-lucide="alert-circle" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i>
+                <p>${mensaje}</p>
+            </div>
+        `;
+        lucide.createIcons();
+    }
+
+    // Renderizar paginación
+    function renderizarPaginacion() {
+        const contenedor = document.getElementById('paginacion');
+        const { pagina, totalPaginas } = paginacionActual;
+        
+        if (totalPaginas <= 1) {
+            contenedor.style.display = 'none';
+            return;
+        }
+        
+        contenedor.style.display = 'flex';
+        contenedor.innerHTML = '';
+        
+        // Botón anterior
+        const btnPrev = document.createElement('button');
+        btnPrev.className = 'btn btn-borde btn-pequeno';
+        btnPrev.textContent = '← Anterior';
+        btnPrev.disabled = pagina === 1;
+        btnPrev.onclick = () => { if (pagina > 1) { filtros.pagina--; cargarEmpleos(); window.scrollTo(0, 0); }};
+        contenedor.appendChild(btnPrev);
+        
+        // Números de página
+        for (let i = Math.max(1, pagina - 2); i <= Math.min(totalPaginas, pagina + 2); i++) {
+            const btn = document.createElement('button');
+            btn.className = `btn ${i === pagina ? 'btn-primario' : 'btn-borde'} btn-pequeno`;
+            btn.textContent = i;
+            btn.onclick = () => { filtros.pagina = i; cargarEmpleos(); window.scrollTo(0, 0); };
+            contenedor.appendChild(btn);
+        }
+        
+        // Botón siguiente
+        const btnNext = document.createElement('button');
+        btnNext.className = 'btn btn-borde btn-pequeno';
+        btnNext.textContent = 'Siguiente →';
+        btnNext.disabled = pagina === totalPaginas;
+        btnNext.onclick = () => { if (pagina < totalPaginas) { filtros.pagina++; cargarEmpleos(); window.scrollTo(0, 0); }};
+        contenedor.appendChild(btnNext);
+    }
+
+    // ========================================
+    // BÚSQUEDA Y FILTROS
+    // ========================================
+
+    // Función principal de búsqueda (se llama con oninput)
     function buscarEmpleos() {
-        var texto = document.getElementById('buscador').value.toLowerCase();
-        var resultado = empleos.filter(function(e) {
-            return e.titulo.toLowerCase().includes(texto) ||
-                   e.empresa.toLowerCase().includes(texto) ||
-                   e.sector.toLowerCase().includes(texto);
-        });
-        renderizarEmpleos(resultado);
+        filtros.q = document.getElementById('buscador')?.value || '';
+        filtros.ubicacion = document.getElementById('ubicacion-input')?.value || '';
+        filtros.nivel = document.getElementById('select-nivel')?.value || '';
+        filtros.sector = document.getElementById('select-sector')?.value || '';
+        filtros.contrato = document.getElementById('select-contrato')?.value || '';
+        filtros.salario = document.getElementById('select-salario')?.value || '';
+        filtros.pagina = 1; // Reiniciar paginación
+        cargarEmpleos();
     }
 
     // Click en filtro del sidebar
     function filtrar(elemento) {
         elemento.classList.toggle('activo');
-        // Aqui iria la logica real de filtrado cuando haya backend
+        const valor = elemento.textContent.trim();
+        const seccion = elemento.closest('.seccion-filtro')?.querySelector('h4')?.textContent;
+        
+        let clave = '';
+        switch(seccion) {
+            case 'Nivel de Experiencia': clave = 'nivel'; break;
+            case 'Sector Laboral': clave = 'sector'; break;
+            case 'Tipo de Contrato': 
+                clave = 'contrato';
+                // Normalizar valores para la BD
+                const mapaContrato = {
+                    'Tiempo Completo': 'Tiempo completo',
+                    'Medio Tiempo': 'Medio tiempo'
+                };
+                filtros[clave] = elemento.classList.contains('activo') ? (mapaContrato[valor] || valor) : '';
+                cargarEmpleos();
+                return;
+            case 'Rango Salarial': clave = 'salario'; break;
+        }
+        
+        filtros[clave] = elemento.classList.contains('activo') ? valor : '';
+        filtros.pagina = 1;
+        cargarEmpleos();
     }
 
     // Limpiar todos los filtros
     function limpiarFiltros() {
-        var opciones = document.querySelectorAll('.opcion-filtro');
-        opciones.forEach(function(op) {
-            op.classList.remove('activo');
-        });
-        renderizarEmpleos(empleos);
+        // Reset UI
+        document.querySelectorAll('.opcion-filtro').forEach(el => el.classList.remove('activo'));
+        document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+        const buscador = document.getElementById('buscador');
+        const ubicacion = document.getElementById('ubicacion-input');
+        if (buscador) buscador.value = '';
+        if (ubicacion) ubicacion.value = '';
+        
+        // Reset estado
+        Object.keys(filtros).forEach(k => filtros[k] = k === 'pagina' ? 1 : '');
+        cargarEmpleos();
     }
 
-    // Mostrar todos los empleos al cargar la pagina
-    renderizarEmpleos(empleos);
+    // ========================================
+    // GUARDAR EMPLEO
+    // ========================================
 
-    // Ocultar boton admin si no es admin
+    async function guardarEmpleo(empleoId, elemento) {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        
+        if (!usuario) {
+            alert('🔐 Debes iniciar sesión para guardar empleos');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/guardar/${empleoId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+            const result = await response.json();
+            
+            if (result.exito) {
+                elemento.textContent = result.guardado ? '✅' : '🔖';
+                elemento.title = result.guardado ? 'Guardado' : 'Guardar empleo';
+                // Pequeña animación
+                elemento.style.transform = 'scale(1.2)';
+                setTimeout(() => elemento.style.transform = 'scale(1)', 200);
+            } else {
+                alert(result.mensaje || 'Error al guardar');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('⚠️ No se pudo conectar con el servidor');
+        }
+    }
+
+    // ========================================
+    // CARGAR FILTROS DISPONIBLES (opcional)
+    // ========================================
+
+    async function cargarFiltrosDisponibles() {
+        try {
+            const res = await fetch(`${API_URL}/filtros`);
+            const result = await res.json();
+            if (result.exito) {
+                // Aquí podrías llenar los selects dinámicamente si lo necesitas
+                console.log('Filtros disponibles:', result.data);
+            }
+        } catch (error) {
+            console.error('Error cargando filtros:', error);
+        }
+    }
+
+    // ========================================
+    // INICIALIZACIÓN
+    // ========================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cargar datos iniciales
+        cargarEmpleos();
+        cargarFiltrosDisponibles();
+        
+        // Verificar sesión para botón admin
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
-            }
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
         }
+        
+        // Permitir búsqueda con Enter
+        const buscador = document.getElementById('buscador');
+        if (buscador) {
+            buscador.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') buscarEmpleos();
+            });
+        }
+    });
 </script>
 
 </body>

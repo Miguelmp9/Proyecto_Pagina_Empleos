@@ -295,3 +295,148 @@ CREATE TABLE discusion_etiquetas (
 );
 
 
+INSERT INTO empresas (nombre, industria, tamano, ubicacion, descripcion, logo, sitio_web, verificada, calificacion_promedio, total_valoraciones, fecha_registro) VALUES
+('TechSolutions SV', 'Tecnología', '50-200 empleados', 'San Salvador', 'Desarrollo de software y soluciones digitales para empresas en El Salvador y Centroamérica.', 'logo_tech.png', 'https://techsolutions.sv', TRUE, 4.5, 28, NOW()),
+('Creativa Digital', 'Diseño', '10-50 empleados', 'Santa Tecla', 'Agencia especializada en diseño UX/UI, branding y marketing digital.', 'logo_creativa.png', 'https://creativadigital.com', TRUE, 4.8, 42, NOW()),
+('DataCorp El Salvador', 'Finanzas', '200-500 empleados', 'San Salvador', 'Análisis de datos, business intelligence y consultoría financiera.', 'logo_datacorp.png', 'https://datacorp.sv', FALSE, 4.2, 15, NOW()),
+('StartUp Innovadora', 'Tecnología', '1-10 empleados', 'Remoto', 'Startup enfocada en inteligencia artificial y automatización de procesos.', 'logo_startup.png', 'https://startup-innova.io', FALSE, 4.0, 8, NOW()),
+('Consultores Asociados', 'Administración', '50-200 empleados', 'San Miguel', 'Consultoría empresarial, gestión de proyectos y transformación digital.', 'logo_consultores.png', 'https://consultores-asoc.com', TRUE, 4.3, 31, NOW()),
+('Banco Central de Reservas', 'Finanzas', '500+ empleados', 'San Salvador', 'Institución financiera gubernamental.', 'logo_bcr.png', 'https://bcr.gob.sv', TRUE, 4.1, 120, NOW()),
+('Clínicas de El Salvador', 'Salud', '200-500 empleados', 'San Salvador', 'Red de centros médicos especializados.', 'logo_clinicas.png', 'https://clinicas.sv', TRUE, 4.4, 89, NOW()),
+('EducaOnline SV', 'Educación', '10-50 empleados', 'Remoto', 'Plataforma de educación en línea para Centroamérica.', 'logo_educa.png', 'https://educaonline.sv', FALSE, 4.6, 55, NOW());
+
+
+
+INSERT INTO empleos (empresa_id, titulo, descripcion, responsabilidades, requisitos, beneficios, ubicacion, tipo_contrato, nivel_experiencia, sector, rango_salarial_min, rango_salarial_max, email_contacto, estado, fecha_publicacion, fecha_cierre) VALUES
+
+-- TechSolutions SV (empresa_id = 1)
+(1, 'Desarrollador Frontend React', 
+ 'Buscamos desarrollador con experiencia en React para unirse a nuestro equipo de desarrollo.', 
+ '• Desarrollar interfaces con React y TypeScript\n• Colaborar con el equipo de diseño UX\n• Optimizar rendimiento y accesibilidad\n• Participar en code reviews', 
+ '• 2+ años de experiencia en React\n• Conocimiento sólido en TypeScript\n• Experiencia con Git y trabajo en equipo\n• Inglés técnico (lectura)', 
+ '• Salario competitivo en USD\n• Trabajo híbrido (3 días oficina, 2 remoto)\n• Capacitaciones certificadas pagadas\n• Seguro médico privado', 
+ 'San Salvador', 'Tiempo completo', 'Mid-Level', 'Tecnología', 
+ 800.00, 1500.00, 'rrhh@techsolutions.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY)),
+
+(1, 'Backend Developer Node.js', 
+ 'Desarrollador backend para crear y mantener APIs escalables con Node.js y MySQL.', 
+ '• Diseñar y desarrollar APIs RESTful\n• Optimizar consultas y estructura de base de datos\n• Implementar autenticación y seguridad\n• Documentar endpoints con Swagger', 
+ '• 3+ años de experiencia en Node.js\n• Experiencia con MySQL o PostgreSQL\n• Conocimiento en Docker y CI/CD\n• Buenas prácticas de código limpio', 
+ '• Experiencia con microservicios\n• Conocimiento en AWS o Azure', 
+ '• Bonus trimestral por desempeño\n• Seguro médico familiar\n• Home office 2 días/semana\n• Presupuesto para conferencias', 
+ 'San Salvador', 'Tiempo completo', 'Senior', 'Tecnología', 
+ 1200.00, 2000.00, 'rrhh@techsolutions.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 45 DAY)),
+
+(1, 'Practicante de Desarrollo Web', 
+ 'Oportunidad para estudiantes de último año en sistemas, informática o carreras afines.', 
+ '• Apoyar en desarrollo de módulos frontend/backend\n• Escribir pruebas unitarias básicas\n• Documentar código y procesos\n• Participar en reuniones de equipo', 
+ '• Conocimientos en HTML, CSS y JavaScript\n• Git básico (commit, push, pull)\n• Ganas de aprender y crecer profesionalmente\n• Disponibilidad de 20-30 horas/semana', 
+ '• Estar cursando último año de carrera técnica/universitaria\n• Portfolio con proyectos personales (aunque sean pequeños)', 
+ '• Mentoría personalizada con desarrolladores senior\n• Posibilidad de contratación al finalizar prácticas\n• Certificado de prácticas profesionales\n• Ambiente de aprendizaje', 
+ 'San Salvador', 'Prácticas', 'Entry-Level', 'Tecnología', 
+ 300.00, 500.00, 'practicas@techsolutions.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 15 DAY)),
+
+-- Creativa Digital (empresa_id = 2)
+(2, 'Diseñador UX/UI Junior', 
+ 'Únete a nuestro equipo creativo para diseñar experiencias digitales memorables.', 
+ '• Crear wireframes, mockups y prototipos en Figma\n• Realizar tests de usabilidad con usuarios reales\n• Colaborar estrechamente con desarrolladores frontend\n• Mantener y actualizar sistema de diseño', 
+ '• Portfolio con al menos 3 proyectos UX/UI completos\n• Dominio de Figma (auto-layout, componentes, variables)\n• Inglés básico para documentación técnica\n• Capacidad de recibir y aplicar feedback', 
+ '• Conocimiento básico de HTML/CSS\n• Experiencia con herramientas de prototipado interactivo', 
+ '• Ambiente creativo y colaborativo\n• Flexibilidad horaria (núcleo 10am-3pm)\n• Proyectos con clientes internacionales\n• Presupuesto para cursos de diseño', 
+ 'Santa Tecla', 'Tiempo completo', 'Junior', 'Diseño', 
+ 600.00, 900.00, 'hola@creativadigital.com', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 20 DAY)),
+
+(2, 'Especialista en Marketing Digital', 
+ 'Profesional para planificar y ejecutar campañas digitales efectivas.', 
+ '• Planificar estrategias de marketing en redes sociales y Google Ads\n• Gestionar presupuesto mensual de anuncios ($5k-$20k)\n• Analizar métricas, ROI y generar reportes ejecutivos\n• Coordinar con equipo de diseño para creatividades', 
+ '• 2+ años gestionando campañas en Google Ads y Meta Ads\n• Conocimiento sólido en SEO on-page y técnico\n• Google Analytics 4 certificado\n• Excel intermedio (tablas dinámicas, fórmulas)', 
+ '• Experiencia en e-commerce o SaaS\n• Conocimiento de herramientas de automatización (HubSpot, Mailchimp)', 
+ '• Comisiones por resultados alcanzados\n• Capacitaciones pagadas en plataformas premium\n• Ambiente dinámico y sin burocracia\n• Día libre en cumpleaños', 
+ 'Santa Tecla', 'Tiempo completo', 'Mid-Level', 'Marketing', 
+ 700.00, 1200.00, 'hola@creativadigital.com', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 25 DAY)),
+
+-- DataCorp El Salvador (empresa_id = 3)
+(3, 'Analista de Datos', 
+ 'Profesional para transformar datos en insights accionables para la toma de decisiones.', 
+ '• Procesar y limpiar grandes volúmenes de datos financieros\n• Crear dashboards interactivos en Power BI o Tableau\n• Desarrollar modelos predictivos básicos\n• Presentar hallazgos a gerencia y stakeholders', 
+ '• Experiencia comprobable en SQL y Python (pandas, numpy)\n• Conocimiento en estadística descriptiva e inferencial\n• Dominio de Power BI o Tableau\n• Capacidad de comunicación técnica y no técnica', 
+ '• Experiencia en sector financiero o bancario\n• Conocimiento de machine learning básico (scikit-learn)', 
+ '• Bonos trimestrales por objetivos cumplidos\n• Capacitación certificada en herramientas cloud (AWS, Azure)\n• Plan de carrera estructurado\n• Seguro médico con cobertura familiar', 
+ 'San Salvador', 'Tiempo completo', 'Mid-Level', 'Finanzas', 
+ 1000.00, 1600.00, 'talento@datacorp.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 60 DAY)),
+
+-- StartUp Innovadora (empresa_id = 4)
+(4, 'Full Stack Developer Remoto', 
+ 'Startup en crecimiento busca desarrollador full stack para proyecto innovador con IA.', 
+ '• Desarrollar features tanto en frontend (React) como backend (Node.js)\n• Integrar APIs de inteligencia artificial (OpenAI, Anthropic)\n• Participar en decisiones de arquitectura y tecnología\n• Escribir código limpio, testeable y documentado', 
+ '• Experiencia sólida en React + Node.js en producción\n• Conocimiento en APIs REST y GraphQL\n• Mentalidad startup: autonomía, proactividad, aprendizaje continuo\n• Inglés intermedio para documentación y reuniones', 
+ '• Experiencia con herramientas de IA generativa\n• Conocimiento en despliegue en Vercel/Render/Railway', 
+ '• Equity (acciones) en la startup\n• 100% remoto con horario flexible\n• Tecnología de punta y libertad técnica\n• Presupuesto anual para equipo y herramientas', 
+ 'Remoto', 'Tiempo completo', 'Mid-Level', 'Tecnología', 
+ 1300.00, 2200.00, 'jobs@startup-innova.io', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY)),
+
+-- Consultores Asociados (empresa_id = 5)
+(5, 'Project Manager', 
+ 'Liderar proyectos de transformación digital para clientes corporativos del sector público y privado.', 
+ '• Gestionar cronogramas, presupuestos y alcance de proyectos\n• Coordinar equipos multidisciplinarios (desarrollo, diseño, QA)\n• Reportar avances y riesgos a stakeholders ejecutivos\n• Aplicar metodologías ágiles (Scrum, Kanban) según contexto', 
+ '• Certificación PMP, Scrum Master o equivalente\n• 4+ años gestionando proyectos de TI o consultoría\n• Excel avanzado y herramientas de gestión (Jira, Asana, MS Project)\n• Excelentes habilidades de comunicación y negociación', 
+ '• Experiencia en sector público o banca\n• Conocimiento en gestión del cambio organizacional', 
+ '• Auto de empresa o bono de transporte\n• Seguro médico familiar con cobertura amplia\n• Bonus anual por proyecto entregado\n• Capacitación en metodologías avanzadas', 
+ 'San Miguel', 'Tiempo completo', 'Senior', 'Administración', 
+ 1500.00, 2500.00, 'rrhh@consultores-asoc.com', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY)),
+
+-- Banco Central de Reservas (empresa_id = 6)
+(6, 'Desarrollador Java Senior', 
+ 'Desarrollador para sistemas críticos del sector financiero gubernamental.', 
+ '• Desarrollar y mantener aplicaciones Java enterprise\n• Implementar estándares de seguridad bancaria\n• Optimizar rendimiento de sistemas de alta disponibilidad\n• Documentar procesos técnicos para auditoría', 
+ '• 5+ años en Java EE/Spring Boot\n• Experiencia con bases de datos Oracle o PostgreSQL\n• Conocimiento en seguridad informática y normativas financieras\n• Disponibilidad para guardias técnicas rotativas', 
+ '• Certificaciones Oracle o Spring\n• Experiencia en sector bancario o gubernamental', 
+ '• Salario competitivo del sector público\n• Prestaciones de ley ampliadas\n• Estabilidad laboral y plan de pensiones\n• Capacitación técnica continua', 
+ 'San Salvador', 'Tiempo completo', 'Senior', 'Finanzas', 
+ 1400.00, 2100.00, 'recursos.humanos@bcr.gob.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 40 DAY)),
+
+-- Clínicas de El Salvador (empresa_id = 7)
+(7, 'Enfermero/a de Planta', 
+ 'Profesional de enfermería para atención en áreas de hospitalización y emergencia.', 
+ '• Brindar atención directa a pacientes según protocolos\n• Administrar medicamentos y tratamientos prescritos\n• Registrar información clínica en sistema electrónico\n• Coordinar con equipo médico multidisciplinario', 
+ '• Título universitario en Enfermería registrado en CNS\n• 2+ años de experiencia en entorno hospitalario\n• Certificación en RCP y primeros auxilios vigente\n• Disponibilidad para turnos rotativos', 
+ '• Especialización en área crítica o quirúrgica\n• Conocimiento de sistemas de historia clínica electrónica', 
+ '• Salario base + bonos por turno nocturno/festivo\n• Seguro médico para empleado y familia directa\n• Capacitación continua en áreas clínicas\n• Oportunidades de especialización pagada', 
+ 'San Salvador', 'Tiempo completo', 'Mid-Level', 'Salud', 
+ 650.00, 950.00, 'talento@clinicas.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 35 DAY)),
+
+-- EducaOnline SV (empresa_id = 8)
+(8, 'Desarrollador de Contenido Educativo', 
+ 'Crear materiales didácticos digitales para cursos en línea de calidad.', 
+ '• Diseñar estructuras de cursos y módulos de aprendizaje\n• Redactar contenidos pedagógicos atractivos y efectivos\n• Coordinar con diseñadores instruccionales y multimedia\n• Evaluar y actualizar contenidos según feedback de estudiantes', 
+ '• Experiencia en diseño instruccional o creación de contenido educativo\n• Conocimiento de plataformas LMS (Moodle, Canvas, Teachable)\n• Excelentes habilidades de redacción y ortografía\n• Creatividad y empatía con el estudiante adulto', 
+ '• Experiencia en educación en línea para Centroamérica\n• Conocimiento de estándares SCORM o xAPI', 
+ '• 100% remoto con horario flexible\n• Pago por proyecto o mensual según acuerdo\n• Acceso gratuito a toda la plataforma educativa\n• Reconocimiento público como autor/a de cursos', 
+ 'Remoto', 'Medio tiempo', 'Mid-Level', 'Educación', 
+ 500.00, 800.00, 'contenido@educaonline.sv', 'activo', NOW(), DATE_ADD(NOW(), INTERVAL 50 DAY));
+
+
+INSERT INTO habilidades (nombre, categoria) VALUES
+('React', 'Frontend'), ('TypeScript', 'Frontend'), ('JavaScript', 'Frontend'), ('HTML/CSS', 'Frontend'),
+('Node.js', 'Backend'), ('Python', 'Backend'), ('Java', 'Backend'), ('SQL', 'Backend'),
+('MySQL', 'Base de Datos'), ('PostgreSQL', 'Base de Datos'), ('MongoDB', 'Base de Datos'),
+('Figma', 'Diseño'), ('Adobe XD', 'Diseño'), ('Photoshop', 'Diseño'),
+('Scrum', 'Metodologías'), ('Kanban', 'Metodologías'), ('Git', 'Herramientas'), ('Docker', 'Herramientas'),
+('AWS', 'Cloud'), ('Azure', 'Cloud'), ('Google Analytics', 'Marketing'), ('SEO', 'Marketing');
+
+
+CREATE INDEX idx_empleos_titulo ON empleos(titulo);
+CREATE INDEX idx_empleos_sector ON empleos(sector);
+CREATE INDEX idx_empleos_ubicacion ON empleos(ubicacion);
+CREATE INDEX idx_empleos_contrato ON empleos(tipo_contrato);
+CREATE INDEX idx_empleos_nivel ON empleos(nivel_experiencia);
+CREATE INDEX idx_empleos_salario ON empleos(rango_salarial_min, rango_salarial_max);
+CREATE INDEX idx_empleos_estado_fecha ON empleos(estado, fecha_publicacion);
+CREATE INDEX idx_empresas_nombre ON empresas(nombre);
+CREATE INDEX idx_usuarios_email ON usuarios(email);
+
+
+SELECT '✅ Total Empresas:' AS estado, COUNT(*) as total FROM empresas;
+SELECT '✅ Total Empleos:' AS estado, COUNT(*) as total FROM empleos;
+SELECT '✅ Empleos Activos:' AS estado, COUNT(*) as total FROM empleos WHERE estado = 'activo';
+
