@@ -18,19 +18,17 @@
 
             <div class="auth-logo">
                 <div class="auth-logo-fila">
-                    <img src="../contenido_multimedia/logo.png" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                    <img src="/contenido_multimedia/logo.png" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
                     <span>Shovel</span>
                 </div>
                 <p class="auth-subtitulo" id="subtitulo">Bienvenido de vuelta</p>
             </div>
 
-            <!-- Tabs (se ocultan en recuperar contraseña) -->
             <div class="auth-tabs" id="auth-tabs">
                 <div class="auth-tab activo" id="tab-login" onclick="cambiarTab('login')">Iniciar Sesión</div>
                 <div class="auth-tab" id="tab-registro" onclick="cambiarTab('registro')">Registrarse</div>
             </div>
 
-            <!-- Mensaje de error/éxito -->
             <div id="mensaje" style="display:none; padding: 10px; border-radius: 6px; margin-bottom: 10px; text-align:center; font-size: 14px;"></div>
 
             <!-- Formulario de Login -->
@@ -42,7 +40,6 @@
                         <input class="input" type="email" id="login-email" placeholder="tu@email.com">
                     </div>
                 </div>
-
                 <div class="grupo-input">
                     <label>Contraseña</label>
                     <div class="input-con-icono">
@@ -50,13 +47,10 @@
                         <input class="input" type="password" id="login-contrasena" placeholder="••••••••">
                     </div>
                 </div>
-
                 <div class="link-olvidaste">
                     <a href="#" onclick="cambiarTab('recuperar')">¿Olvidaste tu contraseña?</a>
                 </div>
-
                 <button class="btn btn-primario btn-ancho-completo" onclick="iniciarSesion()">Iniciar Sesión</button>
-
                 <p class="texto-link-auth">
                     ¿No tienes cuenta? <a href="#" onclick="cambiarTab('registro')">Regístrate aquí</a>
                 </p>
@@ -64,11 +58,28 @@
 
             <!-- Formulario de Registro -->
             <div id="form-registro" style="display: none;">
-                <div class="grupo-input">
-                    <label>Nombre completo</label>
-                    <input class="input" type="text" id="registro-nombre" placeholder="Juan Pérez">
+
+                <!-- Selector tipo de cuenta -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+                    <div id="tipo-usuario" onclick="seleccionarTipo('usuario')"
+                        style="border:2px solid var(--morado); border-radius:8px; padding:12px; text-align:center; cursor:pointer; background:rgba(124,111,239,0.1);">
+                        <div style="font-size:1.5rem; margin-bottom:4px;">👤</div>
+                        <div style="font-size:0.875rem; font-weight:600;">Soy Candidato</div>
+                        <div style="font-size:0.75rem; color:var(--texto2);">Busco empleo</div>
+                    </div>
+                    <div id="tipo-empresa" onclick="seleccionarTipo('empresa')"
+                        style="border:2px solid var(--borde); border-radius:8px; padding:12px; text-align:center; cursor:pointer;">
+                        <div style="font-size:1.5rem; margin-bottom:4px;">🏢</div>
+                        <div style="font-size:0.875rem; font-weight:600;">Soy Empresa</div>
+                        <div style="font-size:0.75rem; color:var(--texto2);">Publico empleos</div>
+                    </div>
                 </div>
 
+                <!-- Campos comunes -->
+                <div class="grupo-input">
+                    <label id="label-nombre">Nombre completo</label>
+                    <input class="input" type="text" id="registro-nombre" placeholder="Juan Pérez">
+                </div>
                 <div class="grupo-input">
                     <label>Correo electrónico</label>
                     <div class="input-con-icono">
@@ -76,7 +87,6 @@
                         <input class="input" type="email" id="registro-email" placeholder="tu@email.com">
                     </div>
                 </div>
-
                 <div class="grupo-input">
                     <label>Contraseña</label>
                     <div class="input-con-icono">
@@ -84,7 +94,6 @@
                         <input class="input" type="password" id="registro-contrasena" placeholder="••••••••">
                     </div>
                 </div>
-
                 <div class="grupo-input">
                     <label>Confirmar contraseña</label>
                     <div class="input-con-icono">
@@ -93,8 +102,26 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primario btn-ancho-completo" onclick="registrarse()">Crear Cuenta</button>
+                <!-- Campos extra para empresa -->
+                <div id="campos-empresa" style="display:none;">
+                    <div class="grupo-input">
+                        <label>Industria</label>
+                        <input class="input" type="text" id="registro-industria" placeholder="Tecnología, Salud, Finanzas...">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Tamaño de la empresa</label>
+                        <select class="input" id="registro-tamano">
+                            <option value="">Selecciona...</option>
+                            <option value="1-10">1-10 empleados</option>
+                            <option value="11-50">11-50 empleados</option>
+                            <option value="51-200">51-200 empleados</option>
+                            <option value="201-500">201-500 empleados</option>
+                            <option value="500+">500+ empleados</option>
+                        </select>
+                    </div>
+                </div>
 
+                <button class="btn btn-primario btn-ancho-completo" onclick="registrarse()">Crear Cuenta</button>
                 <p class="texto-link-auth">
                     ¿Ya tienes cuenta? <a href="#" onclick="cambiarTab('login')">Inicia sesión</a>
                 </p>
@@ -109,7 +136,6 @@
                         <input class="input" type="email" id="recuperar-email" placeholder="tu@email.com">
                     </div>
                 </div>
-
                 <div class="grupo-input">
                     <label>Nueva contraseña</label>
                     <div class="input-con-icono">
@@ -117,7 +143,6 @@
                         <input class="input" type="password" id="recuperar-contrasena" placeholder="••••••••">
                     </div>
                 </div>
-
                 <div class="grupo-input">
                     <label>Confirmar nueva contraseña</label>
                     <div class="input-con-icono">
@@ -125,9 +150,7 @@
                         <input class="input" type="password" id="recuperar-confirmar" placeholder="••••••••">
                     </div>
                 </div>
-
                 <button class="btn btn-primario btn-ancho-completo" onclick="recuperarContrasena()">Cambiar Contraseña</button>
-
                 <p class="texto-link-auth">
                     <a href="#" onclick="cambiarTab('login')">← Volver al inicio de sesión</a>
                 </p>
@@ -152,8 +175,35 @@
 
 <script>
     const API = 'http://localhost:3000';
+    let tipoRegistro = 'usuario';
 
     lucide.createIcons();
+
+    function seleccionarTipo(tipo) {
+        tipoRegistro = tipo;
+        const tipoUsuario = document.getElementById('tipo-usuario');
+        const tipoEmpresa = document.getElementById('tipo-empresa');
+        const camposEmpresa = document.getElementById('campos-empresa');
+        const labelNombre = document.getElementById('label-nombre');
+
+        if (tipo === 'usuario') {
+            tipoUsuario.style.border = '2px solid var(--morado)';
+            tipoUsuario.style.background = 'rgba(124,111,239,0.1)';
+            tipoEmpresa.style.border = '2px solid var(--borde)';
+            tipoEmpresa.style.background = 'transparent';
+            camposEmpresa.style.display = 'none';
+            labelNombre.textContent = 'Nombre completo';
+            document.getElementById('registro-nombre').placeholder = 'Juan Pérez';
+        } else {
+            tipoEmpresa.style.border = '2px solid var(--morado)';
+            tipoEmpresa.style.background = 'rgba(124,111,239,0.1)';
+            tipoUsuario.style.border = '2px solid var(--borde)';
+            tipoUsuario.style.background = 'transparent';
+            camposEmpresa.style.display = 'block';
+            labelNombre.textContent = 'Nombre de la empresa';
+            document.getElementById('registro-nombre').placeholder = 'Mi Empresa S.A.';
+        }
+    }
 
     function mostrarMensaje(texto, tipo) {
         const msg = document.getElementById('mensaje');
@@ -170,7 +220,6 @@
         document.getElementById('form-registro').style.display = 'none';
         document.getElementById('form-recuperar').style.display = 'none';
         document.getElementById('auth-tabs').style.display = 'flex';
-
         document.getElementById('tab-login').classList.remove('activo');
         document.getElementById('tab-registro').classList.remove('activo');
 
@@ -209,23 +258,42 @@
         btn.innerHTML = '<span class="btn-spinner"></span> Iniciando sesión...';
 
         try {
-            const res = await fetch(`${API}/usuarios/login`, {
+            // Primero intentamos login como usuario
+            let res = await fetch(`${API}/usuarios/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, contrasena })
             });
 
-            const data = await res.json();
+            let data = await res.json();
+
+            // Si no encontró como usuario, intentamos como empresa
+            if (!res.ok) {
+                res = await fetch(`${API}/empresas/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, contrasena })
+                });
+
+                data = await res.json();
+            }
 
             if (!res.ok) {
-                mostrarMensaje(data.error || 'Error al iniciar sesión', 'error');
+                mostrarMensaje(data.error || 'Correo o contraseña incorrectos', 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Iniciar Sesión';
                 return;
             }
 
             btn.innerHTML = '✓ Entrando...';
-            localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+            // Guardamos según si es usuario o empresa
+            if (data.usuario) {
+                localStorage.setItem('usuario', JSON.stringify(data.usuario));
+            } else if (data.empresa) {
+                localStorage.setItem('usuario', JSON.stringify(data.empresa));
+            }
+
             setTimeout(() => window.location.href = 'home.html', 800);
 
         } catch (error) {
@@ -236,12 +304,12 @@
     }
 
     async function registrarse() {
-        const nombre_completo = document.getElementById('registro-nombre').value.trim();
+        const nombre = document.getElementById('registro-nombre').value.trim();
         const email = document.getElementById('registro-email').value.trim();
         const contrasena = document.getElementById('registro-contrasena').value.trim();
         const confirmar = document.getElementById('registro-confirmar').value.trim();
 
-        if (!nombre_completo || !email || !contrasena || !confirmar) {
+        if (!nombre || !email || !contrasena || !confirmar) {
             mostrarMensaje('Por favor completa todos los campos', 'error');
             return;
         }
@@ -252,13 +320,31 @@
         }
 
         try {
-            const res = await fetch(`${API}/usuarios`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre_completo, email, contrasena })
-            });
+            let res, data;
 
-            const data = await res.json();
+            if (tipoRegistro === 'usuario') {
+                res = await fetch(`${API}/usuarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre_completo: nombre, email, contrasena })
+                });
+            } else {
+                const industria = document.getElementById('registro-industria').value.trim();
+                const tamano = document.getElementById('registro-tamano').value;
+
+                if (!industria || !tamano) {
+                    mostrarMensaje('Por favor completa los datos de la empresa', 'error');
+                    return;
+                }
+
+                res = await fetch(`${API}/empresas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, contrasena, industria, tamano })
+                });
+            }
+
+            data = await res.json();
 
             if (!res.ok) {
                 mostrarMensaje(data.error || 'Error al crear la cuenta', 'error');
@@ -321,4 +407,5 @@
 </script>
 
 </body>
+
 </html>

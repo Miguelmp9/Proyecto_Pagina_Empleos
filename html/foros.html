@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,160 +10,295 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
+
 <body>
-<nav>
-    <a href="home.html" class="nav-logo">
-        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
-    </a>
-    <div class="nav-links">
-        <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
-        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
-        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
-        <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
-        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
-        <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
-    </div>
-</nav>
 
-<div class="encabezado-foros">
-    <div>
-        <h1>Foros de Discusión</h1>
-        <p>Únete a la comunidad y comparte experiencias con otros profesionales</p>
-    </div>
-    <button class="btn btn-primario">+ Nueva Discusión</button>
-</div>
-
-<div class="barra-busqueda-foros">
-    <i data-lucide="search"></i>
-    <input type="text" placeholder="Buscar en los foros...">
-</div>
-
-<div class="grid-stats-foros">
-    <div class="stat-foro"><div class="numero">245</div><div class="etiqueta">Discusiones</div></div>
-    <div class="stat-foro"><div class="numero">1,240</div><div class="etiqueta">Miembros</div></div>
-    <div class="stat-foro"><div class="numero">3,890</div><div class="etiqueta">Respuestas</div></div>
-    <div class="stat-foro"><div class="numero">156</div><div class="etiqueta">Hoy</div></div>
-</div>
-
-<div class="contenido-foros">
-    <!-- Sidebar categorias -->
-    <div class="sidebar-categorias">
-        <div class="tarjeta">
-            <div class="titulo-categorias"><i data-lucide="filter"></i> Categorías</div>
-            <div class="categoria-item activo">Todos <span class="badge badge-morado">245</span></div>
-            <div class="categoria-item">Tecnología <span style="color:var(--texto3); font-size:0.82rem;">89</span></div>
-            <div class="categoria-item">Marketing <span style="color:var(--texto3); font-size:0.82rem;">45</span></div>
-            <div class="categoria-item">Diseño <span style="color:var(--texto3); font-size:0.82rem;">38</span></div>
-            <div class="categoria-item">Finanzas <span style="color:var(--texto3); font-size:0.82rem;">32</span></div>
-            <div class="categoria-item">Recursos Humanos <span style="color:var(--texto3); font-size:0.82rem;">41</span></div>
+    <!-- ── NAVBAR ── -->
+    <nav>
+        <a href="home.html" class="nav-logo">
+            <img src="../contenido_multimedia/logo.png"
+                style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+            Shovel
+        </a>
+        <div class="nav-links">
+            <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+            <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+            <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+            <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
+            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
         </div>
+    </nav>
+
+    <!-- ── ENCABEZADO ── -->
+    <div class="encabezado-foros">
+        <div>
+            <h1>Foros de Discusión</h1>
+            <p>Únete a la comunidad y comparte experiencias con otros profesionales</p>
+        </div>
+        <a href="nueva-discusion.html" class="btn btn-primario">
+            <i data-lucide="plus"></i> Nueva Discusión
+        </a>
     </div>
 
-    <!-- Lista de posts -->
-    <div class="lista-posts">
-        <div class="tarjeta-post">
-            <div class="post-cabecera">
-                <div class="avatar" style="background:rgba(124,111,239,0.2); color:var(--morado);">AG</div>
-                <div class="post-contenido">
-                    <div class="post-badges"><span class="badge badge-morado">⭐ Destacado</span><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Finanzas</span></div>
-                    <p class="post-titulo">¿Cuál es el mejor momento para negociar un aumento de sueldo?</p>
-                    <div class="post-hashtags"><span class="post-hashtag">#Salario</span><span class="post-hashtag">#Negociación</span><span class="post-hashtag">#Carrera</span></div>
-                    <div class="post-footer">
-                        <span class="post-autor">Ana García · Hace 2 horas</span>
-                        <div class="post-stats"><span>👍 56</span><span>💬 24</span><span>👁 320 vistas</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- ── BARRA DE BÚSQUEDA ── -->
+    <div class="barra-busqueda-foros">
+        <i data-lucide="search"></i>
+        <input type="text" id="buscador" placeholder="Buscar en los foros...">
+    </div>
 
-        <div class="tarjeta-post">
-            <div class="post-cabecera">
-                <div class="avatar" style="background:rgba(34,197,94,0.2); color:var(--verde);">CM</div>
-                <div class="post-contenido">
-                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Tecnología</span></div>
-                    <p class="post-titulo">Consejos para transición de carrera a desarrollo web</p>
-                    <div class="post-hashtags"><span class="post-hashtag">#DesarrolloWeb</span><span class="post-hashtag">#Carrera</span><span class="post-hashtag">#Aprendizaje</span></div>
-                    <div class="post-footer">
-                        <span class="post-autor">Carlos Martínez · Hace 5 horas</span>
-                        <div class="post-stats"><span>👍 42</span><span>💬 18</span><span>👁 280 vistas</span></div>
-                    </div>
-                </div>
-            </div>
+    <!-- ── STATS ── -->
+    <div class="grid-stats-foros">
+        <div class="stat-foro">
+            <div class="stat-icono-foro"><i data-lucide="message-square"></i></div>
+            <div class="numero" id="stat-discusiones">0</div>
+            <div class="etiqueta">Discusiones</div>
         </div>
-
-        <div class="tarjeta-post">
-            <div class="post-cabecera">
-                <div class="avatar" style="background:rgba(245,158,11,0.2); color:var(--amarillo);">LF</div>
-                <div class="post-contenido">
-                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Recursos Humanos</span></div>
-                    <p class="post-titulo">¿Qué habilidades blandas son más valoradas por los empleadores?</p>
-                    <div class="post-hashtags"><span class="post-hashtag">#Habilidades</span><span class="post-hashtag">#SoftSkills</span><span class="post-hashtag">#Empleabilidad</span></div>
-                    <div class="post-footer">
-                        <span class="post-autor">Laura Fernández · Hace 1 día</span>
-                        <div class="post-stats"><span>👍 78</span><span>💬 31</span><span>👁 450 vistas</span></div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-foro">
+            <div class="stat-icono-foro"><i data-lucide="users"></i></div>
+            <div class="numero" id="stat-miembros">0</div>
+            <div class="etiqueta">Miembros</div>
         </div>
-
-        <div class="tarjeta-post">
-            <div class="post-cabecera">
-                <div class="avatar" style="background:rgba(239,68,68,0.2); color:var(--rojo);">DM</div>
-                <div class="post-contenido">
-                    <div class="post-badges"><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Marketing</span></div>
-                    <p class="post-titulo">Estrategias de marketing digital para freelancers</p>
-                    <div class="post-hashtags"><span class="post-hashtag">#Freelance</span><span class="post-hashtag">#MarketingDigital</span><span class="post-hashtag">#Estrategia</span></div>
-                    <div class="post-footer">
-                        <span class="post-autor">David Martín · Hace 1 día</span>
-                        <div class="post-stats"><span>👍 35</span><span>💬 15</span><span>👁 190 vistas</span></div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-foro">
+            <div class="stat-icono-foro"><i data-lucide="message-circle"></i></div>
+            <div class="numero" id="stat-respuestas">0</div>
+            <div class="etiqueta">Respuestas</div>
         </div>
-
-        <div class="tarjeta-post">
-            <div class="post-cabecera">
-                <div class="avatar" style="background:rgba(124,111,239,0.2); color:var(--morado);">MT</div>
-                <div class="post-contenido">
-                    <div class="post-badges"><span class="badge badge-morado">⭐ Destacado</span><span class="badge" style="background:var(--tarjeta2); color:var(--texto2);">Tecnología</span></div>
-                    <p class="post-titulo">Experiencias con entrevistas remotas en empresas internacionales</p>
-                    <div class="post-hashtags"><span class="post-hashtag">#Entrevistas</span><span class="post-hashtag">#Remoto</span><span class="post-hashtag">#Internacional</span></div>
-                    <div class="post-footer">
-                        <span class="post-autor">Miguel Torres · Hace 3 días</span>
-                        <div class="post-stats"><span>👍 92</span><span>💬 38</span><span>👁 520 vistas</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="centro-boton">
-            <button class="btn btn-borde">Cargar Más Discusiones</button>
+        <div class="stat-foro">
+            <div class="stat-icono-foro"><i data-lucide="trending-up"></i></div>
+            <div class="numero" id="stat-categorias">0</div>
+            <div class="etiqueta">Categorías</div>
         </div>
     </div>
-</div>
 
-<footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
+    <!-- ── CONTENIDO PRINCIPAL ── -->
+    <div class="contenido-foros">
 
-<script>
-    lucide.createIcons();
+        <!-- Sidebar categorías -->
+        <div class="sidebar-categorias">
+            <div class="tarjeta">
+                <div class="titulo-categorias"><i data-lucide="filter"></i> Categorías</div>
+                <div class="categoria-item activo" data-cat-id="">
+                    Todos <span class="badge badge-morado" id="badge-todos">0</span>
+                </div>
+                <div id="lista-categorias"></div>
+            </div>
 
-    // Click en categorias
-    var categorias = document.querySelectorAll('.categoria-item');
-    categorias.forEach(function(cat) {
-        cat.addEventListener('click', function() {
-            categorias.forEach(function(c) { c.classList.remove('activo'); });
-            this.classList.add('activo');
-        });
-    });
+            <!-- Ordenar por -->
+            <div class="tarjeta" style="margin-top:1rem;">
+                <div class="titulo-categorias"><i data-lucide="arrow-up-down"></i> Ordenar Por</div>
+                <select id="orden" class="select-orden">
+                    <option value="reciente">Más Reciente</option>
+                    <option value="popular">Más Popular</option>
+                    <option value="comentado">Más Comentado</option>
+                    <option value="visto">Más Visto</option>
+                </select>
+            </div>
+        </div>
 
-    // Ocultar boton admin si no es admin
+        <!-- Lista de posts -->
+        <div class="lista-posts" id="lista-posts">
+            <p style="text-align:center; color:#888;">Cargando discusiones...</p>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="../contenido_multimedia/logo.png" alt="">
+                    <span>Shovel</span>
+                </div>
+                <p>Tu plataforma confiable para encontrar el trabajo ideal</p>
+            </div>
+            <div class="footer-col">
+                <h4>Para Candidatos</h4>
+                <a href="buscar.html">Buscar Empleos</a>
+                <a href="perfil.html">Crear Perfil</a>
+                <a href="recursos.html">Recursos</a>
+            </div>
+            <div class="footer-col">
+                <h4>Para Empresas</h4>
+                <a href="publicar.html">Publicar Empleo</a>
+                <a href="#">Gestionar Vacantes</a>
+                <a href="#">Ver Candidatos</a>
+            </div>
+            <div class="footer-col">
+                <h4>Soporte</h4>
+                <a href="#">Centro de Ayuda</a>
+                <a href="#">Contacto</a>
+                <a href="#">Términos y Condiciones</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+    </footer>
+
+    <script>
+        const API = 'http://localhost:3000';
+
+        lucide.createIcons();
+
         const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        // Ocultar boton admin si no es admin
         const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
-            }
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
         }
-</script>
+
+        // Ocultar boton publicar si no es empresa
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+            btnPublicar.style.display = 'none';
+        }
+
+        // ── Obtener iniciales del autor ──
+        function getIniciales(nombre) {
+            return nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        // ── Colores de avatar ──
+        function getColorAvatar(iniciales) {
+            var colores = ['avatar-morado', 'avatar-verde', 'avatar-amarillo', 'avatar-rojo', 'avatar-azul'];
+            return colores[iniciales.charCodeAt(0) % colores.length];
+        }
+
+        // ── Tiempo relativo ──
+        function timeAgo(fechaStr) {
+            var diff = Math.floor((new Date() - new Date(fechaStr)) / 60000);
+            if (diff < 60) return 'Hace ' + diff + ' minutos';
+            if (diff < 1440) return 'Hace ' + Math.floor(diff / 60) + ' horas';
+            if (diff < 2880) return 'Hace 1 día';
+            return 'Hace ' + Math.floor(diff / 1440) + ' días';
+        }
+
+        // ── Renderizar discusiones ──
+        function renderDiscusiones(discusiones) {
+            var lista = document.getElementById('lista-posts');
+
+            if (discusiones.length === 0) {
+                lista.innerHTML = '<p style="text-align:center;color:#888;padding:2rem;">No hay discusiones en esta categoría.</p>';
+                return;
+            }
+
+            lista.innerHTML = discusiones.map(function (d) {
+                var iniciales = getIniciales(d.autor);
+                var color = getColorAvatar(iniciales);
+                var tags = (d.etiquetas || []).map(e => '<span class="post-hashtag">#' + e.nombre + '</span>').join('');
+                var destacado = d.destacado ? '<span class="badge badge-morado"><i data-lucide="star"></i> Destacado</span>' : '';
+
+                return `
+        <a href="detalle-foro.html?id=${d.id}" class="tarjeta-post">
+            <div class="post-cabecera">
+                <div class="avatar ${color}">${iniciales}</div>
+                <div class="post-contenido">
+                    <div class="post-badges">
+                        ${destacado}
+                        <span class="badge badge-cat">${d.categoria}</span>
+                    </div>
+                    <p class="post-titulo">${d.titulo}</p>
+                    <div class="post-hashtags">${tags}</div>
+                    <div class="post-footer">
+                        <span class="post-autor">${d.autor} · ${timeAgo(d.fecha_creacion)}</span>
+                        <div class="post-stats">
+                            <span><i data-lucide="thumbs-up"></i> ${d.total_likes}</span>
+                            <span><i data-lucide="message-circle"></i> ${d.total_respuestas}</span>
+                            <span><i data-lucide="eye"></i> ${d.total_vistas}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>`;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // ── Cargar categorías ──
+        function cargarCategorias(totalDiscusiones) {
+            fetch(API + '/foros/categorias')
+                .then(r => r.json())
+                .then(function (cats) {
+                    document.getElementById('badge-todos').textContent = totalDiscusiones;
+                    document.getElementById('stat-categorias').textContent = cats.length;
+
+                    var html = cats.map(function (c) {
+                        return `<div class="categoria-item" data-cat-id="${c.id}">
+                    ${c.nombre} <span class="cat-count">${c.total_discusiones}</span>
+                </div>`;
+                    }).join('');
+                    document.getElementById('lista-categorias').innerHTML = html;
+
+                    // Eventos de click en categorías
+                    document.querySelectorAll('.categoria-item').forEach(function (item) {
+                        item.addEventListener('click', function () {
+                            document.querySelectorAll('.categoria-item').forEach(c => c.classList.remove('activo'));
+                            this.classList.add('activo');
+                            var catId = this.getAttribute('data-cat-id');
+                            var orden = document.getElementById('orden').value;
+                            cargarDiscusiones(catId, orden);
+                        });
+                    });
+                })
+                .catch(function () {
+                    document.getElementById('lista-categorias').innerHTML = '<p style="color:#888;">Error al cargar categorías</p>';
+                });
+        }
+
+        // ── Cargar discusiones ──
+        function cargarDiscusiones(categoria_id, orden) {
+            var url = API + '/foros?orden=' + (orden || 'reciente');
+            if (categoria_id) url += '&categoria_id=' + categoria_id;
+
+            document.getElementById('lista-posts').innerHTML = '<p style="text-align:center;color:#888;">Cargando...</p>';
+
+            fetch(url)
+                .then(r => r.json())
+                .then(function (discusiones) {
+                    // Stats
+                    document.getElementById('stat-discusiones').textContent = discusiones.length;
+                    var totalRespuestas = discusiones.reduce((acc, d) => acc + d.total_respuestas, 0);
+                    document.getElementById('stat-respuestas').textContent = totalRespuestas;
+
+                    // ← AGREGAR AQUÍ
+                    fetch(API + '/usuarios')
+                        .then(r => r.json())
+                        .then(function (usuarios) {
+                            document.getElementById('stat-miembros').textContent = usuarios.length;
+                        });
+                    // ← HASTA AQUÍ
+
+                    renderDiscusiones(discusiones);
+
+                    if (!categoria_id) cargarCategorias(discusiones.length);
+                })
+                .catch(function () {
+                    document.getElementById('lista-posts').innerHTML =
+                        '<p style="text-align:center;color:#e53e3e;">Error al conectar con el servidor. ¿Está corriendo Node.js?</p>';
+                });
+        }
+
+        // ── Ordenar ──
+        document.getElementById('orden').addEventListener('change', function () {
+            var catActiva = document.querySelector('.categoria-item.activo');
+            var catId = catActiva ? catActiva.getAttribute('data-cat-id') : '';
+            cargarDiscusiones(catId, this.value);
+        });
+
+        // ── Buscador ──
+        document.getElementById('buscador').addEventListener('input', function () {
+            var q = this.value.toLowerCase();
+            document.querySelectorAll('.tarjeta-post').forEach(function (post) {
+                var titulo = post.querySelector('.post-titulo').textContent.toLowerCase();
+                post.style.display = titulo.includes(q) ? '' : 'none';
+            });
+        });
+
+        // ── Inicio ──
+        cargarDiscusiones('', 'reciente');
+    </script>
+
 </body>
+
 </html>

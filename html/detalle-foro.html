@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Detalle del Foro</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/detalle-foro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav>
+        <a href="home.html" class="nav-logo">
+            <img src="../contenido_multimedia/logo.png"
+                style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+            Shovel
+        </a>
+        <div class="nav-links">
+            <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+            <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+            <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+            <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
+            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
+        </div>
+    </nav>
+
+    <!-- ── CONTENIDO ── -->
+    <div class="page-wrapper">
+
+        <a href="foros.html" class="back-btn">
+            <i data-lucide="arrow-left"></i> Volver a los foros
+        </a>
+
+        <!-- ── TARJETA PRINCIPAL ── -->
+        <div class="detalle-card" id="detalle-card">
+            <p style="text-align:center;color:#888;">Cargando discusión...</p>
+        </div>
+
+        <!-- ── FORMULARIO DE RESPUESTA ── -->
+        <div class="reply-card">
+            <h3>Añadir una respuesta</h3>
+            <div id="form-reply">
+                <textarea id="reply-input" placeholder="Comparte tu opinión o experiencia..."></textarea>
+                <div class="reply-form-footer">
+                    <p class="reply-hint">Sé respetuoso y constructivo en tu respuesta</p>
+                    <button type="button" class="btn btn-primario" id="btn-publicar">
+                        <i data-lucide="send"></i> Publicar Respuesta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── LISTA DE RESPUESTAS ── -->
+        <div class="respuestas-seccion">
+            <h3 class="respuestas-titulo" id="respuestas-titulo">Respuestas (0)</h3>
+            <div id="lista-respuestas"></div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle"></i>
+        <span id="toast-msg">Acción realizada</span>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="../contenido_multimedia/logo.png" alt="">
+                    <span>Shovel</span>
+                </div>
+                <p>Tu plataforma confiable para encontrar el trabajo ideal</p>
+            </div>
+            <div class="footer-col">
+                <h4>Para Candidatos</h4>
+                <a href="buscar.html">Buscar Empleos</a>
+                <a href="perfil.html">Crear Perfil</a>
+                <a href="recursos.html">Recursos</a>
+            </div>
+            <div class="footer-col">
+                <h4>Para Empresas</h4>
+                <a href="publicar.html">Publicar Empleo</a>
+                <a href="#">Gestionar Vacantes</a>
+                <a href="#">Ver Candidatos</a>
+            </div>
+            <div class="footer-col">
+                <h4>Soporte</h4>
+                <a href="#">Centro de Ayuda</a>
+                <a href="#">Contacto</a>
+                <a href="#">Términos y Condiciones</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+    </footer>
+
+    <script>
+        const API = 'http://localhost:3000';
+
+        var params = new URLSearchParams(window.location.search);
+        var discusionId = params.get('id');
+        var usuario = JSON.parse(localStorage.getItem('usuario'));
+        var likedPrincipal = false;
+        var likedRespuestas = {};
+
+        lucide.createIcons();
+
+        var usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        // Ocultar boton admin si no es admin
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
+        }
+
+        // Ocultar boton publicar si no es empresa
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+            btnPublicar.style.display = 'none';
+        }
+
+        // ── Helpers ──
+        function getIniciales(nombre) {
+            return nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+        function getColorAvatar(iniciales) {
+            var colores = ['avatar-morado', 'avatar-verde', 'avatar-amarillo', 'avatar-rojo', 'avatar-azul'];
+            return colores[iniciales.charCodeAt(0) % colores.length];
+        }
+        function timeAgo(fechaStr) {
+            var diff = Math.floor((new Date() - new Date(fechaStr)) / 60000);
+            if (diff < 60) return 'Hace ' + diff + ' minutos';
+            if (diff < 1440) return 'Hace ' + Math.floor(diff / 60) + ' horas';
+            if (diff < 2880) return 'Hace 1 día';
+            return 'Hace ' + Math.floor(diff / 1440) + ' días';
+        }
+        function mostrarToast(msg) {
+            var toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.add('show');
+            lucide.createIcons();
+            setTimeout(function () { toast.classList.remove('show'); }, 2500);
+        }
+
+        // ── Renderizar discusión ──
+        function renderDiscusion(d) {
+            var iniciales = getIniciales(d.autor);
+            var color = getColorAvatar(iniciales);
+            var tags = (d.etiquetas || []).map(e => '<span class="post-hashtag">#' + e.nombre + '</span>').join('');
+            var destacado = d.destacado
+                ? '<span class="badge badge-morado"><i data-lucide="star"></i> Destacado</span>' : '';
+
+            document.getElementById('detalle-card').innerHTML = `
+        <div class="detalle-top">
+            <div class="detalle-badges">
+                ${destacado}
+                <span class="badge badge-cat">${d.categoria}</span>
+            </div>
+            <div class="detalle-acciones-top">
+                <button class="btn-icono" title="Compartir" id="btn-compartir">
+                    <i data-lucide="share-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <h1 class="detalle-titulo">${d.titulo}</h1>
+        <div class="detalle-hashtags">${tags}</div>
+
+        <div class="detalle-autor">
+            <div class="avatar ${color}">${iniciales}</div>
+            <div class="autor-info">
+                <p class="autor-nombre">${d.autor}</p>
+                <p class="autor-titulo">${d.titulo_pro || ''}</p>
+            </div>
+            <div class="autor-meta">
+                <span><i data-lucide="calendar"></i> ${timeAgo(d.fecha_creacion)}</span>
+                <span><i data-lucide="eye"></i> ${d.total_vistas} vistas</span>
+            </div>
+        </div>
+
+        <div class="detalle-contenido">${d.contenido.replace(/\n/g, '<br>')}</div>
+
+        <div class="detalle-footer">
+            <button class="btn-like" id="btn-like-principal">
+                <i data-lucide="thumbs-up"></i>
+                <span id="like-count">${d.total_likes}</span>
+            </button>
+            <div class="btn-respuestas">
+                <i data-lucide="message-circle"></i>
+                <span id="respuestas-count">${d.total_respuestas}</span> Respuestas
+            </div>
+        </div>
+    `;
+
+            document.title = 'Shovel - ' + d.titulo;
+            lucide.createIcons();
+
+            // Like principal
+            var likesGuardados = JSON.parse(localStorage.getItem('likes_discusiones') || '{}');
+            var yaLiked = likesGuardados[discusionId];
+            if (yaLiked) {
+                document.getElementById('btn-like-principal').classList.add('liked');
+            }
+
+            document.getElementById('btn-like-principal').addEventListener('click', function () {
+                var likesGuardados = JSON.parse(localStorage.getItem('likes_discusiones') || '{}');
+
+                if (likesGuardados[discusionId]) {
+                    mostrarToast('Ya le diste like a esta discusión');
+                    return;
+                }
+
+                fetch(API + '/foros/' + discusionId + '/like', { method: 'POST' })
+                    .then(r => r.json())
+                    .then(function () {
+                        likesGuardados[discusionId] = true;
+                        localStorage.setItem('likes_discusiones', JSON.stringify(likesGuardados));
+                        document.getElementById('btn-like-principal').classList.add('liked');
+                        document.getElementById('like-count').textContent = d.total_likes + 1;
+                    });
+            });
+
+
+            // Compartir
+            document.getElementById('btn-compartir').addEventListener('click', function () {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(window.location.href);
+                    mostrarToast('Enlace copiado al portapapeles');
+                }
+            });
+
+            // Renderizar respuestas
+            renderRespuestas(d.respuestas || []);
+        }
+
+        // ── Renderizar respuestas ──
+        function renderRespuestas(respuestas) {
+            var lista = document.getElementById('lista-respuestas');
+            var titulo = document.getElementById('respuestas-titulo');
+            if (titulo) titulo.textContent = 'Respuestas (' + respuestas.length + ')';
+
+            if (respuestas.length === 0) {
+                lista.innerHTML = '<p class="sin-respuestas">Sé el primero en responder esta discusión.</p>';
+                return;
+            }
+
+            lista.innerHTML = respuestas.map(function (r) {
+                var ini = getIniciales(r.autor);
+                var color = getColorAvatar(ini);
+                var liked = likedRespuestas[r.id];
+                return `
+        <div class="respuesta-card" id="respuesta-${r.id}">
+            <div class="respuesta-cabecera">
+                <div class="avatar ${color}">${ini}</div>
+                <div class="respuesta-autor-info">
+                    <p class="autor-nombre">${r.autor}</p>
+                    <p class="autor-titulo">${r.titulo_pro || ''}</p>
+                </div>
+                <span class="respuesta-fecha">${timeAgo(r.fecha_creacion)}</span>
+            </div>
+            <div class="respuesta-contenido">${r.contenido.replace(/\n/g, '<br>')}</div>
+            <div class="respuesta-acciones">
+                <button class="btn-like ${liked ? 'liked' : ''}" data-resp-id="${r.id}" data-likes="${r.total_likes}">
+                    <i data-lucide="thumbs-up"></i> ${r.total_likes + (liked ? 1 : 0)}
+                </button>
+                <button class="btn-responder" data-autor="${r.autor}">
+                    <i data-lucide="corner-down-right"></i> Responder
+                </button>
+            </div>
+        </div>`;
+            }).join('');
+
+            lucide.createIcons();
+
+            // Like respuestas
+            document.querySelectorAll('.btn-like[data-resp-id]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var rid = this.getAttribute('data-resp-id');
+                    var likesResp = JSON.parse(localStorage.getItem('likes_respuestas') || '{}');
+
+                    if (likesResp[rid]) {
+                        mostrarToast('Ya le diste like a esta respuesta');
+                        return;
+                    }
+
+                    fetch(API + '/foros/respuestas/' + rid + '/like', { method: 'POST' })
+                        .then(r => r.json())
+                        .then(function () {
+                            likesResp[rid] = true;
+                            localStorage.setItem('likes_respuestas', JSON.stringify(likesResp));
+                            cargarDiscusion();
+                        });
+                });
+            });
+
+            // Botón responder (rellena textarea)
+            document.querySelectorAll('.btn-responder').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var autor = this.getAttribute('data-autor');
+                    var textarea = document.getElementById('reply-input');
+                    textarea.value = '@' + autor + ' ';
+                    textarea.focus();
+                    textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+        }
+
+        // ── Publicar respuesta ──
+        document.getElementById('btn-publicar').addEventListener('click', function () {
+            var texto = document.getElementById('reply-input').value.trim();
+            if (!texto) return;
+
+            if (!usuario) {
+                mostrarToast('Debes iniciar sesión para responder');
+                return;
+            }
+
+            fetch(API + '/foros/' + discusionId + '/respuestas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    usuario_id: usuario.id,
+                    contenido: texto
+                })
+            })
+                .then(r => r.json())
+                .then(function (data) {
+                    if (data.error) { mostrarToast('Error: ' + data.error); return; }
+                    document.getElementById('reply-input').value = '';
+                    mostrarToast('¡Respuesta publicada!');
+                    cargarDiscusion(); // recargar para mostrar la nueva respuesta
+                })
+                .catch(function () {
+                    mostrarToast('Error al publicar la respuesta');
+                });
+        });
+
+        // ── Cargar discusión desde la API ──
+        function cargarDiscusion() {
+            if (!discusionId) {
+                document.getElementById('detalle-card').innerHTML =
+                    '<p style="color:#e53e3e;text-align:center;">No se especificó una discusión.</p>';
+                return;
+            }
+
+            fetch(API + '/foros/' + discusionId)
+                .then(r => r.json())
+                .then(function (data) {
+                    if (data.error) {
+                        document.getElementById('detalle-card').innerHTML =
+                            '<p style="color:#e53e3e;text-align:center;">' + data.error + '</p>';
+                        return;
+                    }
+                    renderDiscusion(data);
+                })
+                .catch(function () {
+                    document.getElementById('detalle-card').innerHTML =
+                        '<p style="color:#e53e3e;text-align:center;">Error al conectar con el servidor. ¿Está corriendo Node.js?</p>';
+                });
+        }
+
+        // ── Inicio ──
+        cargarDiscusion();
+    </script>
+
+</body>
+
+</html>

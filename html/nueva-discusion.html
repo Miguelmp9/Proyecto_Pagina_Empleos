@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shovel - Nueva Discusión</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/nueva-discusion.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <a href="home.html" class="nav-logo">
+        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+        Shovel
+    </a>
+    <div class="nav-links">
+        <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+        <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
+        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+        <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
+    </div>
+</nav>
+
+<!-- ── CONTENIDO ── -->
+<div class="page-wrapper">
+
+    <a href="foros.html" class="back-btn">
+        <i data-lucide="arrow-left"></i> Volver a los foros
+    </a>
+
+    <div class="page-header">
+        <h1>Crear Nueva Discusión</h1>
+        <p>Comparte tus ideas, preguntas o experiencias con la comunidad</p>
+    </div>
+
+    <div id="form-discusion">
+
+        <!-- Título -->
+        <div class="form-card">
+            <label class="field-label" for="titulo">
+                Título <span class="req">*</span>
+            </label>
+            <input type="text" id="titulo" maxlength="255"
+                placeholder="Escribe un título claro y descriptivo para tu discusión">
+            <p class="char-count" id="char-count">0 / 255 caracteres</p>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-card">
+            <label class="field-label" for="categoria">
+                Categoría <span class="req">*</span>
+            </label>
+            <div class="select-wrap">
+                <select id="categoria">
+                    <option value="" disabled selected>Cargando categorías...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="form-card">
+            <label class="field-label" for="contenido">
+                Contenido <span class="req">*</span>
+            </label>
+            <textarea id="contenido"
+                placeholder="Describe tu discusión con detalle..."></textarea>
+            <div class="tip-box">
+                💡 <strong>Consejo:</strong> Sé específico y claro en tu discusión.
+                Incluye toda la información relevante para que otros puedan ayudarte mejor.
+            </div>
+        </div>
+
+        <!-- Etiquetas -->
+        <div class="form-card">
+            <label class="field-label">
+                Etiquetas
+                <span class="field-label-opt">(Opcional — máximo 5)</span>
+            </label>
+            <p class="field-sub">Añade etiquetas para ayudar a otros a encontrar tu discusión</p>
+
+            <div class="tags-display" id="tags-display"></div>
+
+            <div class="tag-input-wrap" id="tag-input-wrap">
+                <i data-lucide="tag" class="tag-icon-left"></i>
+                <input type="text" id="tag-input"
+                    placeholder="Escribe o selecciona etiquetas" autocomplete="off">
+                <div class="tag-suggestions" id="tag-suggestions">
+                    <div class="tag-sug-header">Etiquetas populares</div>
+                    <div id="tag-sug-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pautas -->
+        <div class="guidelines-card">
+            <h3>Pautas de la Comunidad</h3>
+            <ul>
+                <li>Sé respetuoso y profesional en tus comentarios</li>
+                <li>Evita contenido ofensivo, spam o autopromoción excesiva</li>
+                <li>Verifica que tu pregunta no haya sido respondida antes</li>
+                <li>Usa un lenguaje claro y evita abreviaturas innecesarias</li>
+                <li>Agradece las respuestas útiles y marca las soluciones</li>
+            </ul>
+        </div>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+            <a href="foros.html" class="btn btn-borde">
+                <i data-lucide="x"></i> Cancelar
+            </a>
+            <button type="button" id="btn-publicar" class="btn btn-primario">
+                <i data-lucide="send"></i> Publicar Discusión
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <i data-lucide="check-circle"></i>
+    <span id="toast-msg">¡Discusión creada exitosamente!</span>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <div class="footer-logo">
+                <img src="../contenido_multimedia/logo.png" alt="">
+                <span>Shovel</span>
+            </div>
+            <p>Tu plataforma confiable para encontrar el trabajo ideal</p>
+        </div>
+        <div class="footer-col">
+            <h4>Para Candidatos</h4>
+            <a href="buscar.html">Buscar Empleos</a>
+            <a href="perfil.html">Crear Perfil</a>
+            <a href="recursos.html">Recursos</a>
+        </div>
+        <div class="footer-col">
+            <h4>Para Empresas</h4>
+            <a href="publicar.html">Publicar Empleo</a>
+            <a href="#">Gestionar Vacantes</a>
+            <a href="#">Ver Candidatos</a>
+        </div>
+        <div class="footer-col">
+            <h4>Soporte</h4>
+            <a href="#">Centro de Ayuda</a>
+            <a href="#">Contacto</a>
+            <a href="#">Términos y Condiciones</a>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+    const API = 'http://localhost:3000';
+
+
+
+
+    lucide.createIcons();
+
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    // Ocultar boton admin si no es admin
+    const btnAdmin = document.querySelector('a[href="admin.html"]');
+    if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+        btnAdmin.style.display = 'none';
+    }
+
+    // Ocultar boton publicar si no es empresa
+    const btnPublicar = document.querySelector('a[href="publicar.html"]');
+    if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+        btnPublicar.style.display = 'none';
+    }
+
+    // ── Cargar categorías desde la API ──
+    fetch(API + '/foros/categorias')
+        .then(r => r.json())
+        .then(function (cats) {
+            var select = document.getElementById('categoria');
+            select.innerHTML = '<option value="" disabled selected>Selecciona una categoría</option>';
+            cats.forEach(function (c) {
+                select.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+            });
+        })
+        .catch(function () {
+            document.getElementById('categoria').innerHTML =
+                '<option value="" disabled selected>Error al cargar categorías</option>';
+        });
+
+    // ── Contador de título ──
+    var inputTitulo = document.getElementById('titulo');
+    var charCount = document.getElementById('char-count');
+    inputTitulo.addEventListener('input', function () {
+        charCount.textContent = this.value.length + ' / 255 caracteres';
+    });
+
+    // ── Lógica de etiquetas ──
+    var popularTags = [
+        'Desarrollo Web', 'React', 'Node.js', 'Python', 'Marketing Digital',
+        'SEO', 'UX', 'UI', 'Diseño', 'Freelance', 'Remoto', 'Salario',
+        'Negociación', 'Entrevistas', 'Portfolio', 'Carrera', 'Aprendizaje',
+        'Soft Skills', 'Liderazgo', 'Productividad'
+    ];
+
+    var tags = [];
+    var tagsDisplay = document.getElementById('tags-display');
+    var tagInput = document.getElementById('tag-input');
+    var tagSuggestions = document.getElementById('tag-suggestions');
+    var tagSugList = document.getElementById('tag-sug-list');
+    var tagInputWrap = document.getElementById('tag-input-wrap');
+
+    function renderTags() {
+        tagsDisplay.innerHTML = '';
+        tags.forEach(function (tag) {
+            var pill = document.createElement('span');
+            pill.className = 'tag-pill';
+            pill.innerHTML = '#' + tag + '<button type="button" data-tag="' + tag + '">✕</button>';
+            pill.querySelector('button').addEventListener('click', function () {
+                tags = tags.filter(t => t !== this.getAttribute('data-tag'));
+                renderTags();
+            });
+            tagsDisplay.appendChild(pill);
+        });
+        tagInputWrap.style.display = tags.length >= 5 ? 'none' : 'block';
+    }
+
+    function addTag(tag) {
+        tag = tag.trim();
+        if (tag && !tags.includes(tag) && tags.length < 5) {
+            tags.push(tag);
+            tagInput.value = '';
+            hideSuggestions();
+            renderTags();
+        }
+    }
+
+    function showSuggestions(query) {
+        var filtered = popularTags.filter(t =>
+            t.toLowerCase().includes(query.toLowerCase()) && !tags.includes(t)
+        ).slice(0, 10);
+
+        tagSugList.innerHTML = '';
+        if (!filtered.length) { hideSuggestions(); return; }
+
+        filtered.forEach(function (t) {
+            var item = document.createElement('div');
+            item.className = 'tag-sug-item';
+            item.innerHTML = '<i data-lucide="plus"></i> #' + t;
+            item.addEventListener('mousedown', function (e) { e.preventDefault(); addTag(t); });
+            tagSugList.appendChild(item);
+        });
+        lucide.createIcons();
+        tagSuggestions.classList.add('visible');
+    }
+
+    function hideSuggestions() { tagSuggestions.classList.remove('visible'); }
+
+    tagInput.addEventListener('input', function () { showSuggestions(this.value); });
+    tagInput.addEventListener('focus', function () { showSuggestions(this.value); });
+    tagInput.addEventListener('blur', function () { setTimeout(hideSuggestions, 150); });
+    tagInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); if (this.value.trim()) addTag(this.value); }
+    });
+
+    // ── Toast ──
+    function mostrarToast(msg) {
+        document.getElementById('toast-msg').textContent = msg;
+        document.getElementById('toast').classList.add('show');
+        lucide.createIcons();
+        setTimeout(() => document.getElementById('toast').classList.remove('show'), 2500);
+    }
+
+    // ── Submit ──
+    document.getElementById('btn-publicar').addEventListener('click', function () {
+        var titulo = document.getElementById('titulo').value.trim();
+        var contenido = document.getElementById('contenido').value.trim();
+        var categoria = document.getElementById('categoria').value;
+        var hayError = false;
+
+        // Limpiar errores
+        ['titulo', 'contenido', 'categoria'].forEach(id => {
+            document.getElementById(id).style.borderColor = '';
+        });
+
+        if (!titulo) { document.getElementById('titulo').style.borderColor = 'var(--rojo)'; hayError = true; }
+        if (!contenido) { document.getElementById('contenido').style.borderColor = 'var(--rojo)'; hayError = true; }
+        if (!categoria) { document.getElementById('categoria').style.borderColor = 'var(--rojo)'; hayError = true; }
+        if (hayError) return;
+
+        if (!usuario) {
+            mostrarToast('Debes iniciar sesión para publicar');
+            return;
+        }
+
+        // Deshabilitar botón mientras se envía
+        var btn = document.getElementById('btn-publicar');
+        btn.disabled = true;
+        btn.textContent = 'Publicando...';
+
+        fetch(API + '/foros', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario_id: usuario.id,
+                categoria_id: parseInt(categoria),
+                titulo: titulo,
+                contenido: contenido,
+                etiquetas: tags
+            })
+        })
+            .then(r => r.json())
+            .then(function (data) {
+                if (data.error) {
+                    mostrarToast('Error: ' + data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="send"></i> Publicar Discusión';
+                    lucide.createIcons();
+                    return;
+                }
+                mostrarToast('¡Discusión creada exitosamente!');
+                setTimeout(() => window.location.href = 'foros.html', 1800);
+            })
+            .catch(function () {
+                mostrarToast('Error al conectar con el servidor');
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send"></i> Publicar Discusión';
+                lucide.createIcons();
+            });
+    });
+
+    // Limpiar bordes de error al escribir
+    ['titulo', 'contenido'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', function () {
+            this.style.borderColor = '';
+        });
+    });
+    document.getElementById('categoria').addEventListener('change', function () {
+        this.style.borderColor = '';
+    });
+</script>
+
+</body>
+
+</html>

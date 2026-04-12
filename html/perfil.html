@@ -52,40 +52,150 @@
     <!-- Tarjeta con tabs -->
     <div class="tarjeta">
         <div class="tabs">
-            <div class="tab activo" onclick="cambiarTab(this)">Vista General</div>
-            <div class="tab" onclick="cambiarTab(this)">Editar Perfil</div>
-            <div class="tab" onclick="cambiarTab(this)">Mis Postulaciones</div>
-            <div class="tab" onclick="cambiarTab(this)">Habilidades</div>
-            <div class="tab" onclick="cambiarTab(this)">Mis Valoraciones</div>
-            <div class="tab" onclick="cambiarTab(this)">Alertas</div>
+            <div class="tab activo" onclick="cambiarTab(this, 'vista-general')">Vista General</div>
+            <div class="tab" onclick="cambiarTab(this, 'editar-perfil')">Editar Perfil</div>
+            <div class="tab" onclick="cambiarTab(this, 'mis-postulaciones')">Mis Postulaciones</div>
+            <div class="tab" onclick="cambiarTab(this, 'habilidades')">Habilidades</div>
+            <div class="tab" onclick="cambiarTab(this, 'mis-valoraciones')">Mis Valoraciones</div>
+            <div class="tab" onclick="cambiarTab(this, 'alertas')">Alertas</div>
         </div>
 
-        <!-- Vista general -->
-        <div class="seccion-perfil">
-            <h3>Sobre Mí</h3>
-            <p id="perfil-sobre-mi">-</p>
-        </div>
-
-        <div class="seccion-perfil">
-            <h3>Currículum</h3>
-            <div class="tarjeta-cv">
-                <div class="cv-icono-wrap">
-                    <div class="cv-icono"><i data-lucide="file-text"></i></div>
-                    <div>
-                        <div class="cv-nombre">CV_2026.pdf</div>
-                        <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
+        <!-- Vista General -->
+        <div id="vista-general" class="contenido-tab">
+            <div class="seccion-perfil">
+                <h3>Sobre Mí</h3>
+                <p id="perfil-sobre-mi">-</p>
+            </div>
+            <div class="seccion-perfil">
+                <h3>Currículum</h3>
+                <div class="tarjeta-cv">
+                    <div class="cv-icono-wrap">
+                        <div class="cv-icono"><i data-lucide="file-text"></i></div>
+                        <div>
+                            <div class="cv-nombre">CV_2026.pdf</div>
+                            <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
+                        </div>
                     </div>
+                    <button class="btn btn-borde btn-pequeno">↑ Actualizar CV</button>
                 </div>
-                <button class="btn btn-borde btn-pequeno">↑ Actualizar CV</button>
+            </div>
+            <div class="seccion-perfil">
+                <h3>Experiencia Laboral</h3>
+                <div class="experiencia-item">
+                    <h4 id="perfil-titulo">-</h4>
+                    <p class="experiencia-empresa" id="perfil-sector">-</p>
+                    <p class="experiencia-desc" id="perfil-disponibilidad">-</p>
+                </div>
             </div>
         </div>
 
-        <div class="seccion-perfil">
-            <h3>Experiencia Laboral</h3>
-            <div class="experiencia-item">
-                <h4 id="perfil-titulo">-</h4>
-                <p class="experiencia-empresa" id="perfil-sector">-</p>
-                <p class="experiencia-desc" id="perfil-disponibilidad">-</p>
+        <!-- Editar Perfil -->
+        <div id="editar-perfil" class="contenido-tab" style="display:none;">
+            <div class="seccion-perfil">
+                <h3>Editar Información</h3>
+                <div id="mensaje-editar" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="grupo-input">
+                        <label>Nombre completo</label>
+                        <input class="input" type="text" id="edit-nombre">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Email</label>
+                        <input class="input" type="email" id="edit-email">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Teléfono</label>
+                        <input class="input" type="text" id="edit-telefono" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9\-]/g, '')">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Ubicación</label>
+                        <input class="input" type="text" id="edit-ubicacion">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Título Profesional</label>
+                        <input class="input" type="text" id="edit-titulo">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Años de Experiencia</label>
+                        <input class="input" type="number" id="edit-experiencia" min="0">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Disponibilidad</label>
+                        <input class="input" type="text" id="edit-disponibilidad">
+                    </div>
+                    <div class="grupo-input">
+                        <label>Sector Preferido</label>
+                        <input class="input" type="text" id="edit-sector">
+                    </div>
+                    <div class="grupo-input">
+                        <label>LinkedIn</label>
+                        <input class="input" type="text" id="edit-linkedin">
+                    </div>
+                    <div class="grupo-input">
+                        <label>GitHub</label>
+                        <input class="input" type="text" id="edit-github">
+                    </div>
+                </div>
+
+                <div class="grupo-input" style="margin-top:1rem;">
+                    <label>Sobre Mí</label>
+                    <textarea class="input" id="edit-sobre-mi" rows="4" style="resize:vertical;"></textarea>
+                </div>
+
+                <div style="margin-top:1rem; display:flex; gap:1rem;">
+                    <button class="btn btn-primario" onclick="guardarPerfil()">Guardar Cambios</button>
+                    <button class="btn btn-borde" onclick="cambiarTab(document.querySelector('.tab'), 'vista-general')">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mis Postulaciones -->
+        <div id="mis-postulaciones" class="contenido-tab" style="display:none;">
+            <div class="seccion-perfil">
+                <h3>Mis Postulaciones</h3>
+                <p style="color:var(--texto2);">Próximamente podrás ver tus postulaciones aquí.</p>
+            </div>
+        </div>
+
+        <!-- Habilidades -->
+        <div id="habilidades" class="contenido-tab" style="display:none;">
+            <div class="seccion-perfil">
+                <h3>Mis Habilidades</h3>
+                <div id="mensaje-habilidades" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+
+                <!-- Agregar habilidad -->
+                <div style="display:flex; gap:1rem; margin-bottom:1.5rem; align-items:center;">
+                    <input class="input" type="text" id="nueva-habilidad" placeholder="Ej: JavaScript, React, Python..." style="flex:1;">
+                    <select class="input" id="nivel-habilidad" style="width:160px;">
+                        <option value="Básico">Básico</option>
+                        <option value="Intermedio" selected>Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
+                        <option value="Experto">Experto</option>
+                    </select>
+                    <button class="btn btn-primario" onclick="agregarHabilidad()">+ Agregar</button>
+                </div>
+
+                <!-- Lista de habilidades -->
+                <div id="lista-habilidades" style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+                    <p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mis Valoraciones -->
+        <div id="mis-valoraciones" class="contenido-tab" style="display:none;">
+            <div class="seccion-perfil">
+                <h3>Mis Valoraciones</h3>
+                <p style="color:var(--texto2);">Próximamente podrás ver tus valoraciones aquí.</p>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alertas" class="contenido-tab" style="display:none;">
+            <div class="seccion-perfil">
+                <h3>Alertas de Empleo</h3>
+                <p style="color:var(--texto2);">Próximamente podrás configurar tus alertas aquí.</p>
             </div>
         </div>
 
@@ -96,51 +206,169 @@
 <footer><div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div></footer>
 
 <script>
-
-    
+    const API = 'http://localhost:3000';
     lucide.createIcons();
 
-    // Obtenemos el usuario del localStorage
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
     // Ocultar boton admin si no es admin
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
-            }
-        }
+    const btnAdmin = document.querySelector('a[href="admin.html"]');
+    if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+        btnAdmin.style.display = 'none';
+    }
+
+    // Ocultar boton publicar si no es empresa
+    const btnPublicar = document.querySelector('a[href="publicar.html"]');
+    if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+        btnPublicar.style.display = 'none';
+    }
 
     // Si no hay usuario redirigimos al login
     if (!usuario) {
         window.location.href = 'login.html';
-    } else {
-        // Cargamos los datos básicos del localStorage
-        document.getElementById('perfil-nombre').textContent = usuario.nombre_completo || '-';
-        document.getElementById('perfil-email').textContent = '✉ ' + (usuario.email || '-');
-
-        // Buscamos el resto de datos completos desde la API
-        fetch(`http://localhost:3000/usuarios/${usuario.id}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('perfil-cargo').textContent = data.titulo_profesional || '-';
-                document.getElementById('perfil-ubicacion').textContent = '📍 ' + (data.ubicacion || '-');
-                document.getElementById('perfil-telefono').textContent = '📞 ' + (data.telefono || '-');
-                document.getElementById('perfil-experiencia').textContent = '💼 ' + (data.anios_experiencia || '0') + ' años de experiencia';
-                document.getElementById('perfil-sobre-mi').textContent = data.sobre_mi || '-';
-                document.getElementById('perfil-titulo').textContent = data.titulo_profesional || '-';
-                document.getElementById('perfil-sector').textContent = data.sector_preferido || '-';
-                document.getElementById('perfil-disponibilidad').textContent = 'Disponibilidad: ' + (data.disponibilidad || '-');
-            })
-            .catch(error => console.error('Error al cargar perfil:', error));
     }
 
-    function cambiarTab(elemento) {
-        var tabs = document.querySelectorAll('.tab');
-        tabs.forEach(function(t) { t.classList.remove('activo'); });
+    // Datos completos del usuario desde la API
+    let datosUsuario = {};
+
+    // Cargar datos del perfil
+    fetch(`${API}/usuarios/${usuario.id}`)
+        .then(res => res.json())
+        .then(data => {
+            datosUsuario = data;
+
+            document.getElementById('perfil-nombre').textContent = data.nombre_completo || '-';
+            document.getElementById('perfil-email').textContent = '✉ ' + (data.email || '-');
+            document.getElementById('perfil-cargo').textContent = data.titulo_profesional || '-';
+            document.getElementById('perfil-ubicacion').textContent = '📍 ' + (data.ubicacion || '-');
+            document.getElementById('perfil-telefono').textContent = '📞 ' + (data.telefono || '-');
+            document.getElementById('perfil-experiencia').textContent = '💼 ' + (data.anios_experiencia || '0') + ' años de experiencia';
+            document.getElementById('perfil-sobre-mi').textContent = data.sobre_mi || '-';
+            document.getElementById('perfil-titulo').textContent = data.titulo_profesional || '-';
+            document.getElementById('perfil-sector').textContent = data.sector_preferido || '-';
+            document.getElementById('perfil-disponibilidad').textContent = 'Disponibilidad: ' + (data.disponibilidad || '-');
+
+            // Llenar formulario de editar
+            document.getElementById('edit-nombre').value = data.nombre_completo || '';
+            document.getElementById('edit-email').value = data.email || '';
+            document.getElementById('edit-telefono').value = data.telefono || '';
+            document.getElementById('edit-ubicacion').value = data.ubicacion || '';
+            document.getElementById('edit-titulo').value = data.titulo_profesional || '';
+            document.getElementById('edit-experiencia').value = data.anios_experiencia || '';
+            document.getElementById('edit-disponibilidad').value = data.disponibilidad || '';
+            document.getElementById('edit-sector').value = data.sector_preferido || '';
+            document.getElementById('edit-linkedin').value = data.linkedin_url || '';
+            document.getElementById('edit-github').value = data.github_url || '';
+            document.getElementById('edit-sobre-mi').value = data.sobre_mi || '';
+        })
+        .catch(error => console.error('Error al cargar perfil:', error));
+
+    // Cambiar tabs
+    function cambiarTab(elemento, tabId) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+        document.querySelectorAll('.contenido-tab').forEach(c => c.style.display = 'none');
         elemento.classList.add('activo');
+        document.getElementById(tabId).style.display = 'block';
     }
 
-    
+    // Guardar cambios del perfil
+    async function guardarPerfil() {
+        const datos = {
+            nombre_completo: document.getElementById('edit-nombre').value.trim(),
+            email: document.getElementById('edit-email').value.trim(),
+            telefono: document.getElementById('edit-telefono').value.trim(),
+            ubicacion: document.getElementById('edit-ubicacion').value.trim(),
+            titulo_profesional: document.getElementById('edit-titulo').value.trim(),
+            anios_experiencia: parseInt(document.getElementById('edit-experiencia').value) || 0,
+            disponibilidad: document.getElementById('edit-disponibilidad').value.trim(),
+            sector_preferido: document.getElementById('edit-sector').value.trim(),
+            linkedin_url: document.getElementById('edit-linkedin').value.trim(),
+            github_url: document.getElementById('edit-github').value.trim(),
+            sobre_mi: document.getElementById('edit-sobre-mi').value.trim()
+        };
+
+        try {
+            const res = await fetch(`${API}/usuarios/${usuario.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+
+            const data = await res.json();
+            const msg = document.getElementById('mensaje-editar');
+
+            if (!res.ok) {
+                msg.textContent = data.error || 'Error al guardar';
+                msg.style.display = 'block';
+                msg.style.backgroundColor = '#ff4d4d33';
+                msg.style.color = '#ff4d4d';
+                msg.style.border = '1px solid #ff4d4d';
+                return;
+            }
+
+            // Actualizar localStorage
+            localStorage.setItem('usuario', JSON.stringify({ ...usuario, nombre_completo: datos.nombre_completo, email: datos.email }));
+
+            // Actualizar header del perfil
+            document.getElementById('perfil-nombre').textContent = datos.nombre_completo;
+            document.getElementById('perfil-cargo').textContent = datos.titulo_profesional;
+            document.getElementById('perfil-ubicacion').textContent = '📍 ' + datos.ubicacion;
+            document.getElementById('perfil-email').textContent = '✉ ' + datos.email;
+            document.getElementById('perfil-telefono').textContent = '📞 ' + datos.telefono;
+            document.getElementById('perfil-experiencia').textContent = '💼 ' + datos.anios_experiencia + ' años de experiencia';
+            document.getElementById('perfil-sobre-mi').textContent = datos.sobre_mi;
+
+            msg.textContent = '✓ Perfil actualizado correctamente';
+            msg.style.display = 'block';
+            msg.style.backgroundColor = '#4CAF5033';
+            msg.style.color = '#4CAF50';
+            msg.style.border = '1px solid #4CAF50';
+
+            setTimeout(() => msg.style.display = 'none', 3000);
+
+        } catch (error) {
+            console.error('Error al guardar perfil:', error);
+        }
+    }
+
+    // Habilidades guardadas en localStorage
+    let habilidades = JSON.parse(localStorage.getItem('habilidades_' + usuario.id)) || [];
+
+    function renderHabilidades() {
+        const lista = document.getElementById('lista-habilidades');
+        if (habilidades.length === 0) {
+            lista.innerHTML = '<p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>';
+            return;
+        }
+        lista.innerHTML = habilidades.map((h, i) => `
+            <div style="display:flex; align-items:center; gap:0.5rem; background:var(--tarjeta2); border:1px solid var(--borde); border-radius:20px; padding:6px 14px;">
+                <span style="font-size:0.875rem; font-weight:500;">${h.nombre}</span>
+                <span style="font-size:0.75rem; color:var(--morado);">${h.nivel}</span>
+                <button onclick="eliminarHabilidad(${i})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.75rem; padding:0; margin-left:4px;">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function agregarHabilidad() {
+        const nombre = document.getElementById('nueva-habilidad').value.trim();
+        const nivel = document.getElementById('nivel-habilidad').value;
+
+        if (!nombre) return;
+
+        habilidades.push({ nombre, nivel });
+        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
+        document.getElementById('nueva-habilidad').value = '';
+        renderHabilidades();
+    }
+
+    function eliminarHabilidad(index) {
+        habilidades.splice(index, 1);
+        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
+        renderHabilidades();
+    }
+
+    renderHabilidades();
 </script>
 </body>
+
 </html>
