@@ -217,6 +217,12 @@
         btnAdmin.style.display = 'none';
     }
 
+    // Ocultar boton publicar si no es empresa
+    const btnPublicar = document.querySelector('a[href="publicar.html"]');
+    if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+        btnPublicar.style.display = 'none';
+    }
+
     // Si no hay usuario redirigimos al login
     if (!usuario) {
         window.location.href = 'login.html';
@@ -364,4 +370,5 @@
     renderHabilidades();
 </script>
 </body>
+
 </html>

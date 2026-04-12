@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,342 +10,353 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
+
 <body>
 
-<!-- Navbar -->
-<nav>
-    <a href="home.html" class="nav-logo">
-        <div class="logo-icono">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                <rect x="2" y="7" width="20" height="14" rx="2" fill="white"/>
-                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="white" stroke-width="2" fill="none"/>
-            </svg>
+    <!-- Navbar -->
+    <nav>
+        <a href="home.html" class="nav-logo">
+            <div class="logo-icono">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <rect x="2" y="7" width="20" height="14" rx="2" fill="white" />
+                    <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="white" stroke-width="2" fill="none" />
+                </svg>
+            </div>
+            Shovel
+        </a>
+        <div class="nav-links">
+            <a href="buscar.html" class="nav-link activo"><i data-lucide="search"></i> Buscar Empleos</a>
+            <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+            <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+            <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
+            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
         </div>
-        Shovel
-    </a>
-    <div class="nav-links">
-        <a href="buscar.html" class="nav-link activo"><i data-lucide="search"></i> Buscar Empleos</a>
-        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
-        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
-        <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
-        <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
-    </div>
-</nav>
+    </nav>
 
-<div class="contenedor-detalle">
+    <div class="contenedor-detalle">
 
-    <!-- Boton de volver -->
-    <a href="buscar.html" class="boton-volver">
-        <i data-lucide="arrow-left" style="width:15px; height:15px;"></i>
-        Volver a resultados
-    </a>
+        <!-- Boton de volver -->
+        <a href="buscar.html" class="boton-volver">
+            <i data-lucide="arrow-left" style="width:15px; height:15px;"></i>
+            Volver a resultados
+        </a>
 
-    <!-- Cabecera del empleo -->
-    <div class="empleo-header" id="empleo-header">
-        <!-- Se llena con JavaScript -->
-    </div>
-
-    <!-- Layout de dos columnas -->
-    <div class="detalle-layout">
-
-        <!-- Columna izquierda: descripcion -->
-        <div>
-            <div class="seccion-descripcion">
-                <h2>Descripción del Puesto</h2>
-                <p id="descripcion-texto">Estamos buscando un profesional apasionado para unirse a nuestro equipo. Serás responsable de liderar proyectos estratégicos y colaborar con equipos multidisciplinarios para alcanzar los objetivos de la empresa.</p>
-                <p>El candidato ideal tiene experiencia sólida en su área, capacidad para trabajar de manera autónoma y habilidades de comunicación excepcionales. Valoramos la creatividad, la proactividad y el compromiso con la calidad.</p>
-            </div>
-
-            <div class="seccion-descripcion">
-                <h2>Requisitos</h2>
-                <ul class="lista-requisitos" id="lista-requisitos">
-                    <!-- Se llena con JavaScript -->
-                </ul>
-            </div>
-
-            <div class="seccion-descripcion">
-                <h2>Lo que ofrecemos</h2>
-                <ul class="lista-requisitos">
-                    <li>Salario competitivo según experiencia</li>
-                    <li>Modalidad de trabajo flexible</li>
-                    <li>Plan de desarrollo profesional</li>
-                    <li>Seguro médico y beneficios adicionales</li>
-                    <li>Ambiente de trabajo colaborativo e innovador</li>
-                    <li>Vacaciones adicionales al mínimo legal</li>
-                </ul>
-            </div>
+        <!-- Cabecera del empleo -->
+        <div class="empleo-header" id="empleo-header">
+            <!-- Se llena con JavaScript -->
         </div>
 
-        <!-- Columna derecha: info adicional -->
-        <div class="sidebar-info">
+        <!-- Layout de dos columnas -->
+        <div class="detalle-layout">
 
-            <!-- Boton de postularse -->
-            <div class="barra-postular">
-                <button class="btn btn-primario" style="width:100%; font-size:1rem; padding:14px;" onclick="postularse()">
-                    Postularme Ahora
-                </button>
-                <p>Al postularte aceptas que tu perfil sea visible para la empresa</p>
-            </div>
+            <!-- Columna izquierda: descripcion -->
+            <div>
+                <div class="seccion-descripcion">
+                    <h2>Descripción del Puesto</h2>
+                    <p id="descripcion-texto">Estamos buscando un profesional apasionado para unirse a nuestro equipo.
+                        Serás responsable de liderar proyectos estratégicos y colaborar con equipos multidisciplinarios
+                        para alcanzar los objetivos de la empresa.</p>
+                    <p>El candidato ideal tiene experiencia sólida en su área, capacidad para trabajar de manera
+                        autónoma y habilidades de comunicación excepcionales. Valoramos la creatividad, la proactividad
+                        y el compromiso con la calidad.</p>
+                </div>
 
-            <!-- Info del empleo -->
-            <div class="tarjeta-info">
-                <h3>Información del Empleo</h3>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Nivel</span>
-                    <span class="info-valor" id="info-nivel">-</span>
+                <div class="seccion-descripcion">
+                    <h2>Requisitos</h2>
+                    <ul class="lista-requisitos" id="lista-requisitos">
+                        <!-- Se llena con JavaScript -->
+                    </ul>
                 </div>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Tipo</span>
-                    <span class="info-valor" id="info-tipo">-</span>
-                </div>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Ubicación</span>
-                    <span class="info-valor" id="info-ubicacion">-</span>
-                </div>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Salario</span>
-                    <span class="info-valor" id="info-salario" style="color: var(--verde);">-</span>
-                </div>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Sector</span>
-                    <span class="info-valor" id="info-sector">-</span>
-                </div>
-                <div class="info-fila">
-                    <span class="info-etiqueta">Publicado</span>
-                    <span class="info-valor" id="info-tiempo">-</span>
+
+                <div class="seccion-descripcion">
+                    <h2>Lo que ofrecemos</h2>
+                    <ul class="lista-requisitos">
+                        <li>Salario competitivo según experiencia</li>
+                        <li>Modalidad de trabajo flexible</li>
+                        <li>Plan de desarrollo profesional</li>
+                        <li>Seguro médico y beneficios adicionales</li>
+                        <li>Ambiente de trabajo colaborativo e innovador</li>
+                        <li>Vacaciones adicionales al mínimo legal</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Info de la empresa -->
-            <div class="tarjeta-empresa">
-                <h3>Sobre la Empresa</h3>
-                <div class="empresa-logo">🏢</div>
-                <div class="empresa-nombre" id="empresa-nombre">-</div>
-                <div class="empresa-sector" id="empresa-sector">-</div>
-                <p class="empresa-desc">
-                    Empresa líder en su sector con más de 10 años de experiencia en el mercado.
-                    Comprometida con la innovación y el desarrollo del talento humano.
-                </p>
-            </div>
+            <!-- Columna derecha: info adicional -->
+            <div class="sidebar-info">
 
+                <!-- Boton de postularse -->
+                <div class="barra-postular">
+                    <button class="btn btn-primario" style="width:100%; font-size:1rem; padding:14px;"
+                        onclick="postularse()">
+                        Postularme Ahora
+                    </button>
+                    <p>Al postularte aceptas que tu perfil sea visible para la empresa</p>
+                </div>
+
+                <!-- Info del empleo -->
+                <div class="tarjeta-info">
+                    <h3>Información del Empleo</h3>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Nivel</span>
+                        <span class="info-valor" id="info-nivel">-</span>
+                    </div>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Tipo</span>
+                        <span class="info-valor" id="info-tipo">-</span>
+                    </div>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Ubicación</span>
+                        <span class="info-valor" id="info-ubicacion">-</span>
+                    </div>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Salario</span>
+                        <span class="info-valor" id="info-salario" style="color: var(--verde);">-</span>
+                    </div>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Sector</span>
+                        <span class="info-valor" id="info-sector">-</span>
+                    </div>
+                    <div class="info-fila">
+                        <span class="info-etiqueta">Publicado</span>
+                        <span class="info-valor" id="info-tiempo">-</span>
+                    </div>
+                </div>
+
+                <!-- Info de la empresa -->
+                <div class="tarjeta-empresa">
+                    <h3>Sobre la Empresa</h3>
+                    <div class="empresa-logo">🏢</div>
+                    <div class="empresa-nombre" id="empresa-nombre">-</div>
+                    <div class="empresa-sector" id="empresa-sector">-</div>
+                    <p class="empresa-desc">
+                        Empresa líder en su sector con más de 10 años de experiencia en el mercado.
+                        Comprometida con la innovación y el desarrollo del talento humano.
+                    </p>
+                </div>
+
+            </div>
         </div>
+
     </div>
 
-</div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+    </footer>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
-</footer>
+    <script>
 
-<script>
-
-    // Ocultar boton admin si no es admin
         const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        // Ocultar boton admin si no es admin
         const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
+        }
+
+        // Ocultar boton publicar si no es empresa
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+            btnPublicar.style.display = 'none';
+        }
+
+        // Los mismos datos de empleos que en buscar.html
+        // En un proyecto real esto vendria de una API o base de datos
+        var empleos = [
+            {
+                id: 1,
+                titulo: "Senior Frontend Developer",
+                empresa: "TechCorp Inc.",
+                ubicacion: "Madrid, España",
+                tipo: "Tiempo Completo",
+                salario: "$60k - $80k",
+                nivel: "Senior",
+                sector: "Tecnología",
+                tiempo: "Hace 2 días",
+                requisitos: [
+                    "5+ años de experiencia en desarrollo frontend",
+                    "Dominio de React, TypeScript y CSS moderno",
+                    "Experiencia con Git y metodologías ágiles",
+                    "Capacidad para liderar equipos pequeños",
+                    "Inglés intermedio o avanzado"
+                ]
+            },
+            {
+                id: 2,
+                titulo: "UX/UI Designer",
+                empresa: "DesignHub",
+                ubicacion: "Barcelona, España",
+                tipo: "Remoto",
+                salario: "$50k - $70k",
+                nivel: "Mid-Level",
+                sector: "Diseño",
+                tiempo: "Hace 1 día",
+                requisitos: [
+                    "3+ años de experiencia en diseño UX/UI",
+                    "Dominio de Figma o Adobe XD",
+                    "Portafolio con proyectos reales",
+                    "Conocimiento de principios de accesibilidad",
+                    "Habilidad para comunicar decisiones de diseño"
+                ]
+            },
+            {
+                id: 3,
+                titulo: "Marketing Manager",
+                empresa: "Growth Marketing",
+                ubicacion: "Valencia, España",
+                tipo: "Tiempo Completo",
+                salario: "$55k - $75k",
+                nivel: "Senior",
+                sector: "Marketing",
+                tiempo: "Hace 3 días",
+                requisitos: [
+                    "4+ años de experiencia en marketing digital",
+                    "Experiencia en gestión de campañas SEM y SEO",
+                    "Dominio de herramientas de analítica (GA4, etc.)",
+                    "Habilidades de liderazgo y gestión de equipos",
+                    "Orientación a resultados y métricas"
+                ]
+            },
+            {
+                id: 4,
+                titulo: "Data Analyst",
+                empresa: "DataInsights",
+                ubicacion: "Sevilla, España",
+                tipo: "Híbrido",
+                salario: "$45k - $60k",
+                nivel: "Mid-Level",
+                sector: "Tecnología",
+                tiempo: "Hace 5 días",
+                requisitos: [
+                    "2+ años de experiencia en análisis de datos",
+                    "Dominio de SQL y Python",
+                    "Experiencia con herramientas BI (Tableau, Power BI)",
+                    "Habilidad para comunicar insights de manera clara",
+                    "Conocimiento en estadística y probabilidad"
+                ]
+            },
+            {
+                id: 5,
+                titulo: "Product Manager",
+                empresa: "InnovateLabs",
+                ubicacion: "Bilbao, España",
+                tipo: "Tiempo Completo",
+                salario: "$70k - $90k",
+                nivel: "Senior",
+                sector: "Tecnología",
+                tiempo: "Hace 1 semana",
+                requisitos: [
+                    "5+ años de experiencia como Product Manager",
+                    "Experiencia en productos digitales B2B o B2C",
+                    "Dominio de metodologías ágiles (Scrum, Kanban)",
+                    "Capacidad para priorizar backlog y definir roadmap",
+                    "Excelentes habilidades de comunicación"
+                ]
+            },
+            {
+                id: 6,
+                titulo: "Content Writer",
+                empresa: "ContentPro",
+                ubicacion: "Remoto",
+                tipo: "Freelance",
+                salario: "$30k - $45k",
+                nivel: "Junior",
+                sector: "Marketing",
+                tiempo: "Hace 4 días",
+                requisitos: [
+                    "1+ año de experiencia en redacción de contenido",
+                    "Excelente ortografía y gramática en español",
+                    "Conocimientos básicos de SEO",
+                    "Capacidad para adaptarse a diferentes tonos de marca",
+                    "Manejo de WordPress u otros CMS"
+                ]
             }
+        ];
+
+        // Obtener el id del empleo desde la URL (ej: ?id=1)
+        function obtenerIdDeUrl() {
+            var params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id'));
         }
-    lucide.createIcons();
 
-    // Los mismos datos de empleos que en buscar.html
-    // En un proyecto real esto vendria de una API o base de datos
-    var empleos = [
-        {
-            id: 1,
-            titulo: "Senior Frontend Developer",
-            empresa: "TechCorp Inc.",
-            ubicacion: "Madrid, España",
-            tipo: "Tiempo Completo",
-            salario: "$60k - $80k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 2 días",
-            requisitos: [
-                "5+ años de experiencia en desarrollo frontend",
-                "Dominio de React, TypeScript y CSS moderno",
-                "Experiencia con Git y metodologías ágiles",
-                "Capacidad para liderar equipos pequeños",
-                "Inglés intermedio o avanzado"
-            ]
-        },
-        {
-            id: 2,
-            titulo: "UX/UI Designer",
-            empresa: "DesignHub",
-            ubicacion: "Barcelona, España",
-            tipo: "Remoto",
-            salario: "$50k - $70k",
-            nivel: "Mid-Level",
-            sector: "Diseño",
-            tiempo: "Hace 1 día",
-            requisitos: [
-                "3+ años de experiencia en diseño UX/UI",
-                "Dominio de Figma o Adobe XD",
-                "Portafolio con proyectos reales",
-                "Conocimiento de principios de accesibilidad",
-                "Habilidad para comunicar decisiones de diseño"
-            ]
-        },
-        {
-            id: 3,
-            titulo: "Marketing Manager",
-            empresa: "Growth Marketing",
-            ubicacion: "Valencia, España",
-            tipo: "Tiempo Completo",
-            salario: "$55k - $75k",
-            nivel: "Senior",
-            sector: "Marketing",
-            tiempo: "Hace 3 días",
-            requisitos: [
-                "4+ años de experiencia en marketing digital",
-                "Experiencia en gestión de campañas SEM y SEO",
-                "Dominio de herramientas de analítica (GA4, etc.)",
-                "Habilidades de liderazgo y gestión de equipos",
-                "Orientación a resultados y métricas"
-            ]
-        },
-        {
-            id: 4,
-            titulo: "Data Analyst",
-            empresa: "DataInsights",
-            ubicacion: "Sevilla, España",
-            tipo: "Híbrido",
-            salario: "$45k - $60k",
-            nivel: "Mid-Level",
-            sector: "Tecnología",
-            tiempo: "Hace 5 días",
-            requisitos: [
-                "2+ años de experiencia en análisis de datos",
-                "Dominio de SQL y Python",
-                "Experiencia con herramientas BI (Tableau, Power BI)",
-                "Habilidad para comunicar insights de manera clara",
-                "Conocimiento en estadística y probabilidad"
-            ]
-        },
-        {
-            id: 5,
-            titulo: "Product Manager",
-            empresa: "InnovateLabs",
-            ubicacion: "Bilbao, España",
-            tipo: "Tiempo Completo",
-            salario: "$70k - $90k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 1 semana",
-            requisitos: [
-                "5+ años de experiencia como Product Manager",
-                "Experiencia en productos digitales B2B o B2C",
-                "Dominio de metodologías ágiles (Scrum, Kanban)",
-                "Capacidad para priorizar backlog y definir roadmap",
-                "Excelentes habilidades de comunicación"
-            ]
-        },
-        {
-            id: 6,
-            titulo: "Content Writer",
-            empresa: "ContentPro",
-            ubicacion: "Remoto",
-            tipo: "Freelance",
-            salario: "$30k - $45k",
-            nivel: "Junior",
-            sector: "Marketing",
-            tiempo: "Hace 4 días",
-            requisitos: [
-                "1+ año de experiencia en redacción de contenido",
-                "Excelente ortografía y gramática en español",
-                "Conocimientos básicos de SEO",
-                "Capacidad para adaptarse a diferentes tonos de marca",
-                "Manejo de WordPress u otros CMS"
-            ]
-        }
-    ];
-
-    // Obtener el id del empleo desde la URL (ej: ?id=1)
-    function obtenerIdDeUrl() {
-        var params = new URLSearchParams(window.location.search);
-        return parseInt(params.get('id'));
-    }
-
-    // Buscar el empleo por id
-    function encontrarEmpleo(id) {
-        for (var i = 0; i < empleos.length; i++) {
-            if (empleos[i].id === id) {
-                return empleos[i];
+        // Buscar el empleo por id
+        function encontrarEmpleo(id) {
+            for (var i = 0; i < empleos.length; i++) {
+                if (empleos[i].id === id) {
+                    return empleos[i];
+                }
             }
-        }
-        return null;
-    }
-
-    // Llenar la pagina con los datos del empleo
-    function cargarEmpleo() {
-        var id = obtenerIdDeUrl();
-        var empleo = encontrarEmpleo(id);
-
-        // Si no se encuentra el empleo, mostrar mensaje
-        if (!empleo) {
-            document.getElementById('empleo-header').innerHTML = '<p style="color: var(--texto2);">Empleo no encontrado.</p>';
-            return;
+            return null;
         }
 
-        // Actualizar el titulo de la pagina
-        document.title = 'Shovel - ' + empleo.titulo;
+        // Llenar la pagina con los datos del empleo
+        function cargarEmpleo() {
+            var id = obtenerIdDeUrl();
+            var empleo = encontrarEmpleo(id);
 
-        // Llenar la cabecera
-        var header = document.getElementById('empleo-header');
-        header.innerHTML =
-            '<div class="empleo-header-izq">' +
+            // Si no se encuentra el empleo, mostrar mensaje
+            if (!empleo) {
+                document.getElementById('empleo-header').innerHTML = '<p style="color: var(--texto2);">Empleo no encontrado.</p>';
+                return;
+            }
+
+            // Actualizar el titulo de la pagina
+            document.title = 'Shovel - ' + empleo.titulo;
+
+            // Llenar la cabecera
+            var header = document.getElementById('empleo-header');
+            header.innerHTML =
+                '<div class="empleo-header-izq">' +
                 '<h1>' + empleo.titulo + '</h1>' +
                 '<p class="empleo-header-empresa">' + empleo.empresa + '</p>' +
                 '<div class="empleo-header-meta">' +
-                    '<span><i data-lucide="map-pin"></i>' + empleo.ubicacion + '</span>' +
-                    '<span><i data-lucide="clock"></i>' + empleo.tipo + '</span>' +
-                    '<span><i data-lucide="dollar-sign"></i>' + empleo.salario + '</span>' +
+                '<span><i data-lucide="map-pin"></i>' + empleo.ubicacion + '</span>' +
+                '<span><i data-lucide="clock"></i>' + empleo.tipo + '</span>' +
+                '<span><i data-lucide="dollar-sign"></i>' + empleo.salario + '</span>' +
                 '</div>' +
                 '<div class="empleo-header-tags">' +
-                    '<span class="tag">' + empleo.nivel + '</span>' +
-                    '<span class="tag">' + empleo.sector + '</span>' +
+                '<span class="tag">' + empleo.nivel + '</span>' +
+                '<span class="tag">' + empleo.sector + '</span>' +
                 '</div>' +
-            '</div>' +
-            '<div class="empleo-header-der">' +
+                '</div>' +
+                '<div class="empleo-header-der">' +
                 '<span class="empleo-publicado">Publicado ' + empleo.tiempo + '</span>' +
                 '<button class="btn btn-borde btn-pequeno">🔖 Guardar</button>' +
-            '</div>';
+                '</div>';
 
-        // Llenar la info lateral
-        document.getElementById('info-nivel').textContent = empleo.nivel;
-        document.getElementById('info-tipo').textContent = empleo.tipo;
-        document.getElementById('info-ubicacion').textContent = empleo.ubicacion;
-        document.getElementById('info-salario').textContent = empleo.salario;
-        document.getElementById('info-sector').textContent = empleo.sector;
-        document.getElementById('info-tiempo').textContent = empleo.tiempo;
-        document.getElementById('empresa-nombre').textContent = empleo.empresa;
-        document.getElementById('empresa-sector').textContent = empleo.sector;
+            // Llenar la info lateral
+            document.getElementById('info-nivel').textContent = empleo.nivel;
+            document.getElementById('info-tipo').textContent = empleo.tipo;
+            document.getElementById('info-ubicacion').textContent = empleo.ubicacion;
+            document.getElementById('info-salario').textContent = empleo.salario;
+            document.getElementById('info-sector').textContent = empleo.sector;
+            document.getElementById('info-tiempo').textContent = empleo.tiempo;
+            document.getElementById('empresa-nombre').textContent = empleo.empresa;
+            document.getElementById('empresa-sector').textContent = empleo.sector;
 
-        // Llenar los requisitos
-        var listaReq = document.getElementById('lista-requisitos');
-        var htmlReq = '';
-        for (var i = 0; i < empleo.requisitos.length; i++) {
-            htmlReq += '<li>' + empleo.requisitos[i] + '</li>';
+            // Llenar los requisitos
+            var listaReq = document.getElementById('lista-requisitos');
+            var htmlReq = '';
+            for (var i = 0; i < empleo.requisitos.length; i++) {
+                htmlReq += '<li>' + empleo.requisitos[i] + '</li>';
+            }
+            listaReq.innerHTML = htmlReq;
+
+            // Re-inicializar iconos de lucide porque agregamos HTML dinamico
+            lucide.createIcons();
         }
-        listaReq.innerHTML = htmlReq;
 
-        // Re-inicializar iconos de lucide porque agregamos HTML dinamico
-        lucide.createIcons();
-    }
+        // Funcion para postularse (por ahora solo muestra una alerta)
+        function postularse() {
+            alert('¡Postulación enviada! En un proyecto real aquí iría la lógica del backend.');
+        }
 
-    // Funcion para postularse (por ahora solo muestra una alerta)
-    function postularse() {
-        alert('¡Postulación enviada! En un proyecto real aquí iría la lógica del backend.');
-    }
-
-    // Cargar el empleo cuando la pagina carga
-    cargarEmpleo();
-</script>
+        // Cargar el empleo cuando la pagina carga
+        cargarEmpleo();
+    </script>
 
 
 </body>
+
 </html>

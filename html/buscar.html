@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,299 +10,309 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
+
 <body>
 
-<!-- Navbar -->
-<nav>
-    <a href="home.html" class="nav-logo">
-        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
-        Shovel
-    </a>
-    <div class="nav-links">
-        <a href="buscar.html" class="nav-link activo"><i data-lucide="search"></i> Buscar Empleos</a>
-        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
-        <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
-        <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
-        <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+    <!-- Navbar -->
+    <nav>
+        <a href="home.html" class="nav-logo">
+            <img src="../contenido_multimedia/logo.png"
+                style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+            Shovel
+        </a>
+        <div class="nav-links">
+            <a href="buscar.html" class="nav-link activo"><i data-lucide="search"></i> Buscar Empleos</a>
+            <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+            <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
+            <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
+            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+        </div>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="encabezado-pagina">
+        <h1>Resultados de Búsqueda</h1>
+        <p id="conteo-resultados">Se encontraron 6 empleos que coinciden con tu búsqueda</p>
     </div>
-</nav>
 
-<!-- Encabezado -->
-<div class="encabezado-pagina">
-    <h1>Resultados de Búsqueda</h1>
-    <p id="conteo-resultados">Se encontraron 6 empleos que coinciden con tu búsqueda</p>
-</div>
+    <!-- Contenido principal -->
+    <div class="contenedor-busqueda">
 
-<!-- Contenido principal -->
-<div class="contenedor-busqueda">
+        <!-- Sidebar filtros -->
+        <div class="sidebar-filtros">
+            <div class="tarjeta">
+                <div class="titulo-filtros">
+                    <i data-lucide="filter"></i>
+                    Filtros
+                </div>
 
-    <!-- Sidebar filtros -->
-    <div class="sidebar-filtros">
-        <div class="tarjeta">
-            <div class="titulo-filtros">
-                <i data-lucide="filter"></i>
-                Filtros
+                <div class="seccion-filtro">
+                    <h4>Nivel de Experiencia</h4>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Junior</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Mid-Level</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Senior</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Ejecutivo</div>
+                </div>
+
+                <div class="seccion-filtro">
+                    <h4>Sector Laboral</h4>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Tecnología</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Marketing</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Diseño</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Finanzas</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Educación</div>
+                </div>
+
+                <div class="seccion-filtro">
+                    <h4>Tipo de Contrato</h4>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Tiempo Completo</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Medio Tiempo</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Remoto</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Híbrido</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">Freelance</div>
+                </div>
+
+                <div class="seccion-filtro">
+                    <h4>Rango Salarial</h4>
+                    <div class="opcion-filtro" onclick="filtrar(this)">$0 - $30k</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">$30k - $60k</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">$60k - $100k</div>
+                    <div class="opcion-filtro" onclick="filtrar(this)">$100k+</div>
+                </div>
+
+                <button class="btn btn-borde" style="width:100%; margin-top:0.5rem; font-size:0.8rem;"
+                    onclick="limpiarFiltros()">
+                    Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div style="flex: 1;">
+
+            <!-- Barra de búsqueda -->
+            <div class="barra-busqueda">
+                <div class="input-wrap">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="buscador" placeholder="Título del empleo o palabra clave"
+                        oninput="buscarEmpleos()">
+                </div>
+                <div class="input-wrap" style="flex: 0.7;">
+                    <i data-lucide="map-pin"></i>
+                    <input type="text" placeholder="Ubicación" style="padding-left: 34px;">
+                </div>
+                <button class="btn btn-primario" onclick="buscarEmpleos()">
+                    <i data-lucide="search" style="width:14px; height:14px;"></i>
+                    Buscar Empleos
+                </button>
             </div>
 
-            <div class="seccion-filtro">
-                <h4>Nivel de Experiencia</h4>
-                <div class="opcion-filtro" onclick="filtrar(this)">Junior</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Mid-Level</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Senior</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Ejecutivo</div>
+            <!-- Selects de filtro rápido -->
+            <div class="filtros-select">
+                <select onchange="buscarEmpleos()">
+                    <option value="">Todos los niveles</option>
+                    <option>Junior</option>
+                    <option>Mid-Level</option>
+                    <option>Senior</option>
+                    <option>Ejecutivo</option>
+                </select>
+                <select onchange="buscarEmpleos()">
+                    <option value="">Todos los sectores</option>
+                    <option>Tecnología</option>
+                    <option>Marketing</option>
+                    <option>Diseño</option>
+                    <option>Finanzas</option>
+                </select>
+                <select onchange="buscarEmpleos()">
+                    <option value="">Tipo de contrato</option>
+                    <option>Tiempo Completo</option>
+                    <option>Medio Tiempo</option>
+                    <option>Remoto</option>
+                    <option>Freelance</option>
+                </select>
+                <select onchange="buscarEmpleos()">
+                    <option value="">Salario</option>
+                    <option>$0 - $30k</option>
+                    <option>$30k - $60k</option>
+                    <option>$60k - $100k</option>
+                    <option>$100k+</option>
+                </select>
             </div>
 
-            <div class="seccion-filtro">
-                <h4>Sector Laboral</h4>
-                <div class="opcion-filtro" onclick="filtrar(this)">Tecnología</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Marketing</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Diseño</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Finanzas</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Educación</div>
-            </div>
+            <!-- Lista de empleos -->
+            <div id="lista-empleos"></div>
 
-            <div class="seccion-filtro">
-                <h4>Tipo de Contrato</h4>
-                <div class="opcion-filtro" onclick="filtrar(this)">Tiempo Completo</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Medio Tiempo</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Remoto</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Híbrido</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">Freelance</div>
-            </div>
-
-            <div class="seccion-filtro">
-                <h4>Rango Salarial</h4>
-                <div class="opcion-filtro" onclick="filtrar(this)">$0 - $30k</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">$30k - $60k</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">$60k - $100k</div>
-                <div class="opcion-filtro" onclick="filtrar(this)">$100k+</div>
-            </div>
-
-            <button class="btn btn-borde" style="width:100%; margin-top:0.5rem; font-size:0.8rem;" onclick="limpiarFiltros()">
-                Limpiar Filtros
-            </button>
         </div>
     </div>
 
-    <!-- Resultados -->
-    <div style="flex: 1;">
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
+    </footer>
 
-        <!-- Barra de búsqueda -->
-        <div class="barra-busqueda">
-            <div class="input-wrap">
-                <i data-lucide="search"></i>
-                <input type="text" id="buscador" placeholder="Título del empleo o palabra clave" oninput="buscarEmpleos()">
-            </div>
-            <div class="input-wrap" style="flex: 0.7;">
-                <i data-lucide="map-pin"></i>
-                <input type="text" placeholder="Ubicación" style="padding-left: 34px;">
-            </div>
-            <button class="btn btn-primario" onclick="buscarEmpleos()">
-                <i data-lucide="search" style="width:14px; height:14px;"></i>
-                Buscar Empleos
-            </button>
-        </div>
+    <script>
+        lucide.createIcons();
 
-        <!-- Selects de filtro rápido -->
-        <div class="filtros-select">
-            <select onchange="buscarEmpleos()">
-                <option value="">Todos los niveles</option>
-                <option>Junior</option>
-                <option>Mid-Level</option>
-                <option>Senior</option>
-                <option>Ejecutivo</option>
-            </select>
-            <select onchange="buscarEmpleos()">
-                <option value="">Todos los sectores</option>
-                <option>Tecnología</option>
-                <option>Marketing</option>
-                <option>Diseño</option>
-                <option>Finanzas</option>
-            </select>
-            <select onchange="buscarEmpleos()">
-                <option value="">Tipo de contrato</option>
-                <option>Tiempo Completo</option>
-                <option>Medio Tiempo</option>
-                <option>Remoto</option>
-                <option>Freelance</option>
-            </select>
-            <select onchange="buscarEmpleos()">
-                <option value="">Salario</option>
-                <option>$0 - $30k</option>
-                <option>$30k - $60k</option>
-                <option>$60k - $100k</option>
-                <option>$100k+</option>
-            </select>
-        </div>
-
-        <!-- Lista de empleos -->
-        <div id="lista-empleos"></div>
-
-    </div>
-</div>
-
-<!-- Footer -->
-<footer>
-    <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
-</footer>
-
-<script>
-    lucide.createIcons();
-
-    // Datos de los empleos
-    var empleos = [
-        {
-            id: 1,
-            titulo: "Senior Frontend Developer",
-            empresa: "TechCorp Inc.",
-            ubicacion: "Madrid, España",
-            tipo: "Tiempo Completo",
-            salario: "$60k - $80k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 2 días"
-        },
-        {
-            id: 2,
-            titulo: "UX/UI Designer",
-            empresa: "DesignHub",
-            ubicacion: "Barcelona, España",
-            tipo: "Remoto",
-            salario: "$50k - $70k",
-            nivel: "Mid-Level",
-            sector: "Diseño",
-            tiempo: "Hace 1 día"
-        },
-        {
-            id: 3,
-            titulo: "Marketing Manager",
-            empresa: "Growth Marketing",
-            ubicacion: "Valencia, España",
-            tipo: "Tiempo Completo",
-            salario: "$55k - $75k",
-            nivel: "Senior",
-            sector: "Marketing",
-            tiempo: "Hace 3 días"
-        },
-        {
-            id: 4,
-            titulo: "Data Analyst",
-            empresa: "DataInsights",
-            ubicacion: "Sevilla, España",
-            tipo: "Híbrido",
-            salario: "$45k - $60k",
-            nivel: "Mid-Level",
-            sector: "Tecnología",
-            tiempo: "Hace 5 días"
-        },
-        {
-            id: 5,
-            titulo: "Product Manager",
-            empresa: "InnovateLabs",
-            ubicacion: "Bilbao, España",
-            tipo: "Tiempo Completo",
-            salario: "$70k - $90k",
-            nivel: "Senior",
-            sector: "Tecnología",
-            tiempo: "Hace 1 semana"
-        },
-        {
-            id: 6,
-            titulo: "Content Writer",
-            empresa: "ContentPro",
-            ubicacion: "Remoto",
-            tipo: "Freelance",
-            salario: "$30k - $45k",
-            nivel: "Junior",
-            sector: "Marketing",
-            tiempo: "Hace 4 días"
-        }
-    ];
-
-    // Renderizar los empleos en el HTML
-    function renderizarEmpleos(lista) {
-        var contenedor = document.getElementById('lista-empleos');
-        var conteo = document.getElementById('conteo-resultados');
-
-        conteo.textContent = 'Se encontraron ' + lista.length + ' empleos que coinciden con tu búsqueda';
-
-        if (lista.length === 0) {
-            contenedor.innerHTML = '<p style="color: var(--texto2); text-align: center; padding: 2rem;">No se encontraron empleos con esos filtros.</p>';
-            return;
-        }
-
-        var html = '';
-        for (var i = 0; i < lista.length; i++) {
-            var empleo = lista[i];
-            html += '<div class="tarjeta-empleo">';
-            html += '  <div class="empleo-cabecera">';
-            html += '    <div>';
-            html += '      <h3>' + empleo.titulo + '</h3>';
-            html += '      <p class="empleo-empresa">' + empleo.empresa + '</p>';
-            html += '    </div>';
-            html += '    <span class="icono-guardar">🔖</span>';
-            html += '  </div>';
-            html += '  <div class="empleo-meta">';
-            html += '    <span>📍 ' + empleo.ubicacion + '</span>';
-            html += '    <span>🕐 ' + empleo.tipo + '</span>';
-            html += '    <span>💰 ' + empleo.salario + '</span>';
-            html += '  </div>';
-            html += '  <div class="empleo-footer">';
-            html += '    <div class="empleo-tags">';
-            html += '      <span class="tag">' + empleo.nivel + '</span>';
-            html += '      <span class="tag">' + empleo.sector + '</span>';
-            html += '    </div>';
-            html += '    <div class="empleo-acciones">';
-            html += '      <span class="empleo-tiempo">' + empleo.tiempo + '</span>';
-            // Este es el boton que redirige a la pagina de detalle
-            html += '      <a href="detalle_empleo.html?id=' + empleo.id + '" class="btn btn-primario btn-pequeno">Información</a>';
-            html += '    </div>';
-            html += '  </div>';
-            html += '</div>';
-        }
-
-        contenedor.innerHTML = html;
-    }
-
-    // Buscar empleos por texto
-    function buscarEmpleos() {
-        var texto = document.getElementById('buscador').value.toLowerCase();
-        var resultado = empleos.filter(function(e) {
-            return e.titulo.toLowerCase().includes(texto) ||
-                   e.empresa.toLowerCase().includes(texto) ||
-                   e.sector.toLowerCase().includes(texto);
-        });
-        renderizarEmpleos(resultado);
-    }
-
-    // Click en filtro del sidebar
-    function filtrar(elemento) {
-        elemento.classList.toggle('activo');
-        // Aqui iria la logica real de filtrado cuando haya backend
-    }
-
-    // Limpiar todos los filtros
-    function limpiarFiltros() {
-        var opciones = document.querySelectorAll('.opcion-filtro');
-        opciones.forEach(function(op) {
-            op.classList.remove('activo');
-        });
-        renderizarEmpleos(empleos);
-    }
-
-    // Mostrar todos los empleos al cargar la pagina
-    renderizarEmpleos(empleos);
-
-    // Ocultar boton admin si no es admin
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin) {
-            if (!usuario || usuario.rol !== 'admin') {
-                btnAdmin.style.display = 'none';
+        // Datos de los empleos
+        var empleos = [
+            {
+                id: 1,
+                titulo: "Senior Frontend Developer",
+                empresa: "TechCorp Inc.",
+                ubicacion: "Madrid, España",
+                tipo: "Tiempo Completo",
+                salario: "$60k - $80k",
+                nivel: "Senior",
+                sector: "Tecnología",
+                tiempo: "Hace 2 días"
+            },
+            {
+                id: 2,
+                titulo: "UX/UI Designer",
+                empresa: "DesignHub",
+                ubicacion: "Barcelona, España",
+                tipo: "Remoto",
+                salario: "$50k - $70k",
+                nivel: "Mid-Level",
+                sector: "Diseño",
+                tiempo: "Hace 1 día"
+            },
+            {
+                id: 3,
+                titulo: "Marketing Manager",
+                empresa: "Growth Marketing",
+                ubicacion: "Valencia, España",
+                tipo: "Tiempo Completo",
+                salario: "$55k - $75k",
+                nivel: "Senior",
+                sector: "Marketing",
+                tiempo: "Hace 3 días"
+            },
+            {
+                id: 4,
+                titulo: "Data Analyst",
+                empresa: "DataInsights",
+                ubicacion: "Sevilla, España",
+                tipo: "Híbrido",
+                salario: "$45k - $60k",
+                nivel: "Mid-Level",
+                sector: "Tecnología",
+                tiempo: "Hace 5 días"
+            },
+            {
+                id: 5,
+                titulo: "Product Manager",
+                empresa: "InnovateLabs",
+                ubicacion: "Bilbao, España",
+                tipo: "Tiempo Completo",
+                salario: "$70k - $90k",
+                nivel: "Senior",
+                sector: "Tecnología",
+                tiempo: "Hace 1 semana"
+            },
+            {
+                id: 6,
+                titulo: "Content Writer",
+                empresa: "ContentPro",
+                ubicacion: "Remoto",
+                tipo: "Freelance",
+                salario: "$30k - $45k",
+                nivel: "Junior",
+                sector: "Marketing",
+                tiempo: "Hace 4 días"
             }
+        ];
+
+        // Renderizar los empleos en el HTML
+        function renderizarEmpleos(lista) {
+            var contenedor = document.getElementById('lista-empleos');
+            var conteo = document.getElementById('conteo-resultados');
+
+            conteo.textContent = 'Se encontraron ' + lista.length + ' empleos que coinciden con tu búsqueda';
+
+            if (lista.length === 0) {
+                contenedor.innerHTML = '<p style="color: var(--texto2); text-align: center; padding: 2rem;">No se encontraron empleos con esos filtros.</p>';
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < lista.length; i++) {
+                var empleo = lista[i];
+                html += '<div class="tarjeta-empleo">';
+                html += '  <div class="empleo-cabecera">';
+                html += '    <div>';
+                html += '      <h3>' + empleo.titulo + '</h3>';
+                html += '      <p class="empleo-empresa">' + empleo.empresa + '</p>';
+                html += '    </div>';
+                html += '    <span class="icono-guardar">🔖</span>';
+                html += '  </div>';
+                html += '  <div class="empleo-meta">';
+                html += '    <span>📍 ' + empleo.ubicacion + '</span>';
+                html += '    <span>🕐 ' + empleo.tipo + '</span>';
+                html += '    <span>💰 ' + empleo.salario + '</span>';
+                html += '  </div>';
+                html += '  <div class="empleo-footer">';
+                html += '    <div class="empleo-tags">';
+                html += '      <span class="tag">' + empleo.nivel + '</span>';
+                html += '      <span class="tag">' + empleo.sector + '</span>';
+                html += '    </div>';
+                html += '    <div class="empleo-acciones">';
+                html += '      <span class="empleo-tiempo">' + empleo.tiempo + '</span>';
+                // Este es el boton que redirige a la pagina de detalle
+                html += '      <a href="detalle_empleo.html?id=' + empleo.id + '" class="btn btn-primario btn-pequeno">Información</a>';
+                html += '    </div>';
+                html += '  </div>';
+                html += '</div>';
+            }
+
+            contenedor.innerHTML = html;
         }
-</script>
+
+        // Buscar empleos por texto
+        function buscarEmpleos() {
+            var texto = document.getElementById('buscador').value.toLowerCase();
+            var resultado = empleos.filter(function (e) {
+                return e.titulo.toLowerCase().includes(texto) ||
+                    e.empresa.toLowerCase().includes(texto) ||
+                    e.sector.toLowerCase().includes(texto);
+            });
+            renderizarEmpleos(resultado);
+        }
+
+        // Click en filtro del sidebar
+        function filtrar(elemento) {
+            elemento.classList.toggle('activo');
+            // Aqui iria la logica real de filtrado cuando haya backend
+        }
+
+        // Limpiar todos los filtros
+        function limpiarFiltros() {
+            var opciones = document.querySelectorAll('.opcion-filtro');
+            opciones.forEach(function (op) {
+                op.classList.remove('activo');
+            });
+            renderizarEmpleos(empleos);
+        }
+
+        // Mostrar todos los empleos al cargar la pagina
+        renderizarEmpleos(empleos);
+
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        // Ocultar boton admin si no es admin
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
+        }
+
+        // Ocultar boton publicar si no es empresa
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+            btnPublicar.style.display = 'none';
+        }
+    </script>
 
 </body>
+
 </html>
