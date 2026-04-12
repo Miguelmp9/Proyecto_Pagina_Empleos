@@ -1,4 +1,3 @@
-drop database shovel;
 create database shovel;
 use shovel; #uso de la base
 # select * from (para que prueben si se agregaron los datos)
@@ -295,3 +294,185 @@ CREATE TABLE discusion_etiquetas (
 );
 
 
+
+
+
+
+
+-- ══════════════════════════════════════════════════════════════
+--  SHOVEL — INSERTS SOLO PARA EL MÓDULO DE FOROS
+--  Ejecutar en este orden para respetar las foreign keys
+-- ══════════════════════════════════════════════════════════════
+
+USE shovel;
+
+-- ── 1. FOROS_CATEGORIAS ───────────────────────────────────────
+-- (No depende de ninguna otra tabla)
+INSERT INTO foros_categorias (nombre, descripcion, icono, total_discusiones) VALUES
+('Tecnología',          'Programación, software, herramientas y tendencias tech',      'code',        89),
+('Marketing',           'Marketing digital, publicidad, branding y estrategias',       'trending-up', 45),
+('Diseño',              'UX/UI, diseño gráfico, herramientas y portafolios',           'pen-tool',    38),
+('Finanzas',            'Salarios, negociaciones, inversión y economía laboral',       'dollar-sign', 32),
+('Recursos Humanos',    'Procesos de selección, cultura empresarial y bienestar',      'users',       41),
+('Carrera Profesional', 'Desarrollo profesional, transiciones de carrera y consejos', 'briefcase',   22);
+
+-- ── 2. ETIQUETAS ──────────────────────────────────────────────
+-- (No depende de ninguna otra tabla)
+INSERT INTO etiquetas (nombre) VALUES
+('Salario'),
+('Negociación'),
+('Carrera'),
+('Desarrollo Web'),
+('Aprendizaje'),
+('Soft Skills'),
+('Empleabilidad'),
+('Freelance'),
+('Marketing Digital'),
+('Estrategia'),
+('Entrevistas'),
+('Remoto'),
+('Internacional'),
+('Habilidades'),
+('Productividad'),
+('Liderazgo'),
+('React'),
+('Node.js'),
+('UX'),
+('Portfolio');
+
+-- ── 3. DISCUSIONES ────────────────────────────────────────────
+-- (Depende de: usuarios y foros_categorias)
+-- Los usuarios ya existen por los INSERT del archivo Shovel.sql
+-- usuario_id 1=Carlos, 2=Ana, 3=Luis, 4=María, 5=José, 6=Sofía, 7=Miguel, 8=Laura
+INSERT INTO discusiones (usuario_id, categoria_id, titulo, contenido, destacado, total_respuestas, total_likes, total_vistas, fecha_creacion) VALUES
+
+-- Categoría 4 = Finanzas
+(2, 4,
+ '¿Cuál es el mejor momento para negociar un aumento de sueldo?',
+ 'He estado trabajando en mi empresa actual por 2 años y siento que es momento de solicitar un aumento. He superado mis objetivos este año y he asumido responsabilidades adicionales.\n\nMi pregunta es: ¿cuál consideran que es el mejor momento para negociar? ¿Debo esperar a la revisión anual o es mejor hacerlo cuando termino un proyecto importante?\n\nTambién me gustaría saber qué argumentos han funcionado mejor en sus experiencias. ¿Se enfocan en logros, comparación con el mercado, o ambos?\n\nCualquier consejo será muy apreciado. ¡Gracias!',
+ TRUE, 3, 56, 320,
+ '2026-04-11 08:00:00'),
+
+-- Categoría 1 = Tecnología
+(1, 1,
+ 'Consejos para transición de carrera a desarrollo web',
+ 'Llevo 5 años en administración y quiero hacer el salto al desarrollo web. He estado aprendiendo HTML, CSS y JavaScript por mi cuenta durante 6 meses.\n\n¿Cuánto tiempo realista necesito para estar listo para mi primer trabajo? ¿Qué stack recomiendan para conseguir empleo más rápido?\n\nAgradezco cualquier experiencia o consejo de quienes ya hicieron esta transición.',
+ FALSE, 1, 42, 280,
+ '2026-04-11 05:00:00'),
+
+-- Categoría 5 = Recursos Humanos
+(8, 5,
+ '¿Qué habilidades blandas son más valoradas por los empleadores?',
+ 'Estoy preparando mi perfil profesional y me pregunto cuáles son las soft skills que realmente marcan la diferencia al momento de contratar.\n\n¿Qué opinan desde la perspectiva de quienes contratan y también de quienes han sido contratados recientemente?',
+ FALSE, 0, 78, 450,
+ '2026-04-10 10:00:00'),
+
+-- Categoría 2 = Marketing
+(8, 2,
+ 'Estrategias de marketing digital para freelancers',
+ 'Llevo 1 año como freelancer de diseño y me cuesta conseguir clientes de forma constante. Actualmente uso solo Instagram y referencias de conocidos.\n\n¿Qué estrategias de marketing digital han funcionado mejor para ustedes como freelancers?',
+ FALSE, 0, 35, 190,
+ '2026-04-10 08:00:00'),
+
+-- Categoría 1 = Tecnología
+(7, 1,
+ 'Experiencias con entrevistas remotas en empresas internacionales',
+ 'He tenido varias entrevistas con empresas de EE.UU. y Europa y noto diferencias importantes con las entrevistas locales.\n\n¿Alguien más ha pasado por este proceso? Me gustaría saber cómo prepararse para los desafíos técnicos en inglés y cómo manejar las diferencias culturales.',
+ TRUE, 2, 92, 520,
+ '2026-04-08 12:00:00'),
+
+-- Categoría 6 = Carrera Profesional
+(4, 6,
+ '¿Cómo armar un portafolio si no tengo experiencia laboral?',
+ 'Acabo de terminar mis estudios de diseño gráfico y no tengo experiencia formal. Todos los trabajos piden portafolio pero ¿cómo construyo uno sin haber trabajado?\n\n¿Proyectos personales cuentan? ¿Trabajos universitarios? Busco consejos prácticos.',
+ FALSE, 0, 44, 210,
+ '2026-04-09 14:00:00'),
+
+-- Categoría 1 = Tecnología
+(3, 1,
+ 'Docker vs máquinas virtuales: ¿cuándo usar cada uno?',
+ 'Estoy aprendiendo sobre infraestructura y me genera confusión saber cuándo conviene usar Docker y cuándo una VM tradicional.\n\n¿Alguien con experiencia en DevOps puede explicar los casos de uso reales de cada uno?',
+ FALSE, 0, 29, 175,
+ '2026-04-09 09:00:00'),
+
+-- Categoría 3 = Diseño
+(2, 3,
+ 'Figma vs Adobe XD en 2026: ¿cuál recomiendan?',
+ 'Soy diseñadora y quiero dominar bien una sola herramienta. He probado ambas superficialmente.\n\n¿Cuál tiene mejor futuro laboral? ¿Cuál es más pedida por las empresas actualmente?',
+ FALSE, 0, 51, 300,
+ '2026-04-07 16:00:00');
+
+-- ── 4. DISCUSION_ETIQUETAS ────────────────────────────────────
+-- (Depende de: discusiones y etiquetas)
+-- discusion 1 → Salario, Negociación, Carrera
+INSERT INTO discusion_etiquetas (discusion_id, etiqueta_id) VALUES
+(1, 1), (1, 2), (1, 3),
+-- discusion 2 → Desarrollo Web, Carrera, Aprendizaje
+(2, 4), (2, 3), (2, 5),
+-- discusion 3 → Soft Skills, Habilidades, Empleabilidad
+(3, 6), (3, 14), (3, 7),
+-- discusion 4 → Freelance, Marketing Digital, Estrategia
+(4, 8), (4, 9), (4, 10),
+-- discusion 5 → Entrevistas, Remoto, Internacional
+(5, 11), (5, 12), (5, 13),
+-- discusion 6 → Portfolio, Carrera, Diseño(UX)
+(6, 20), (6, 3), (6, 19),
+-- discusion 7 → Node.js, Productividad
+(7, 18), (7, 15),
+-- discusion 8 → UX, Portfolio
+(8, 19), (8, 20);
+
+-- ── 5. RESPUESTAS_FORO ────────────────────────────────────────
+-- (Depende de: discusiones y usuarios)
+INSERT INTO respuestas_foro (discusion_id, usuario_id, contenido, total_likes, fecha_creacion) VALUES
+
+-- Respuestas de discusión 1 (negociar aumento)
+(1, 1,
+ 'Excelente pregunta. En mi experiencia, el mejor momento es después de completar un proyecto importante o cuando has logrado algo significativo.\n\nAlgunos consejos:\n- Prepara números concretos de tus logros\n- Investiga el rango salarial del mercado para tu posición\n- Ten una cifra específica en mente, no un rango\n- Sé profesional y enfócate en valor, no en necesidad personal\n\n¡Mucha suerte!',
+ 15, '2026-04-11 09:15:00'),
+
+(1, 4,
+ 'Totalmente de acuerdo. Además recomiendo:\n\n- No hagas la solicitud por email, hazlo en persona\n- Escoge un momento en que tu jefe no esté estresado\n- Ten un plan B: si no pueden aumentar salario, tal vez bonos o capacitación\n- Sé paciente, estas cosas toman tiempo\n\nEn mi caso, esperé 3 semanas después de liderar un proyecto exitoso y funcionó perfectamente.',
+ 12, '2026-04-11 10:30:00'),
+
+(1, 3,
+ 'Una cosa que me ayudó mucho fue documentar todo lo que hice durante el año. Mantuve un archivo con todos mis logros, proyectos completados y feedback positivo.\n\nCuando llegó el momento de la negociación, tenía todo organizado y fue mucho más fácil presentar mi caso.',
+ 8, '2026-04-11 11:45:00'),
+
+-- Respuestas de discusión 2 (transición a dev web)
+(2, 10,
+ 'Hice exactamente eso hace 2 años. Mi recomendación es enfocarte en React después de dominar los fundamentos. Con 12-18 meses de práctica constante puedes conseguir tu primer trabajo.\n\nLo más importante: construye proyectos reales y sube todo a GitHub.',
+ 23, '2026-04-11 06:30:00'),
+
+-- Respuestas de discusión 5 (entrevistas remotas)
+(5, 10,
+ 'Tengo experiencia trabajando remoto para una empresa de otro país. El mayor consejo: practica hablar en inglés técnico todos los días, no solo leerlo.\n\nPara el proceso técnico, LeetCode y HackerRank son esenciales. Las empresas internacionales suelen tener 3-5 rondas de entrevistas.',
+ 41, '2026-04-08 14:00:00'),
+
+(5, 7,
+ 'Añado que es muy importante investigar la cultura de la empresa antes. Las empresas de EE.UU. valoran mucho el storytelling con el método STAR para responder preguntas de comportamiento.',
+ 29, '2026-04-09 09:00:00');
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE foros_categorias fc
+SET total_discusiones = (
+    SELECT COUNT(*) FROM discusiones d
+    WHERE d.categoria_id = fc.id
+);
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE discusiones SET total_likes = 0;
+UPDATE respuestas_foro SET total_likes = 0;
+
+SET SQL_SAFE_UPDATES = 1;
+
+UPDATE discusiones SET total_vistas = 0 WHERE id > 0;
+
+SELECT * FROM discusiones;
