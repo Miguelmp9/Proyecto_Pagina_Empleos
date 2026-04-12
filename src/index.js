@@ -4,6 +4,7 @@ import cors from 'cors';
 
 //importacion del router de usuarios
 import UsuarioRoutes from './routes/Usuarios.js';
+import ForosRoutes from './routes/forosRoutes.js';
 
 //Importacion del middleware de manejo de errores 
 import { errorHandler } from './Middlewares/errorhandler.js';
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 
 //Asociamos todas las rutas de usuarios al prefijo /api/usuarios
 app.use('/usuarios', UsuarioRoutes);
+app.use('/foros', ForosRoutes);       
 
 //Agregamos el middleware de manejo de errores 
 app.use(errorHandler);
