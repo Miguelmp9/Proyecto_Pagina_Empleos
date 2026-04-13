@@ -88,7 +88,7 @@
     background-color: var(--tarjeta2);
     border: 1px solid var(--borde);
     border-radius: 8px;
-    padding: 10px 14px 10px 34px;
+    padding: 10px 14px;
     color: var(--texto);
     font-size: 0.9rem;
     outline: none;
