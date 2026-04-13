@@ -7,6 +7,7 @@ import UsuarioRoutes from './routes/Usuarios.js';
 import ForosRoutes from './routes/forosRoutes.js';
 import EmpresaRoutes from './routes/Empresas.js';
 import EmpleoRoutes from './routes/Empleos.js';
+import PostulacionRoutes from './routes/Postulaciones.js';
 
 import { errorHandler } from './Middlewares/errorhandler.js';
 
@@ -31,6 +32,7 @@ app.use('/usuarios', UsuarioRoutes);
 app.use('/foros', ForosRoutes);
 app.use('/empresas', EmpresaRoutes);
 app.use('/empleos', EmpleoRoutes);
+app.use('/postulaciones', PostulacionRoutes);
 
 app.use(errorHandler);
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -13,11 +13,9 @@
 
 <body>
 
-    <!-- Navbar -->
     <nav>
         <a href="home.html" class="nav-logo">
-            <img src="../contenido_multimedia/logo.png"
-                style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+            <img src="/contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
             Shovel
         </a>
         <div class="nav-links">
@@ -30,13 +28,11 @@
         </div>
     </nav>
 
-    <!-- Encabezado -->
     <div class="encabezado-pagina">
         <h1>Resultados de Búsqueda</h1>
-        <p id="conteo-resultados">Se encontraron 6 empleos que coinciden con tu búsqueda</p>
+        <p id="conteo-resultados">Cargando empleos...</p>
     </div>
 
-    <!-- Contenido principal -->
     <div class="contenedor-busqueda">
 
         <!-- Sidebar filtros -->
@@ -49,40 +45,35 @@
 
                 <div class="seccion-filtro">
                     <h4>Nivel de Experiencia</h4>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Junior</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Mid-Level</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Senior</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Ejecutivo</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'nivel')">Junior</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'nivel')">Mid-Level</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'nivel')">Senior</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'nivel')">Ejecutivo</div>
                 </div>
 
                 <div class="seccion-filtro">
                     <h4>Sector Laboral</h4>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Tecnología</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Marketing</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Diseño</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Finanzas</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Educación</div>
+                    <div id="filtros-sector">
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Tecnología</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Marketing</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Diseño</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Finanzas</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Educación</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Salud</div>
+                        <div class="opcion-filtro" onclick="toggleFiltro(this, 'sector')">Logística</div>
+                    </div>
                 </div>
 
                 <div class="seccion-filtro">
                     <h4>Tipo de Contrato</h4>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Tiempo Completo</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Medio Tiempo</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Remoto</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Híbrido</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">Freelance</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'contrato')">Tiempo Completo</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'contrato')">Medio Tiempo</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'contrato')">Remoto</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'contrato')">Híbrido</div>
+                    <div class="opcion-filtro" onclick="toggleFiltro(this, 'contrato')">Freelance</div>
                 </div>
 
-                <div class="seccion-filtro">
-                    <h4>Rango Salarial</h4>
-                    <div class="opcion-filtro" onclick="filtrar(this)">$0 - $30k</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">$30k - $60k</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">$60k - $100k</div>
-                    <div class="opcion-filtro" onclick="filtrar(this)">$100k+</div>
-                </div>
-
-                <button class="btn btn-borde" style="width:100%; margin-top:0.5rem; font-size:0.8rem;"
-                    onclick="limpiarFiltros()">
+                <button class="btn btn-borde" style="width:100%; margin-top:0.5rem; font-size:0.8rem;" onclick="limpiarFiltros()">
                     Limpiar Filtros
                 </button>
             </div>
@@ -91,47 +82,47 @@
         <!-- Resultados -->
         <div style="flex: 1;">
 
-            <!-- Barra de búsqueda -->
             <div class="barra-busqueda">
                 <div class="input-wrap">
-                    <i data-lucide="search"></i>
-                    <input type="text" id="buscador" placeholder="Título del empleo o palabra clave"
-                        oninput="buscarEmpleos()">
+                    
+                    <input type="text" id="buscador" placeholder="Título del empleo o palabra clave" oninput="aplicarFiltros()">
                 </div>
                 <div class="input-wrap" style="flex: 0.7;">
-                    <i data-lucide="map-pin"></i>
-                    <input type="text" placeholder="Ubicación" style="padding-left: 34px;">
+                    
+                    <input type="text" id="buscador-ubicacion" placeholder="Ubicación" style="padding-left: 34px;" oninput="aplicarFiltros()">
                 </div>
-                <button class="btn btn-primario" onclick="buscarEmpleos()">
+                <button class="btn btn-primario" onclick="aplicarFiltros()">
                     <i data-lucide="search" style="width:14px; height:14px;"></i>
                     Buscar Empleos
                 </button>
             </div>
 
-            <!-- Selects de filtro rápido -->
             <div class="filtros-select">
-                <select onchange="buscarEmpleos()">
+                <select id="select-nivel" onchange="aplicarFiltros()">
                     <option value="">Todos los niveles</option>
                     <option>Junior</option>
                     <option>Mid-Level</option>
                     <option>Senior</option>
                     <option>Ejecutivo</option>
                 </select>
-                <select onchange="buscarEmpleos()">
+                <select id="select-sector" onchange="aplicarFiltros()">
                     <option value="">Todos los sectores</option>
                     <option>Tecnología</option>
                     <option>Marketing</option>
                     <option>Diseño</option>
                     <option>Finanzas</option>
+                    <option>Educación</option>
+                    <option>Salud</option>
+                    <option>Logística</option>
                 </select>
-                <select onchange="buscarEmpleos()">
+                <select id="select-contrato" onchange="aplicarFiltros()">
                     <option value="">Tipo de contrato</option>
                     <option>Tiempo Completo</option>
                     <option>Medio Tiempo</option>
                     <option>Remoto</option>
                     <option>Freelance</option>
                 </select>
-                <select onchange="buscarEmpleos()">
+                <select id="select-salario" onchange="aplicarFiltros()">
                     <option value="">Salario</option>
                     <option>$0 - $30k</option>
                     <option>$30k - $60k</option>
@@ -140,177 +131,183 @@
                 </select>
             </div>
 
-            <!-- Lista de empleos -->
-            <div id="lista-empleos"></div>
+            <div id="lista-empleos">
+                <p style="color:var(--texto2); text-align:center; padding:2rem;">Cargando empleos...</p>
+            </div>
 
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
     </footer>
 
     <script>
+        const API = 'http://localhost:3000';
         lucide.createIcons();
 
-        // Datos de los empleos
-        var empleos = [
-            {
-                id: 1,
-                titulo: "Senior Frontend Developer",
-                empresa: "TechCorp Inc.",
-                ubicacion: "Madrid, España",
-                tipo: "Tiempo Completo",
-                salario: "$60k - $80k",
-                nivel: "Senior",
-                sector: "Tecnología",
-                tiempo: "Hace 2 días"
-            },
-            {
-                id: 2,
-                titulo: "UX/UI Designer",
-                empresa: "DesignHub",
-                ubicacion: "Barcelona, España",
-                tipo: "Remoto",
-                salario: "$50k - $70k",
-                nivel: "Mid-Level",
-                sector: "Diseño",
-                tiempo: "Hace 1 día"
-            },
-            {
-                id: 3,
-                titulo: "Marketing Manager",
-                empresa: "Growth Marketing",
-                ubicacion: "Valencia, España",
-                tipo: "Tiempo Completo",
-                salario: "$55k - $75k",
-                nivel: "Senior",
-                sector: "Marketing",
-                tiempo: "Hace 3 días"
-            },
-            {
-                id: 4,
-                titulo: "Data Analyst",
-                empresa: "DataInsights",
-                ubicacion: "Sevilla, España",
-                tipo: "Híbrido",
-                salario: "$45k - $60k",
-                nivel: "Mid-Level",
-                sector: "Tecnología",
-                tiempo: "Hace 5 días"
-            },
-            {
-                id: 5,
-                titulo: "Product Manager",
-                empresa: "InnovateLabs",
-                ubicacion: "Bilbao, España",
-                tipo: "Tiempo Completo",
-                salario: "$70k - $90k",
-                nivel: "Senior",
-                sector: "Tecnología",
-                tiempo: "Hace 1 semana"
-            },
-            {
-                id: 6,
-                titulo: "Content Writer",
-                empresa: "ContentPro",
-                ubicacion: "Remoto",
-                tipo: "Freelance",
-                salario: "$30k - $45k",
-                nivel: "Junior",
-                sector: "Marketing",
-                tiempo: "Hace 4 días"
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) btnAdmin.style.display = 'none';
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) btnPublicar.style.display = 'none';
+
+        let todosLosEmpleos = [];
+        let filtrosActivos = { nivel: '', sector: '', contrato: '' };
+
+        // Cargar todos los empleos desde la API
+        async function cargarEmpleos() {
+            try {
+                const res = await fetch(`${API}/empleos`);
+                const empleos = await res.json();
+                todosLosEmpleos = empleos;
+                renderizarEmpleos(empleos);
+            } catch (error) {
+                document.getElementById('lista-empleos').innerHTML =
+                    '<p style="color:var(--texto2); text-align:center; padding:2rem;">Error al cargar los empleos. ¿Está corriendo el servidor?</p>';
             }
-        ];
+        }
 
-        // Renderizar los empleos en el HTML
+        // Renderizar empleos
         function renderizarEmpleos(lista) {
-            var contenedor = document.getElementById('lista-empleos');
-            var conteo = document.getElementById('conteo-resultados');
-
-            conteo.textContent = 'Se encontraron ' + lista.length + ' empleos que coinciden con tu búsqueda';
+            const contenedor = document.getElementById('lista-empleos');
+            const conteo = document.getElementById('conteo-resultados');
+            conteo.textContent = `Se encontraron ${lista.length} empleos que coinciden con tu búsqueda`;
 
             if (lista.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--texto2); text-align: center; padding: 2rem;">No se encontraron empleos con esos filtros.</p>';
+                contenedor.innerHTML = '<p style="color:var(--texto2); text-align:center; padding:2rem;">No se encontraron empleos con esos filtros.</p>';
                 return;
             }
 
-            var html = '';
-            for (var i = 0; i < lista.length; i++) {
-                var empleo = lista[i];
-                html += '<div class="tarjeta-empleo">';
-                html += '  <div class="empleo-cabecera">';
-                html += '    <div>';
-                html += '      <h3>' + empleo.titulo + '</h3>';
-                html += '      <p class="empleo-empresa">' + empleo.empresa + '</p>';
-                html += '    </div>';
-                html += '    <span class="icono-guardar">🔖</span>';
-                html += '  </div>';
-                html += '  <div class="empleo-meta">';
-                html += '    <span>📍 ' + empleo.ubicacion + '</span>';
-                html += '    <span>🕐 ' + empleo.tipo + '</span>';
-                html += '    <span>💰 ' + empleo.salario + '</span>';
-                html += '  </div>';
-                html += '  <div class="empleo-footer">';
-                html += '    <div class="empleo-tags">';
-                html += '      <span class="tag">' + empleo.nivel + '</span>';
-                html += '      <span class="tag">' + empleo.sector + '</span>';
-                html += '    </div>';
-                html += '    <div class="empleo-acciones">';
-                html += '      <span class="empleo-tiempo">' + empleo.tiempo + '</span>';
-                // Este es el boton que redirige a la pagina de detalle
-                html += '      <a href="detalle_empleo.html?id=' + empleo.id + '" class="btn btn-primario btn-pequeno">Información</a>';
-                html += '    </div>';
-                html += '  </div>';
-                html += '</div>';
-            }
+            contenedor.innerHTML = lista.map(e => {
+                const salario = e.rango_salarial_min && e.rango_salarial_max
+                    ? `$${e.rango_salarial_min.toLocaleString()} - $${e.rango_salarial_max.toLocaleString()}`
+                    : 'Salario no especificado';
 
-            contenedor.innerHTML = html;
+                const fechaPublicacion = e.fecha_publicacion
+                    ? calcularTiempo(e.fecha_publicacion)
+                    : '';
+
+                return `
+                <div class="tarjeta-empleo">
+                    <div class="empleo-cabecera">
+                        <div>
+                            <h3>${e.titulo}</h3>
+                            <p class="empleo-empresa">${e.empresa_nombre || 'Empresa'}</p>
+                        </div>
+                        <span class="icono-guardar">🔖</span>
+                    </div>
+                    <div class="empleo-meta">
+                        <span>📍 ${e.ubicacion || '-'}</span>
+                        <span>🕐 ${e.tipo_contrato || '-'}</span>
+                        <span>💰 ${salario}</span>
+                    </div>
+                    <div class="empleo-footer">
+                        <div class="empleo-tags">
+                            <span class="tag">${e.nivel_experiencia || '-'}</span>
+                            <span class="tag">${e.sector || '-'}</span>
+                        </div>
+                        <div class="empleo-acciones">
+                            <span class="empleo-tiempo">${fechaPublicacion}</span>
+                            <a href="detalle_empleo.html?id=${e.id}" class="btn btn-primario btn-pequeno">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        // Buscar empleos por texto
-        function buscarEmpleos() {
-            var texto = document.getElementById('buscador').value.toLowerCase();
-            var resultado = empleos.filter(function (e) {
-                return e.titulo.toLowerCase().includes(texto) ||
-                    e.empresa.toLowerCase().includes(texto) ||
-                    e.sector.toLowerCase().includes(texto);
+        // Calcular tiempo desde publicación
+        function calcularTiempo(fecha) {
+            const diff = Math.floor((new Date() - new Date(fecha)) / 60000);
+            if (diff < 60) return `Hace ${diff} minutos`;
+            if (diff < 1440) return `Hace ${Math.floor(diff / 60)} horas`;
+            if (diff < 2880) return 'Hace 1 día';
+            return `Hace ${Math.floor(diff / 1440)} días`;
+        }
+
+        // Aplicar todos los filtros
+        function aplicarFiltros() {
+            const texto = document.getElementById('buscador').value.toLowerCase();
+            const ubicacion = document.getElementById('buscador-ubicacion').value.toLowerCase();
+            const nivel = document.getElementById('select-nivel').value;
+            const sector = document.getElementById('select-sector').value;
+            const contrato = document.getElementById('select-contrato').value;
+            const salario = document.getElementById('select-salario').value;
+
+            let resultado = todosLosEmpleos.filter(e => {
+                const coincideTexto = !texto ||
+                    e.titulo?.toLowerCase().includes(texto) ||
+                    e.empresa_nombre?.toLowerCase().includes(texto) ||
+                    e.sector?.toLowerCase().includes(texto);
+
+                const coincideUbicacion = !ubicacion ||
+                    e.ubicacion?.toLowerCase().includes(ubicacion);
+
+                const coincideNivel = !nivel || e.nivel_experiencia === nivel ||
+                    filtrosActivos.nivel === e.nivel_experiencia;
+
+                const coincideSector = !sector || e.sector === sector ||
+                    filtrosActivos.sector === e.sector;
+
+                const coincideContrato = !contrato ||
+                    e.tipo_contrato?.includes(contrato);
+
+                let coincideSalario = true;
+                if (salario) {
+                    const min = e.rango_salarial_min || 0;
+                    const max = e.rango_salarial_max || 0;
+                    if (salario === '$0 - $30k') coincideSalario = max <= 30000;
+                    else if (salario === '$30k - $60k') coincideSalario = min >= 30000 && max <= 60000;
+                    else if (salario === '$60k - $100k') coincideSalario = min >= 60000 && max <= 100000;
+                    else if (salario === '$100k+') coincideSalario = min >= 100000;
+                }
+
+                return coincideTexto && coincideUbicacion && coincideNivel && coincideSector && coincideContrato && coincideSalario;
             });
+
             renderizarEmpleos(resultado);
         }
 
-        // Click en filtro del sidebar
-        function filtrar(elemento) {
-            elemento.classList.toggle('activo');
-            // Aqui iria la logica real de filtrado cuando haya backend
-        }
-
-        // Limpiar todos los filtros
-        function limpiarFiltros() {
-            var opciones = document.querySelectorAll('.opcion-filtro');
-            opciones.forEach(function (op) {
-                op.classList.remove('activo');
+        // Toggle filtro del sidebar
+        function toggleFiltro(elemento, tipo) {
+            const estaActivo = elemento.classList.contains('activo');
+            document.querySelectorAll(`.opcion-filtro`).forEach(op => {
+                if (op.getAttribute('onclick')?.includes(tipo)) {
+                    op.classList.remove('activo');
+                }
             });
-            renderizarEmpleos(empleos);
+
+            if (!estaActivo) {
+                elemento.classList.add('activo');
+                filtrosActivos[tipo] = elemento.textContent;
+                if (tipo === 'nivel') document.getElementById('select-nivel').value = elemento.textContent;
+                if (tipo === 'sector') document.getElementById('select-sector').value = elemento.textContent;
+                if (tipo === 'contrato') document.getElementById('select-contrato').value = elemento.textContent;
+            } else {
+                filtrosActivos[tipo] = '';
+                if (tipo === 'nivel') document.getElementById('select-nivel').value = '';
+                if (tipo === 'sector') document.getElementById('select-sector').value = '';
+                if (tipo === 'contrato') document.getElementById('select-contrato').value = '';
+            }
+
+            aplicarFiltros();
         }
 
-        // Mostrar todos los empleos al cargar la pagina
-        renderizarEmpleos(empleos);
-
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-        // Ocultar boton admin si no es admin
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
-            btnAdmin.style.display = 'none';
+        // Limpiar filtros
+        function limpiarFiltros() {
+            document.querySelectorAll('.opcion-filtro').forEach(op => op.classList.remove('activo'));
+            document.getElementById('buscador').value = '';
+            document.getElementById('buscador-ubicacion').value = '';
+            document.getElementById('select-nivel').value = '';
+            document.getElementById('select-sector').value = '';
+            document.getElementById('select-contrato').value = '';
+            document.getElementById('select-salario').value = '';
+            filtrosActivos = { nivel: '', sector: '', contrato: '' };
+            renderizarEmpleos(todosLosEmpleos);
         }
+        
 
-        // Ocultar boton publicar si no es empresa
-        const btnPublicar = document.querySelector('a[href="publicar.html"]');
-        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
-            btnPublicar.style.display = 'none';
-        }
+        cargarEmpleos();
     </script>
 
 </body>
