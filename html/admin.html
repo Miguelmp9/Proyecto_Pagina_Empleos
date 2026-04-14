@@ -13,7 +13,7 @@
 <body>
 <nav>
     <a href="home.html" class="nav-logo">
-        <img src="../contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+        <img src="/contenido_multimedia/logo.png" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
     </a>
     <div class="nav-links">
         <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
@@ -42,7 +42,7 @@
     <!-- Contenido principal -->
     <div class="contenido-admin">
 
-        <!-- Vista Dashboard -->
+        <!-- ===================== DASHBOARD ===================== -->
         <div id="vista-dashboard">
             <h1>Dashboard Principal</h1>
             <div class="grid-stats-admin">
@@ -51,36 +51,32 @@
                         <div class="stat-admin-icono"><i data-lucide="users"></i></div>
                         <span class="tendencia">↗</span>
                     </div>
-                    <div class="numero">150,342</div>
+                    <div class="numero" id="stat-usuarios">—</div>
                     <div class="etiqueta">Usuarios Totales</div>
-                    <div class="crecimiento">+12% este mes</div>
                 </div>
                 <div class="stat-admin">
                     <div class="stat-admin-cabecera">
                         <div class="stat-admin-icono"><i data-lucide="briefcase"></i></div>
                         <span class="tendencia">↗</span>
                     </div>
-                    <div class="numero">5,120</div>
+                    <div class="numero" id="stat-empresas">—</div>
                     <div class="etiqueta">Empresas Activas</div>
-                    <div class="crecimiento">+8% este mes</div>
                 </div>
                 <div class="stat-admin">
                     <div class="stat-admin-cabecera">
                         <div class="stat-admin-icono"><i data-lucide="file-text"></i></div>
                         <span class="tendencia">↗</span>
                     </div>
-                    <div class="numero">12,580</div>
+                    <div class="numero" id="stat-empleos">—</div>
                     <div class="etiqueta">Empleos Publicados</div>
-                    <div class="crecimiento">+15% este mes</div>
                 </div>
                 <div class="stat-admin">
                     <div class="stat-admin-cabecera">
-                        <div class="stat-admin-icono"><i data-lucide="eye"></i></div>
+                        <div class="stat-admin-icono"><i data-lucide="send"></i></div>
                         <span class="tendencia">↗</span>
                     </div>
-                    <div class="numero">2.4M</div>
-                    <div class="etiqueta">Vistas Totales</div>
-                    <div class="crecimiento">+20% este mes</div>
+                    <div class="numero" id="stat-postulaciones">—</div>
+                    <div class="etiqueta">Postulaciones</div>
                 </div>
             </div>
 
@@ -98,42 +94,24 @@
             <div class="grid-listas">
                 <div class="lista-reciente">
                     <h3>Usuarios Recientes</h3>
-                    <div class="fila-lista">
-                        <div><div class="fila-usuario-nombre">Ana García</div><div class="fila-usuario-email">ana@email.com</div></div>
-                        <div class="fila-der"><div class="fila-tiempo">Hoy</div><span class="badge badge-verde">Activo</span></div>
-                    </div>
-                    <div class="fila-lista">
-                        <div><div class="fila-usuario-nombre">Carlos Martínez</div><div class="fila-usuario-email">carlos@email.com</div></div>
-                        <div class="fila-der"><div class="fila-tiempo">Ayer</div><span class="badge badge-verde">Activo</span></div>
-                    </div>
-                    <div class="fila-lista">
-                        <div><div class="fila-usuario-nombre">Laura Sánchez</div><div class="fila-usuario-email">laura@email.com</div></div>
-                        <div class="fila-der"><div class="fila-tiempo">Hace 2 días</div><span class="badge badge-amarillo">Pendiente</span></div>
+                    <div id="lista-usuarios-recientes">
+                        <div style="color:var(--texto2); padding:1rem;">Cargando...</div>
                     </div>
                 </div>
                 <div class="lista-reciente">
                     <h3>Empresas Recientes</h3>
-                    <div class="fila-lista">
-                        <div><div class="fila-empresa-nombre">TechCorp Inc. ✓</div><div class="fila-empresa-sector">Tecnología</div></div>
-                        <div class="fila-empleos">12 empleos<br>publicados</div>
-                    </div>
-                    <div class="fila-lista">
-                        <div><div class="fila-empresa-nombre">DesignHub ✓</div><div class="fila-empresa-sector">Diseño</div></div>
-                        <div class="fila-empleos">8 empleos<br>publicados</div>
-                    </div>
-                    <div class="fila-lista">
-                        <div><div class="fila-empresa-nombre">StartupXYZ</div><div class="fila-empresa-sector">Marketing</div></div>
-                        <div class="fila-empleos">5 empleos<br>publicados</div>
+                    <div id="lista-empresas-recientes">
+                        <div style="color:var(--texto2); padding:1rem;">Cargando...</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Vista Usuarios -->
+        <!-- ===================== USUARIOS ===================== -->
         <div id="vista-usuarios" style="display:none;">
             <div class="encabezado-tabla">
                 <h1>Gestión de Usuarios</h1>
-                <input class="input" style="max-width:240px;" placeholder="Buscar usuarios...">
+                <input class="input" id="buscador-usuarios" style="max-width:240px;" placeholder="Buscar usuarios..." oninput="filtrarUsuarios(this.value)">
             </div>
             <div class="tabla-contenedor">
                 <table class="tabla-datos">
@@ -146,38 +124,77 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td style="font-weight:500;">Ana García</td><td style="color:var(--texto2);">ana@email.com</td><td style="color:var(--texto2);">Hoy</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
-                        <tr><td style="font-weight:500;">Carlos Martínez</td><td style="color:var(--texto2);">carlos@email.com</td><td style="color:var(--texto2);">Ayer</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
-                        <tr><td style="font-weight:500;">Laura Sánchez</td><td style="color:var(--texto2);">laura@email.com</td><td style="color:var(--texto2);">Hace 2 días</td><td><span class="badge badge-amarillo">Pendiente</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
-                        <tr><td style="font-weight:500;">Miguel Torres</td><td style="color:var(--texto2);">miguel@email.com</td><td style="color:var(--texto2);">Hace 3 días</td><td><span class="badge badge-verde">Activo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
-                        <tr><td style="font-weight:500;">Sara Ruiz</td><td style="color:var(--texto2);">sara@email.com</td><td style="color:var(--texto2);">Hace 5 días</td><td><span class="badge badge-rojo">Inactivo</span></td><td><span style="cursor:pointer; color:var(--texto2); margin-right:8px;">👁</span><span style="cursor:pointer; color:var(--rojo);">✕</span></td></tr>
+                    <tbody id="tabla-usuarios-body">
+                        <tr><td colspan="5" style="text-align:center; color:var(--texto2);">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Vista Empresas -->
+        <!-- ===================== EMPRESAS ===================== -->
         <div id="vista-empresas" style="display:none;">
-            <h1>Gestión de Empresas</h1>
+            <div class="encabezado-tabla">
+                <h1>Gestión de Empresas</h1>
+            </div>
             <div class="tabla-contenedor" style="margin-top:1rem;">
                 <table class="tabla-datos">
-                    <thead><tr><th>Empresa</th><th>Sector</th><th>Empleos</th><th>Estado</th><th>Acciones</th></tr></thead>
-                    <tbody>
-                        <tr><td style="font-weight:500;">TechCorp Inc.</td><td style="color:var(--texto2);">Tecnología</td><td>12</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
-                        <tr><td style="font-weight:500;">DesignHub</td><td style="color:var(--texto2);">Diseño</td><td>8</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
-                        <tr><td style="font-weight:500;">Growth Marketing</td><td style="color:var(--texto2);">Marketing</td><td>5</td><td><span class="badge badge-amarillo">Pendiente</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
-                        <tr><td style="font-weight:500;">DataInsights</td><td style="color:var(--texto2);">Tecnología</td><td>3</td><td><span class="badge badge-verde">Verificada</span></td><td><span style="cursor:pointer; color:var(--texto2);">👁</span></td></tr>
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Sector</th>
+                            <th>Empleos</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-empresas-body">
+                        <tr><td colspan="5" style="text-align:center; color:var(--texto2);">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Otras vistas placeholder -->
-        <div id="vista-vacantes" style="display:none;"><h1>Gestión de Vacantes</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
-        <div id="vista-moderacion" style="display:none;"><h1>Moderación</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
-        <div id="vista-estadisticas" style="display:none;"><h1>Estadísticas</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
-        <div id="vista-configuracion" style="display:none;"><h1>Configuración</h1><p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p></div>
+        <!-- ===================== VACANTES ===================== -->
+        <div id="vista-vacantes" style="display:none;">
+            <div class="encabezado-tabla">
+                <h1>Gestión de Vacantes</h1>
+            </div>
+            <div class="tabla-contenedor" style="margin-top:1rem;">
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Empresa</th>
+                            <th>Sector</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-vacantes-body">
+                        <tr><td colspan="6" style="text-align:center; color:var(--texto2);">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===================== MODERACIÓN ===================== -->
+        <div id="vista-moderacion" style="display:none;">
+            <h1>Moderación</h1>
+            <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
+        </div>
+
+        <!-- ===================== ESTADÍSTICAS ===================== -->
+        <div id="vista-estadisticas" style="display:none;">
+            <h1>Estadísticas</h1>
+            <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
+        </div>
+
+        <!-- ===================== CONFIGURACIÓN ===================== -->
+        <div id="vista-configuracion" style="display:none;">
+            <h1>Configuración</h1>
+            <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
+        </div>
 
     </div>
 </div>
@@ -185,98 +202,279 @@
 <footer><div style="text-align:center; padding:0.75rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los derechos reservados.</div></footer>
 
 <script>
-    lucide.createIcons();
+const API = 'http://localhost:3000';
 
-    // Lista de todas las vistas del admin
-    var vistas = ['dashboard', 'usuarios', 'empresas', 'vacantes', 'moderacion', 'estadisticas', 'configuracion'];
+lucide.createIcons();
 
-    function mostrarVista(vista) {
-        // Ocultar todas las vistas
-        vistas.forEach(function(v) {
-            document.getElementById('vista-' + v).style.display = 'none';
-            document.getElementById('nav-' + v).classList.remove('activo');
-        });
+// ─── Utilidades ───────────────────────────────────────────────
+function formatFecha(fechaStr) {
+    if (!fechaStr) return '—';
+    const fecha = new Date(fechaStr);
+    const ahora = new Date();
+    const diff = Math.floor((ahora - fecha) / (1000 * 60 * 60 * 24));
+    if (diff === 0) return 'Hoy';
+    if (diff === 1) return 'Ayer';
+    if (diff < 7) return `Hace ${diff} días`;
+    return fecha.toLocaleDateString('es-ES');
+}
 
-        // Mostrar la vista seleccionada
-        document.getElementById('vista-' + vista).style.display = 'block';
-        document.getElementById('nav-' + vista).classList.add('activo');
+function badgeEstado(estado) {
+    if (!estado) return '<span class="badge badge-amarillo">—</span>';
+    const e = estado.toLowerCase();
+    if (e === 'activo' || e === 'activa' || e === 'verificada') return `<span class="badge badge-verde">${estado}</span>`;
+    if (e === 'inactivo' || e === 'inactiva') return `<span class="badge badge-rojo">${estado}</span>`;
+    return `<span class="badge badge-amarillo">${estado}</span>`;
+}
 
-        // Si es el dashboard, inicializar las graficas
-        if (vista === 'dashboard') {
-            inicializarGraficas();
-        }
+// ─── Navegación ──────────────────────────────────────────────
+var vistas = ['dashboard', 'usuarios', 'empresas', 'vacantes', 'moderacion', 'estadisticas', 'configuracion'];
+
+function mostrarVista(vista) {
+    vistas.forEach(function(v) {
+        document.getElementById('vista-' + v).style.display = 'none';
+        document.getElementById('nav-' + v).classList.remove('activo');
+    });
+    document.getElementById('vista-' + vista).style.display = 'block';
+    document.getElementById('nav-' + vista).classList.add('activo');
+
+    if (vista === 'dashboard') cargarDashboard();
+    if (vista === 'usuarios') cargarUsuarios();
+    if (vista === 'empresas') cargarEmpresas();
+    if (vista === 'vacantes') cargarVacantes();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+async function cargarDashboard() {
+    try {
+        // Stats
+        const res = await fetch(`${API}/admin/stats`);
+        const stats = await res.json();
+        document.getElementById('stat-usuarios').textContent = stats.total_usuarios?.toLocaleString() || '0';
+        document.getElementById('stat-empresas').textContent = stats.total_empresas?.toLocaleString() || '0';
+        document.getElementById('stat-empleos').textContent = stats.total_empleos?.toLocaleString() || '0';
+        document.getElementById('stat-postulaciones').textContent = stats.total_postulaciones?.toLocaleString() || '0';
+    } catch (e) {
+        console.error('Error cargando stats:', e);
     }
 
-    var graficasCreadas = false;
-
-    function inicializarGraficas() {
-        // Solo crear las graficas una vez
-        if (graficasCreadas) return;
-        graficasCreadas = true;
-
-        // Grafica de lineas - crecimiento
-        var ctxLinea = document.getElementById('graficaCrecimiento').getContext('2d');
-        new Chart(ctxLinea, {
-            type: 'line',
-            data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                datasets: [
-                    {
-                        label: 'usuarios',
-                        data: [2000, 3500, 5000, 7000, 9500, 12000],
-                        borderColor: '#7c6fef',
-                        backgroundColor: 'rgba(124,111,239,0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'empresas',
-                        data: [300, 600, 1000, 1500, 2200, 3000],
-                        borderColor: '#22c55e',
-                        backgroundColor: 'rgba(34,197,94,0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { labels: { color: '#a0a0b8', font: { size: 11 } } }
-                },
-                scales: {
-                    x: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                }
-            }
-        });
-
-        // Grafica de dona - categorias
-        var ctxDona = document.getElementById('graficaCategorias').getContext('2d');
-        new Chart(ctxDona, {
-            type: 'doughnut',
-            data: {
-                labels: ['Tecnología', 'Marketing', 'Diseño', 'Finanzas', 'Otros'],
-                datasets: [{
-                    data: [2400, 1500, 1200, 1300, 800],
-                    backgroundColor: ['#7c6fef', '#6158d4', '#22c55e', '#f59e0b', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: { color: '#a0a0b8', font: { size: 11 } }
-                    }
-                }
-            }
-        });
+    try {
+        // Usuarios recientes
+        const resU = await fetch(`${API}/admin/usuarios-recientes`);
+        const usuarios = await resU.json();
+        const contenedor = document.getElementById('lista-usuarios-recientes');
+        contenedor.innerHTML = usuarios.map(u => `
+            <div class="fila-lista">
+                <div>
+                    <div class="fila-usuario-nombre">${u.nombre_completo}</div>
+                    <div class="fila-usuario-email">${u.email}</div>
+                </div>
+                <div class="fila-der">
+                    <div class="fila-tiempo">${formatFecha(u.fecha_registro)}</div>
+                    ${badgeEstado(u.estado)}
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        document.getElementById('lista-usuarios-recientes').innerHTML = '<div style="color:var(--texto2); padding:1rem;">Sin datos</div>';
     }
 
-    // Inicializar graficas cuando carga la pagina
+    try {
+        // Empresas recientes
+        const resE = await fetch(`${API}/admin/empresas-recientes`);
+        const empresas = await resE.json();
+        const contenedor = document.getElementById('lista-empresas-recientes');
+        contenedor.innerHTML = empresas.map(e => `
+            <div class="fila-lista">
+                <div>
+                    <div class="fila-empresa-nombre">${e.nombre} ${e.verificada ? '✓' : ''}</div>
+                    <div class="fila-empresa-sector">${e.industria || '—'}</div>
+                </div>
+                <div class="fila-empleos">${e.total_empleos} empleos<br>publicados</div>
+            </div>
+        `).join('');
+    } catch (e) {
+        document.getElementById('lista-empresas-recientes').innerHTML = '<div style="color:var(--texto2); padding:1rem;">Sin datos</div>';
+    }
+
     inicializarGraficas();
+}
+
+// ─── GRÁFICAS ────────────────────────────────────────────────
+var graficasCreadas = false;
+
+function inicializarGraficas() {
+    if (graficasCreadas) return;
+    graficasCreadas = true;
+
+    var ctxLinea = document.getElementById('graficaCrecimiento').getContext('2d');
+    new Chart(ctxLinea, {
+        type: 'line',
+        data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            datasets: [
+                { label: 'usuarios', data: [2000, 3500, 5000, 7000, 9500, 12000], borderColor: '#7c6fef', backgroundColor: 'rgba(124,111,239,0.1)', fill: true, tension: 0.4 },
+                { label: 'empresas', data: [300, 600, 1000, 1500, 2200, 3000], borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)', fill: true, tension: 0.4 }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { labels: { color: '#a0a0b8', font: { size: 11 } } } }, scales: { x: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+    });
+
+    var ctxDona = document.getElementById('graficaCategorias').getContext('2d');
+    new Chart(ctxDona, {
+        type: 'doughnut',
+        data: {
+            labels: ['Tecnología', 'Marketing', 'Diseño', 'Finanzas', 'Otros'],
+            datasets: [{ data: [2400, 1500, 1200, 1300, 800], backgroundColor: ['#7c6fef', '#6158d4', '#22c55e', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#a0a0b8', font: { size: 11 } } } } }
+    });
+}
+
+// ─── USUARIOS ────────────────────────────────────────────────
+var todosLosUsuarios = [];
+
+async function cargarUsuarios() {
+    const tbody = document.getElementById('tabla-usuarios-body');
+    try {
+        const res = await fetch(`${API}/usuarios`);
+        todosLosUsuarios = await res.json();
+        renderTablaUsuarios(todosLosUsuarios);
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--rojo);">Error al cargar usuarios</td></tr>';
+    }
+}
+
+function renderTablaUsuarios(usuarios) {
+    const tbody = document.getElementById('tabla-usuarios-body');
+    if (!usuarios.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--texto2);">No hay usuarios</td></tr>';
+        return;
+    }
+    tbody.innerHTML = usuarios.map(u => `
+        <tr>
+            <td style="font-weight:500;">${u.nombre_completo}</td>
+            <td style="color:var(--texto2);">${u.email}</td>
+            <td style="color:var(--texto2);">${formatFecha(u.fecha_registro)}</td>
+            <td>${badgeEstado(u.estado)}</td>
+            <td>
+                <span style="cursor:pointer; color:var(--texto2); margin-right:8px;" title="Ver" onclick="verUsuario(${u.id})">👁</span>
+                <span style="cursor:pointer; color:var(--rojo);" title="Eliminar" onclick="eliminarUsuario(${u.id}, '${u.nombre_completo}')">✕</span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filtrarUsuarios(texto) {
+    const filtrados = todosLosUsuarios.filter(u =>
+        u.nombre_completo.toLowerCase().includes(texto.toLowerCase()) ||
+        u.email.toLowerCase().includes(texto.toLowerCase())
+    );
+    renderTablaUsuarios(filtrados);
+}
+
+function verUsuario(id) {
+    const u = todosLosUsuarios.find(u => u.id === id);
+    if (u) alert(`👤 ${u.nombre_completo}\n📧 ${u.email}\n📍 ${u.ubicacion || '—'}\n💼 ${u.titulo_profesional || '—'}\n🔖 Rol: ${u.rol}`);
+}
+
+async function eliminarUsuario(id, nombre) {
+    if (!confirm(`¿Eliminar al usuario "${nombre}"? Esta acción no se puede deshacer.`)) return;
+    try {
+        const res = await fetch(`${API}/usuarios/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+            todosLosUsuarios = todosLosUsuarios.filter(u => u.id !== id);
+            renderTablaUsuarios(todosLosUsuarios);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (e) {
+        alert('Error al eliminar el usuario');
+    }
+}
+
+// ─── EMPRESAS ────────────────────────────────────────────────
+async function cargarEmpresas() {
+    const tbody = document.getElementById('tabla-empresas-body');
+    try {
+        const res = await fetch(`${API}/empresas`);
+        const empresas = await res.json();
+        if (!empresas.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--texto2);">No hay empresas registradas</td></tr>';
+            return;
+        }
+        tbody.innerHTML = empresas.map(e => `
+            <tr>
+                <td style="font-weight:500;">${e.nombre}</td>
+                <td style="color:var(--texto2);">${e.industria || '—'}</td>
+                <td>${e.total_empleos || 0}</td>
+                <td>${e.verificada ? '<span class="badge badge-verde">Verificada</span>' : '<span class="badge badge-amarillo">Pendiente</span>'}</td>
+                <td>
+                    <span style="cursor:pointer; color:var(--texto2); margin-right:8px;" onclick="verEmpresa(${e.id})">👁</span>
+                    <span style="cursor:pointer; color:var(--rojo);" onclick="eliminarEmpresa(${e.id}, '${e.nombre}')">✕</span>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--rojo);">Error al cargar empresas</td></tr>';
+    }
+}
+
+function verEmpresa(id) {
+    window.open(`${API}/empresas/${id}`, '_blank');
+}
+
+async function eliminarEmpresa(id, nombre) {
+    if (!confirm(`¿Eliminar la empresa "${nombre}"?`)) return;
+    try {
+        const res = await fetch(`${API}/empresas/${id}`, { method: 'DELETE' });
+        if (res.ok) cargarEmpresas();
+        else alert('Error al eliminar empresa');
+    } catch (e) {
+        alert('Error al eliminar empresa');
+    }
+}
+
+// ─── VACANTES ────────────────────────────────────────────────
+async function cargarVacantes() {
+    const tbody = document.getElementById('tabla-vacantes-body');
+    try {
+        const res = await fetch(`${API}/empleos`);
+        const empleos = await res.json();
+        if (!empleos.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--texto2);">No hay vacantes registradas</td></tr>';
+            return;
+        }
+        tbody.innerHTML = empleos.map(emp => `
+            <tr>
+                <td style="font-weight:500;">${emp.titulo}</td>
+                <td style="color:var(--texto2);">${emp.empresa_nombre || '—'}</td>
+                <td style="color:var(--texto2);">${emp.sector || '—'}</td>
+                <td>${badgeEstado(emp.estado)}</td>
+                <td style="color:var(--texto2);">${formatFecha(emp.fecha_publicacion)}</td>
+                <td>
+                    <span style="cursor:pointer; color:var(--rojo);" onclick="eliminarVacante(${emp.id}, '${emp.titulo.replace(/'/g, "\\'")}')">✕</span>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--rojo);">Error al cargar vacantes</td></tr>';
+    }
+}
+
+async function eliminarVacante(id, titulo) {
+    if (!confirm(`¿Eliminar la vacante "${titulo}"?`)) return;
+    try {
+        const res = await fetch(`${API}/empleos/${id}`, { method: 'DELETE' });
+        if (res.ok) cargarVacantes();
+        else alert('Error al eliminar vacante');
+    } catch (e) {
+        alert('Error al eliminar vacante');
+    }
+}
+
+// ─── Inicio ──────────────────────────────────────────────────
+cargarDashboard();
 </script>
 
 </body>

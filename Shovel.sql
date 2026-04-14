@@ -1,3 +1,5 @@
+
+
 create database shovel;
 use shovel;
 
@@ -325,9 +327,6 @@ CREATE TABLE discusion_etiquetas (
     FOREIGN KEY (etiqueta_id) REFERENCES etiquetas(id)
 );
 
--- ══════════════════════════════════════════════════════════════
---  INSERTS FOROS
--- ══════════════════════════════════════════════════════════════
 
 INSERT INTO foros_categorias (nombre, descripcion, icono, total_discusiones) VALUES
 ('Tecnología',          'Programación, software, herramientas y tendencias tech',      'code',        89),
