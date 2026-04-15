@@ -2,7 +2,12 @@ import { pool } from '../db.js';
 
 // Obtener todas las empresas
 export const getAllEmpresas = async () => {
-    const [rows] = await pool.query('SELECT * FROM empresas');
+    const [rows] = await pool.query(`
+        SELECT e.*, 
+            (SELECT COUNT(*) FROM empleos emp WHERE emp.empresa_id = e.id) AS total_empleos
+        FROM empresas e
+        ORDER BY e.fecha_registro DESC
+    `);
     return rows;
 };
 
@@ -15,6 +20,12 @@ export const getEmpresaById = async (id) => {
 // Obtener empresa por email
 export const getEmpresaByEmail = async (email) => {
     const [rows] = await pool.query('SELECT * FROM empresas WHERE email = ?', [email]);
+    return rows[0];
+};
+
+// Obtener empresa por usuario_id
+export const getEmpresaByUsuarioId = async (usuario_id) => {
+    const [rows] = await pool.query('SELECT * FROM empresas WHERE usuario_id = ?', [usuario_id]);
     return rows[0];
 };
 

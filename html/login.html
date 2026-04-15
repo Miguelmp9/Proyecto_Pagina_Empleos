@@ -106,7 +106,18 @@
                 <div id="campos-empresa" style="display:none;">
                     <div class="grupo-input">
                         <label>Industria</label>
-                        <input class="input" type="text" id="registro-industria" placeholder="Tecnología, Salud, Finanzas...">
+                        <select class="input" id="registro-industria">
+                            <option value="">Selecciona una industria...</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Diseño">Diseño</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Manufactura">Manufactura</option>
+                            <option value="Comercio">Comercio</option>
+                            <option value="Otro">Otro</option>
+                        </select>
                     </div>
                     <div class="grupo-input">
                         <label>Tamaño de la empresa</label>
@@ -274,7 +285,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, contrasena })
                 });
-
                 data = await res.json();
             }
 
@@ -287,7 +297,6 @@
 
             btn.innerHTML = '✓ Entrando...';
 
-            // Guardamos según si es usuario o empresa
             if (data.usuario) {
                 localStorage.setItem('usuario', JSON.stringify(data.usuario));
             } else if (data.empresa) {
@@ -329,7 +338,7 @@
                     body: JSON.stringify({ nombre_completo: nombre, email, contrasena })
                 });
             } else {
-                const industria = document.getElementById('registro-industria').value.trim();
+                const industria = document.getElementById('registro-industria').value;
                 const tamano = document.getElementById('registro-tamano').value;
 
                 if (!industria || !tamano) {
@@ -407,5 +416,4 @@
 </script>
 
 </body>
-
 </html>

@@ -1,67 +1,39 @@
-import * as empleoServicios from '../services/EmpleoServicios.js';
+import { pool } from '../db.js';
 
-export const getTodosLosEmpleos = async (req, res) => {
+export const getStats = async (req, res) => {
     try {
-        const empleos = await empleoServicios.getAllEmpleos();
-        res.json(empleos);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los empleos' });
-    }
-};
+        const [[{ total_usuarios }]] = await pool.query('SELECT COUNT(*) AS total_usuarios FROM usuarios');
+        const [[{ total_empresas }]] = await pool.query('SELECT COUNT(*) AS total_empresas FROM empresas');
+        const [[{ total_empleos }]] = await pool.query('SELECT COUNT(*) AS total_empleos FROM empleos');
+        const [[{ total_postulaciones }]] = await pool.query('SELECT COUNT(*) AS total_postulaciones FROM postulaciones');
 
-export const getEmpleosPorEmpresa = async (req, res) => {
-    try {
-        const empleos = await empleoServicios.getEmpleosByEmpresa(req.params.empresa_id);
-        res.json(empleos);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los empleos' });
-    }
-};
-
-export const getEmpleoPorId = async (req, res) => {
-    try {
-        const empleo = await empleoServicios.getEmpleoById(req.params.id);
-        if (!empleo) return res.status(404).json({ error: 'Empleo no encontrado' });
-        res.json(empleo);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener el empleo' });
-    }
-};
-
-export const postCrearEmpleo = async (req, res) => {
-    try {
-        const result = await empleoServicios.createEmpleo(req.body);
-        res.status(201).json({ mensaje: 'Empleo publicado', id: result.insertId });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al publicar el empleo' });
-    }
-};
-
-export const putActualizarEmpleo = async (req, res) => {
-    try {
-        const result = await empleoServicios.updateEmpleo(req.params.id, req.body);
-        if (result.affectedRows === 0) return res.status(404).json({ error: 'Empleo no encontrado' });
-        res.json({ mensaje: 'Empleo actualizado' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar el empleo' });
-    }
-};
-
-export const deleteEliminarEmpleo = async (req, res) => {
-    try {
-        const result = await empleoServicios.deleteEmpleo(req.params.id);
-        if (result.affectedRows === 0) return res.status(404).json({ error: 'Empleo no encontrado' });
-        res.json({ mensaje: 'Empleo eliminado' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el empleo' });
-    }
-};
-
-export const getStatsPorEmpresa = async (req, res) => {
-    try {
-        const stats = await empleoServicios.getStatsByEmpresa(req.params.empresa_id);
-        res.json(stats);
+        res.json({ total_usuarios, total_empresas, total_empleos, total_postulaciones });
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+};
+
+export const getUsuariosRecientes = async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT id, nombre_completo, email, fecha_registro, estado FROM usuarios ORDER BY fecha_registro DESC LIMIT 5'
+        );
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener usuarios recientes' });
+    }
+};
+
+export const getEmpresasRecientes = async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT e.id, e.nombre, e.industria, e.verificada,
+                (SELECT COUNT(*) FROM empleos emp WHERE emp.empresa_id = e.id) AS total_empleos
+            FROM empresas e
+            ORDER BY e.fecha_registro DESC LIMIT 5
+        `);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener empresas recientes' });
     }
 };
