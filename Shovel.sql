@@ -1,4 +1,4 @@
-
+drop database shovel;
 create database shovel;
 use shovel;
 
@@ -465,6 +465,9 @@ UPDATE empleos SET
     beneficios = 'Vehículo de empresa, seguro médico, bonos por eficiencia.'
 WHERE id = 10;
 
+
+Drop table recursos;
+
 CREATE TABLE recursos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(255) NOT NULL,
@@ -493,3 +496,25 @@ CREATE TABLE recursos (
     FOREIGN KEY (empresa_id) REFERENCES empresas(id)
 );
 
+
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+DELETE FROM usuarios WHERE id != 11;
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+SET SQL_SAFE_UPDATES = 0;
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE postulaciones;
+TRUNCATE TABLE empleos_guardados;
+TRUNCATE TABLE empleos;
+TRUNCATE TABLE valoraciones_empresas;
+TRUNCATE TABLE empresas;
+
+SET FOREIGN_KEY_CHECKS = 1;
+SET SQL_SAFE_UPDATES = 1;
