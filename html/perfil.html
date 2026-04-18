@@ -28,7 +28,14 @@
 
     <!-- Header del perfil -->
     <div class="perfil-header">
-        <div class="perfil-avatar">👤</div>
+        <!-- NUEVO: foto de perfil con upload -->
+        <div class="perfil-avatar" style="position:relative; cursor:pointer; width:80px; height:80px;" onclick="document.getElementById('input-foto').click()">
+            <img id="foto-perfil-img"
+                 src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>"
+                 style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+            <div style="position:absolute; bottom:0; right:0; background:var(--morado); border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px;">📷</div>
+            <input type="file" id="input-foto" accept="image/*" style="display:none;" onchange="subirFoto(this)">
+        </div>
         <div class="perfil-info">
             <h1 id="perfil-nombre">Cargando...</h1>
             <p class="perfil-cargo" id="perfil-cargo">-</p>
@@ -41,12 +48,12 @@
         </div>
     </div>
 
-    <!-- Stats del perfil -->
+    <!-- Stats del perfil — MODIFICADO: ids agregados a visitas y guardados, completitud dinámica -->
     <div class="perfil-stats">
-        <div><div class="perfil-stat-numero">342</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
+        <div><div class="perfil-stat-numero" id="stat-visitas">-</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
         <div><div class="perfil-stat-numero" id="stat-postulaciones">-</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
-        <div><div class="perfil-stat-numero">8</div><div class="perfil-stat-label">Empleos Guardados</div></div>
-        <div><div class="perfil-stat-numero">92%</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
+        <div><div class="perfil-stat-numero" id="stat-guardados">-</div><div class="perfil-stat-label">Empleos Guardados</div></div>
+        <div><div class="perfil-stat-numero" id="stat-completitud">-</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
     </div>
 
     <!-- Tarjeta con tabs -->
@@ -68,15 +75,20 @@
             </div>
             <div class="seccion-perfil">
                 <h3>Currículum</h3>
+                <!-- NUEVO: CV con upload -->
                 <div class="tarjeta-cv">
                     <div class="cv-icono-wrap">
                         <div class="cv-icono"><i data-lucide="file-text"></i></div>
                         <div>
-                            <div class="cv-nombre">CV_2026.pdf</div>
-                            <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
+                            <div class="cv-nombre" id="cv-nombre">Sin CV subido</div>
+                            <div class="cv-fecha" id="cv-fecha">-</div>
                         </div>
                     </div>
-                    <button class="btn btn-borde btn-pequeno">↑ Actualizar CV</button>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <a id="cv-ver" href="#" target="_blank" style="display:none;" class="btn btn-borde btn-pequeno">👁 Ver CV</a>
+                        <button class="btn btn-borde btn-pequeno" onclick="document.getElementById('input-cv').click()">↑ Actualizar CV</button>
+                        <input type="file" id="input-cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="subirCV(this)">
+                    </div>
                 </div>
             </div>
             <div class="seccion-perfil">
@@ -325,6 +337,31 @@
             document.getElementById('edit-linkedin').value = data.linkedin_url || '';
             document.getElementById('edit-github').value = data.github_url || '';
             document.getElementById('edit-sobre-mi').value = data.sobre_mi || '';
+
+            // NUEVO: cargar foto de perfil si existe
+            if (data.foto_perfil) {
+                document.getElementById('foto-perfil-img').src = `../contenido_multimedia/${data.foto_perfil}`;
+            }
+
+            // NUEVO: visitas al perfil
+            document.getElementById('stat-visitas').textContent = data.visitas_perfil || 0;
+
+            // NUEVO: empleos guardados
+            fetch(`${API}/postulaciones/guardados/${usuario.id}`)
+                .then(r => r.json())
+                .then(g => {
+                    document.getElementById('stat-guardados').textContent = Array.isArray(g) ? g.length : 0;
+                })
+                .catch(() => document.getElementById('stat-guardados').textContent = 0);
+
+            // NUEVO: completitud del perfil calculada dinamicamente
+            const campos = [
+                data.nombre_completo, data.email, data.telefono, data.ubicacion,
+                data.titulo_profesional, data.sobre_mi, data.sector_preferido,
+                data.anios_experiencia, data.foto_perfil, data.linkedin_url
+            ];
+            const rellenos = campos.filter(c => c && String(c).trim() !== '').length;
+            document.getElementById('stat-completitud').textContent = Math.round((rellenos / campos.length) * 100) + '%';
         })
         .catch(error => console.error('Error al cargar perfil:', error));
 
@@ -387,6 +424,15 @@
             document.getElementById('perfil-telefono').textContent = '📞 ' + datos.telefono;
             document.getElementById('perfil-experiencia').textContent = '💼 ' + datos.anios_experiencia + ' años de experiencia';
             document.getElementById('perfil-sobre-mi').textContent = datos.sobre_mi;
+
+            // NUEVO: recalcular completitud al guardar
+            const campos = [
+                datos.nombre_completo, datos.email, datos.telefono, datos.ubicacion,
+                datos.titulo_profesional, datos.sobre_mi, datos.sector_preferido,
+                datos.anios_experiencia, datosUsuario.foto_perfil, datos.linkedin_url
+            ];
+            const rellenos = campos.filter(c => c && String(c).trim() !== '').length;
+            document.getElementById('stat-completitud').textContent = Math.round((rellenos / campos.length) * 100) + '%';
 
             msg.textContent = '✓ Perfil actualizado correctamente';
             msg.style.display = 'block';
@@ -722,6 +768,54 @@
             cargarAlertas();
         } catch (error) {
             console.error('Error al eliminar alerta:', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════
+    // NUEVO: FOTO DE PERFIL
+    // ═══════════════════════════════════════════
+    async function subirFoto(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('foto', file);
+        try {
+            const res = await fetch(`${API}/usuarios/${usuario.id}/foto`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('foto-perfil-img').src = `../contenido_multimedia/${data.foto_perfil}`;
+            }
+        } catch (error) {
+            console.error('Error al subir foto:', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════
+    // NUEVO: CURRICULUM
+    // ═══════════════════════════════════════════
+    async function subirCV(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('cv', file);
+        try {
+            const res = await fetch(`${API}/usuarios/${usuario.id}/cv`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('cv-nombre').textContent = data.nombre_archivo;
+                document.getElementById('cv-fecha').textContent = 'Actualizado: ' + new Date().toLocaleDateString('es-ES');
+                const cvVer = document.getElementById('cv-ver');
+                cvVer.href = `../contenido_multimedia/${data.cv_url}`;
+                cvVer.style.display = 'inline-flex';
+            }
+        } catch (error) {
+            console.error('Error al subir CV:', error);
         }
     }
 </script>

@@ -33,6 +33,7 @@ export const getUsuarioPorEmail = async (req, res) => {
     }
 };
 
+
 // Buscar por nombre
 export const getUsuarioPorNombre = async (req, res) => {
     try {
@@ -121,5 +122,74 @@ export const postLogin = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: 'Error al iniciar sesión' });
+    }
+};
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Configuracion de multer para fotos
+const storageFoto = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../../contenido_multimedia'));
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `foto_${req.params.id}_${Date.now()}${ext}`);
+    }
+});
+
+// Configuracion de multer para CV
+const storageCV = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../../contenido_multimedia'));
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `cv_${req.params.id}_${Date.now()}${ext}`);
+    }
+});
+
+const uploadFoto = multer({ storage: storageFoto });
+const uploadCV = multer({ storage: storageCV });
+
+// Subir foto de perfil
+export const postSubirFoto = [
+    uploadFoto.single('foto'),
+    async (req, res) => {
+        try {
+            if (!req.file) return res.status(400).json({ error: 'No se subió ninguna imagen' });
+            const foto_perfil = req.file.filename;
+            await usuariosServices.updateUsuario(req.params.id, { foto_perfil });
+            res.json({ mensaje: 'Foto actualizada', foto_perfil });
+        } catch (error) {
+            res.status(500).json({ error: 'Error al subir la foto' });
+        }
+    }
+];
+
+// Subir CV
+export const postSubirCV = [
+    uploadCV.single('cv'),
+    async (req, res) => {
+        try {
+            if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' });
+            const cv_url = req.file.filename;
+            res.json({ mensaje: 'CV actualizado', cv_url, nombre_archivo: req.file.originalname });
+        } catch (error) {
+            res.status(500).json({ error: 'Error al subir el CV' });
+        }
+    }
+];
+// Registrar visita al perfil
+export const postRegistrarVisita = async (req, res) => {
+    try {
+        await usuariosServices.incrementarVisitas(req.params.id);
+        res.json({ mensaje: 'Visita registrada' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al registrar visita' });
     }
 };

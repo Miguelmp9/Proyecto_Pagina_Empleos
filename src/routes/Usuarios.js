@@ -31,4 +31,12 @@ router.put('/:id', runValidations(updateUserValidators), usuariosController.putA
 // Eliminar usuario
 router.delete('/:id', usuariosController.deleteEliminarUsuario);
 
+// Subir foto de perfil
+router.post('/:id/foto', usuariosController.postSubirFoto);
+
+// Subir CV
+router.post('/:id/cv', usuariosController.postSubirCV);
+
+router.post('/:id/visita', usuariosController.postRegistrarVisita);
+
 export default router;
