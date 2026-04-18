@@ -44,7 +44,7 @@
     <!-- Stats del perfil -->
     <div class="perfil-stats">
         <div><div class="perfil-stat-numero">342</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
-        <div><div class="perfil-stat-numero">18</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
+        <div><div class="perfil-stat-numero" id="stat-postulaciones">-</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
         <div><div class="perfil-stat-numero">8</div><div class="perfil-stat-label">Empleos Guardados</div></div>
         <div><div class="perfil-stat-numero">92%</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
     </div>
@@ -153,8 +153,10 @@
         <!-- Mis Postulaciones -->
         <div id="mis-postulaciones" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Mis Postulaciones</h3>
-                <p style="color:var(--texto2);">Próximamente podrás ver tus postulaciones aquí.</p>
+                <h3>Historial de Postulaciones</h3>
+                <div id="lista-postulaciones">
+                    <p style="color:var(--texto2);">Cargando postulaciones...</p>
+                </div>
             </div>
         </div>
 
@@ -178,7 +180,7 @@
 
                 <!-- Lista de habilidades -->
                 <div id="lista-habilidades" style="display:flex; flex-wrap:wrap; gap:0.75rem;">
-                    <p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>
+                    <p style="color:var(--texto2);">Cargando habilidades...</p>
                 </div>
             </div>
         </div>
@@ -186,16 +188,79 @@
         <!-- Mis Valoraciones -->
         <div id="mis-valoraciones" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Mis Valoraciones</h3>
-                <p style="color:var(--texto2);">Próximamente podrás ver tus valoraciones aquí.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3 style="margin:0;">Valoraciones de Empresas</h3>
+                    <button class="btn btn-primario btn-pequeno" onclick="abrirModalValoracion()">+ Nueva Valoración</button>
+                </div>
+
+                <div id="modal-valoracion" style="display:none; background:var(--tarjeta2); border:1px solid var(--borde); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+                    <h4 style="margin:0 0 1rem;">Nueva Valoración</h4>
+                    <div id="mensaje-valoracion" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div class="grupo-input">
+                            <label>Empresa</label>
+                            <select class="input" id="val-empresa-id">
+                                <option value="">Selecciona una empresa...</option>
+                            </select>
+                        </div>
+                        <div class="grupo-input">
+                            <label>Calificación (1-5)</label>
+                            <select class="input" id="val-calificacion">
+                                <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                                <option value="4">⭐⭐⭐⭐ Muy buena</option>
+                                <option value="3">⭐⭐⭐ Buena</option>
+                                <option value="2">⭐⭐ Regular</option>
+                                <option value="1">⭐ Mala</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grupo-input" style="margin-bottom:1rem;">
+                        <label>Comentario</label>
+                        <textarea class="input" id="val-comentario" rows="3" placeholder="Describe tu experiencia con esta empresa..." style="resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button class="btn btn-primario" onclick="guardarValoracion()">Guardar Valoración</button>
+                        <button class="btn btn-borde" onclick="cerrarModalValoracion()">Cancelar</button>
+                    </div>
+                </div>
+
+                <div id="lista-valoraciones">
+                    <p style="color:var(--texto2);">Cargando valoraciones...</p>
+                </div>
             </div>
         </div>
 
         <!-- Alertas -->
         <div id="alertas" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Alertas de Empleo</h3>
-                <p style="color:var(--texto2);">Próximamente podrás configurar tus alertas aquí.</p>
+                <h3>Alertas de Trabajo</h3>
+                <div style="background:var(--tarjeta2); border:1px solid var(--borde); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+                    <p style="margin:0 0 1rem; color:var(--texto2); font-size:0.875rem;">Configura tus alertas. Recibirás notificaciones cuando aparezcan empleos que coincidan con tus preferencias.</p>
+                    <div id="mensaje-alertas" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div class="grupo-input">
+                            <label>Palabras Clave</label>
+                            <input class="input" type="text" id="alerta-palabras" placeholder="Ej: React, Frontend, JavaScript">
+                        </div>
+                        <div class="grupo-input">
+                            <label>Ubicación</label>
+                            <input class="input" type="text" id="alerta-ubicacion" placeholder="Ej: San Salvador, Remoto">
+                        </div>
+                    </div>
+                    <div class="grupo-input" style="margin-bottom:1rem;">
+                        <label>Frecuencia de Notificaciones</label>
+                        <select class="input" id="alerta-frecuencia" style="max-width:300px;">
+                            <option value="Diaria">Diaria</option>
+                            <option value="Semanal" selected>Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primario" onclick="guardarAlerta()">Guardar Alerta</button>
+                </div>
+                <h4 style="margin:0 0 1rem;">Mis Alertas Activas</h4>
+                <div id="lista-alertas">
+                    <p style="color:var(--texto2);">Cargando alertas...</p>
+                </div>
             </div>
         </div>
 
@@ -269,6 +334,11 @@
         document.querySelectorAll('.contenido-tab').forEach(c => c.style.display = 'none');
         elemento.classList.add('activo');
         document.getElementById(tabId).style.display = 'block';
+
+        if (tabId === 'mis-postulaciones') cargarPostulaciones();
+        if (tabId === 'habilidades') cargarHabilidades();
+        if (tabId === 'mis-valoraciones') { cargarValoraciones(); cargarEmpresasSelect(); }
+        if (tabId === 'alertas') cargarAlertas();
     }
 
     // Guardar cambios del perfil
@@ -331,44 +401,329 @@
         }
     }
 
-    // Habilidades guardadas en localStorage
-    let habilidades = JSON.parse(localStorage.getItem('habilidades_' + usuario.id)) || [];
+    // ═══════════════════════════════════════════
+    // HABILIDADES — desde la BD
+    // ═══════════════════════════════════════════
+    async function cargarHabilidades() {
+        try {
+            const res = await fetch(`${API}/habilidades/usuario/${usuario.id}`);
+            const data = await res.json();
+            renderHabilidades(data);
+        } catch (error) {
+            console.error('Error al cargar habilidades:', error);
+        }
+    }
 
-    function renderHabilidades() {
+    const nivelTexto = { 1: 'Básico', 2: 'Intermedio', 3: 'Intermedio+', 4: 'Avanzado', 5: 'Experto' };
+
+    function renderHabilidades(habilidades) {
         const lista = document.getElementById('lista-habilidades');
-        if (habilidades.length === 0) {
+        if (!habilidades || habilidades.length === 0) {
             lista.innerHTML = '<p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>';
             return;
         }
-        lista.innerHTML = habilidades.map((h, i) => `
+        lista.innerHTML = habilidades.map(h => `
             <div style="display:flex; align-items:center; gap:0.5rem; background:var(--tarjeta2); border:1px solid var(--borde); border-radius:20px; padding:6px 14px;">
                 <span style="font-size:0.875rem; font-weight:500;">${h.nombre}</span>
-                <span style="font-size:0.75rem; color:var(--morado);">${h.nivel}</span>
-                <button onclick="eliminarHabilidad(${i})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.75rem; padding:0; margin-left:4px;">✕</button>
+                <span style="font-size:0.75rem; color:var(--morado);">${nivelTexto[h.nivel] || 'Intermedio'}</span>
+                <button onclick="eliminarHabilidad(${h.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.75rem; padding:0; margin-left:4px;">✕</button>
             </div>
         `).join('');
     }
 
-    function agregarHabilidad() {
+    async function agregarHabilidad() {
         const nombre = document.getElementById('nueva-habilidad').value.trim();
         const nivel = document.getElementById('nivel-habilidad').value;
-
         if (!nombre) return;
-
-        habilidades.push({ nombre, nivel });
-        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
-        document.getElementById('nueva-habilidad').value = '';
-        renderHabilidades();
+        try {
+            const res = await fetch(`${API}/habilidades/usuario`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, nombre, nivel })
+            });
+            if (res.ok) {
+                document.getElementById('nueva-habilidad').value = '';
+                cargarHabilidades();
+            }
+        } catch (error) {
+            console.error('Error al agregar habilidad:', error);
+        }
     }
 
-    function eliminarHabilidad(index) {
-        habilidades.splice(index, 1);
-        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
-        renderHabilidades();
+    async function eliminarHabilidad(id) {
+        try {
+            await fetch(`${API}/habilidades/usuario/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarHabilidades();
+        } catch (error) {
+            console.error('Error al eliminar habilidad:', error);
+        }
     }
 
-    renderHabilidades();
+    // ═══════════════════════════════════════════
+    // POSTULACIONES — desde la BD
+    // ═══════════════════════════════════════════
+    const estadoColores = {
+        'pendiente':   { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
+        'en_revision': { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
+        'entrevista':  { bg: '#6366f122', color: '#6366f1', texto: 'Entrevista Agendada' },
+        'activo':      { bg: '#22c55e22', color: '#22c55e', texto: 'Activo' },
+        'rechazado':   { bg: '#ef444422', color: '#ef4444', texto: 'No Pasó' },
+        'aceptado':    { bg: '#22c55e22', color: '#22c55e', texto: 'Aceptado' }
+    };
+
+    async function cargarPostulaciones() {
+        try {
+            const res = await fetch(`${API}/postulaciones/usuario/${usuario.id}`);
+            const data = await res.json();
+            document.getElementById('stat-postulaciones').textContent = data.length;
+            const lista = document.getElementById('lista-postulaciones');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No tienes postulaciones aún. <a href="buscar.html" style="color:var(--morado);">Busca empleos</a></p>';
+                return;
+            }
+            lista.innerHTML = data.map(p => {
+                const estado = estadoColores[p.estado] || { bg: '#ffffff11', color: '#aaa', texto: p.estado };
+                const fecha = new Date(p.fecha_aplicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                return `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; font-size:1rem; margin-bottom:4px;">${p.titulo}</div>
+                        <div style="color:var(--texto2); font-size:0.875rem;">${p.empresa_nombre} • ${p.ubicacion || ''}</div>
+                        <div style="color:var(--texto3); font-size:0.8rem; margin-top:4px;">Aplicado el ${fecha}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <span style="background:${estado.bg}; color:${estado.color}; border:1px solid ${estado.color}44; border-radius:20px; padding:4px 12px; font-size:0.8rem; font-weight:500; white-space:nowrap;">${estado.texto}</span>
+                        <button onclick="eliminarPostulacion(${p.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Retirar postulación">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error('Error al cargar postulaciones:', error);
+        }
+    }
+
+    async function eliminarPostulacion(id) {
+        if (!confirm('¿Deseas retirar esta postulación?')) return;
+        try {
+            await fetch(`${API}/postulaciones/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarPostulaciones();
+        } catch (error) {
+            console.error('Error al eliminar postulación:', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════
+    // VALORACIONES — desde la BD
+    // ═══════════════════════════════════════════
+    async function cargarEmpresasSelect() {
+        try {
+            const res = await fetch(`${API}/empresas`);
+            const data = await res.json();
+            const sel = document.getElementById('val-empresa-id');
+            if (sel.options.length <= 1) {
+                data.forEach(emp => {
+                    const opt = document.createElement('option');
+                    opt.value = emp.id;
+                    opt.textContent = emp.nombre;
+                    sel.appendChild(opt);
+                });
+            }
+        } catch (error) {
+            console.error('Error al cargar empresas:', error);
+        }
+    }
+
+    async function cargarValoraciones() {
+        try {
+            const res = await fetch(`${API}/valoraciones/usuario/${usuario.id}`);
+            const data = await res.json();
+            const lista = document.getElementById('lista-valoraciones');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No has valorado ninguna empresa aún.</p>';
+                return;
+            }
+            lista.innerHTML = data.map(v => {
+                const estrellas = '⭐'.repeat(v.calificacion) + '☆'.repeat(5 - v.calificacion);
+                const fecha = new Date(v.fecha_valoracion).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                return `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:600; font-size:1rem;">${v.empresa_nombre}</div>
+                            <div style="color:var(--texto2); font-size:0.8rem;">${v.industria || ''} • ${fecha}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:1rem;">${estrellas}</span>
+                            <button onclick="eliminarValoracion(${v.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Eliminar">✕</button>
+                        </div>
+                    </div>
+                    ${v.comentario ? `<p style="margin:0.5rem 0 0; color:var(--texto2); font-size:0.875rem;">${v.comentario}</p>` : ''}
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error('Error al cargar valoraciones:', error);
+        }
+    }
+
+    function abrirModalValoracion() {
+        document.getElementById('modal-valoracion').style.display = 'block';
+    }
+
+    function cerrarModalValoracion() {
+        document.getElementById('modal-valoracion').style.display = 'none';
+        document.getElementById('val-comentario').value = '';
+        document.getElementById('mensaje-valoracion').style.display = 'none';
+    }
+
+    async function guardarValoracion() {
+        const empresa_id = document.getElementById('val-empresa-id').value;
+        const calificacion = document.getElementById('val-calificacion').value;
+        const comentario = document.getElementById('val-comentario').value.trim();
+        const msg = document.getElementById('mensaje-valoracion');
+        if (!empresa_id) {
+            msg.textContent = 'Selecciona una empresa.';
+            msg.style.display = 'block';
+            msg.style.backgroundColor = '#ff4d4d33';
+            msg.style.color = '#ff4d4d';
+            msg.style.border = '1px solid #ff4d4d';
+            return;
+        }
+        try {
+            const res = await fetch(`${API}/valoraciones`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, empresa_id, calificacion, comentario })
+            });
+            if (res.ok) {
+                cerrarModalValoracion();
+                cargarValoraciones();
+            } else {
+                const data = await res.json();
+                msg.textContent = data.error || 'Error al guardar valoración.';
+                msg.style.display = 'block';
+                msg.style.backgroundColor = '#ff4d4d33';
+                msg.style.color = '#ff4d4d';
+                msg.style.border = '1px solid #ff4d4d';
+            }
+        } catch (error) {
+            console.error('Error al guardar valoración:', error);
+        }
+    }
+
+    async function eliminarValoracion(id) {
+        if (!confirm('¿Eliminar esta valoración?')) return;
+        try {
+            await fetch(`${API}/valoraciones/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarValoraciones();
+        } catch (error) {
+            console.error('Error al eliminar valoración:', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════
+    // ALERTAS — desde la BD
+    // ═══════════════════════════════════════════
+    async function cargarAlertas() {
+        try {
+            const res = await fetch(`${API}/alertas/usuario/${usuario.id}`);
+            const data = await res.json();
+            const lista = document.getElementById('lista-alertas');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No tienes alertas configuradas aún.</p>';
+                return;
+            }
+            lista.innerHTML = data.map(a => `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; font-size:0.95rem; margin-bottom:4px;">🔍 ${a.palabras_clave || 'Sin palabras clave'}</div>
+                        <div style="color:var(--texto2); font-size:0.8rem;">📍 ${a.ubicacion || 'Cualquier lugar'} &nbsp;•&nbsp; 🔔 ${a.frecuencia}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <span style="background:${a.activa ? '#22c55e22' : '#ffffff11'}; color:${a.activa ? '#22c55e' : '#aaa'}; border:1px solid ${a.activa ? '#22c55e44' : '#ffffff22'}; border-radius:20px; padding:3px 10px; font-size:0.75rem; cursor:pointer;"
+                              onclick="toggleAlerta(${a.id}, ${a.activa})">${a.activa ? 'Activa' : 'Inactiva'}</span>
+                        <button onclick="eliminarAlerta(${a.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Eliminar">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error al cargar alertas:', error);
+        }
+    }
+
+    async function guardarAlerta() {
+        const palabras_clave = document.getElementById('alerta-palabras').value.trim();
+        const ubicacion = document.getElementById('alerta-ubicacion').value.trim();
+        const frecuencia = document.getElementById('alerta-frecuencia').value;
+        const msg = document.getElementById('mensaje-alertas');
+        if (!palabras_clave) {
+            msg.textContent = 'Ingresa al menos una palabra clave.';
+            msg.style.display = 'block';
+            msg.style.backgroundColor = '#ff4d4d33';
+            msg.style.color = '#ff4d4d';
+            msg.style.border = '1px solid #ff4d4d';
+            setTimeout(() => msg.style.display = 'none', 3000);
+            return;
+        }
+        try {
+            const res = await fetch(`${API}/alertas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, palabras_clave, ubicacion, frecuencia })
+            });
+            if (res.ok) {
+                document.getElementById('alerta-palabras').value = '';
+                document.getElementById('alerta-ubicacion').value = '';
+                msg.textContent = '✓ Alerta creada correctamente';
+                msg.style.display = 'block';
+                msg.style.backgroundColor = '#4CAF5033';
+                msg.style.color = '#4CAF50';
+                msg.style.border = '1px solid #4CAF50';
+                setTimeout(() => msg.style.display = 'none', 3000);
+                cargarAlertas();
+            }
+        } catch (error) {
+            console.error('Error al guardar alerta:', error);
+        }
+    }
+
+    async function toggleAlerta(id, activa) {
+        try {
+            await fetch(`${API}/alertas/${id}/toggle`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, activa: !activa })
+            });
+            cargarAlertas();
+        } catch (error) {
+            console.error('Error al cambiar estado de alerta:', error);
+        }
+    }
+
+    async function eliminarAlerta(id) {
+        if (!confirm('¿Eliminar esta alerta?')) return;
+        try {
+            await fetch(`${API}/alertas/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarAlertas();
+        } catch (error) {
+            console.error('Error al eliminar alerta:', error);
+        }
+    }
 </script>
 </body>
-
 </html>
