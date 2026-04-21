@@ -47,9 +47,6 @@
                         <input class="input" type="password" id="login-contrasena" placeholder="••••••••">
                     </div>
                 </div>
-                <div class="link-olvidaste">
-                    <a href="#" onclick="cambiarTab('recuperar')">¿Olvidaste tu contraseña?</a>
-                </div>
                 <button class="btn btn-primario btn-ancho-completo" onclick="iniciarSesion()">Iniciar Sesión</button>
                 <p class="texto-link-auth">
                     ¿No tienes cuenta? <a href="#" onclick="cambiarTab('registro')">Regístrate aquí</a>
@@ -59,7 +56,6 @@
             <!-- Formulario de Registro -->
             <div id="form-registro" style="display: none;">
 
-                <!-- Selector tipo de cuenta -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
                     <div id="tipo-usuario" onclick="seleccionarTipo('usuario')"
                         style="border:2px solid var(--morado); border-radius:8px; padding:12px; text-align:center; cursor:pointer; background:rgba(124,111,239,0.1);">
@@ -75,7 +71,6 @@
                     </div>
                 </div>
 
-                <!-- Campos comunes -->
                 <div class="grupo-input">
                     <label id="label-nombre">Nombre completo</label>
                     <input class="input" type="text" id="registro-nombre" placeholder="Juan Pérez">
@@ -102,7 +97,6 @@
                     </div>
                 </div>
 
-                <!-- Campos extra para empresa -->
                 <div id="campos-empresa" style="display:none;">
                     <div class="grupo-input">
                         <label>Industria</label>
@@ -135,35 +129,6 @@
                 <button class="btn btn-primario btn-ancho-completo" onclick="registrarse()">Crear Cuenta</button>
                 <p class="texto-link-auth">
                     ¿Ya tienes cuenta? <a href="#" onclick="cambiarTab('login')">Inicia sesión</a>
-                </p>
-            </div>
-
-            <!-- Formulario de Recuperar Contraseña -->
-            <div id="form-recuperar" style="display: none;">
-                <div class="grupo-input">
-                    <label>Correo electrónico</label>
-                    <div class="input-con-icono">
-                        <i data-lucide="mail" class="icono-input"></i>
-                        <input class="input" type="email" id="recuperar-email" placeholder="tu@email.com">
-                    </div>
-                </div>
-                <div class="grupo-input">
-                    <label>Nueva contraseña</label>
-                    <div class="input-con-icono">
-                        <i data-lucide="lock" class="icono-input"></i>
-                        <input class="input" type="password" id="recuperar-contrasena" placeholder="••••••••">
-                    </div>
-                </div>
-                <div class="grupo-input">
-                    <label>Confirmar nueva contraseña</label>
-                    <div class="input-con-icono">
-                        <i data-lucide="lock" class="icono-input"></i>
-                        <input class="input" type="password" id="recuperar-confirmar" placeholder="••••••••">
-                    </div>
-                </div>
-                <button class="btn btn-primario btn-ancho-completo" onclick="recuperarContrasena()">Cambiar Contraseña</button>
-                <p class="texto-link-auth">
-                    <a href="#" onclick="cambiarTab('login')">← Volver al inicio de sesión</a>
                 </p>
             </div>
 
@@ -229,7 +194,6 @@
         document.getElementById('mensaje').style.display = 'none';
         document.getElementById('form-login').style.display = 'none';
         document.getElementById('form-registro').style.display = 'none';
-        document.getElementById('form-recuperar').style.display = 'none';
         document.getElementById('auth-tabs').style.display = 'flex';
         document.getElementById('tab-login').classList.remove('activo');
         document.getElementById('tab-registro').classList.remove('activo');
@@ -246,12 +210,6 @@
             f.classList.add('form-animado');
             document.getElementById('tab-registro').classList.add('activo');
             document.getElementById('subtitulo').textContent = 'Comienza tu búsqueda laboral';
-        } else if (tab === 'recuperar') {
-            const f = document.getElementById('form-recuperar');
-            f.style.display = 'block';
-            f.classList.add('form-animado');
-            document.getElementById('auth-tabs').style.display = 'none';
-            document.getElementById('subtitulo').textContent = 'Recupera tu contraseña';
         }
     }
 
@@ -269,7 +227,6 @@
         btn.innerHTML = '<span class="btn-spinner"></span> Iniciando sesión...';
 
         try {
-            // Primero intentamos login como usuario
             let res = await fetch(`${API}/usuarios/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -278,7 +235,6 @@
 
             let data = await res.json();
 
-            // Si no encontró como usuario, intentamos como empresa
             if (!res.ok) {
                 res = await fetch(`${API}/empresas/login`, {
                     method: 'POST',
@@ -361,52 +317,6 @@
             }
 
             mostrarMensaje('Cuenta creada exitosamente, ya puedes iniciar sesión', 'exito');
-            setTimeout(() => cambiarTab('login'), 2000);
-
-        } catch (error) {
-            mostrarMensaje('No se pudo conectar con el servidor', 'error');
-        }
-    }
-
-    async function recuperarContrasena() {
-        const email = document.getElementById('recuperar-email').value.trim();
-        const contrasena = document.getElementById('recuperar-contrasena').value.trim();
-        const confirmar = document.getElementById('recuperar-confirmar').value.trim();
-
-        if (!email || !contrasena || !confirmar) {
-            mostrarMensaje('Por favor completa todos los campos', 'error');
-            return;
-        }
-
-        if (contrasena !== confirmar) {
-            mostrarMensaje('Las contraseñas no coinciden', 'error');
-            return;
-        }
-
-        try {
-            const buscar = await fetch(`${API}/usuarios/buscarPorEmail/${email}`);
-
-            if (!buscar.ok) {
-                mostrarMensaje('No existe una cuenta con ese correo', 'error');
-                return;
-            }
-
-            const usuario = await buscar.json();
-
-            const res = await fetch(`${API}/usuarios/${usuario.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contrasena })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                mostrarMensaje(data.error || 'Error al cambiar la contraseña', 'error');
-                return;
-            }
-
-            mostrarMensaje('Contraseña actualizada exitosamente', 'exito');
             setTimeout(() => cambiarTab('login'), 2000);
 
         } catch (error) {

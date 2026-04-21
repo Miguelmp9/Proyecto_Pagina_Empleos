@@ -14,6 +14,7 @@ import HabilidadRoutes from './routes/Habilidades.js';
 import AdminRoutes from './routes/admin.js';        // ← AGREGADO
 
 import { errorHandler } from './Middlewares/errorhandler.js';
+import RecursoRoutes from './routes/Recursos.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -40,7 +41,8 @@ app.use('/postulaciones', PostulacionRoutes);
 app.use('/valoraciones', ValoracionRoutes);
 app.use('/alertas', AlertaRoutes);
 app.use('/habilidades', HabilidadRoutes);
-app.use('/admin', AdminRoutes);                     // ← AGREGADO
+app.use('/admin', AdminRoutes);  
+app.use('/recursos', RecursoRoutes);                   // ← AGREGADO
 
 app.use(errorHandler);
 
