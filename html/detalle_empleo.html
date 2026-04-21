@@ -26,6 +26,9 @@
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -143,6 +146,18 @@
         const btnPublicar = document.querySelector('a[href="publicar.html"]');
         if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) btnPublicar.style.display = 'none';
 
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
+
         lucide.createIcons();
 
         function calcularTiempo(fecha) {
@@ -190,7 +205,6 @@
                     ? `$${empleo.rango_salarial_min.toLocaleString()} - $${empleo.rango_salarial_max.toLocaleString()}`
                     : 'No especificado';
 
-                // Cabecera
                 document.getElementById('empleo-header').innerHTML = `
                     <div class="empleo-header-izq">
                         <h1>${empleo.titulo}</h1>
@@ -207,11 +221,9 @@
                     </div>
                     <div class="empleo-header-der">
                         <span class="empleo-publicado">Publicado ${calcularTiempo(empleo.fecha_publicacion)}</span>
-
                     </div>
                 `;
 
-                // Info lateral
                 document.getElementById('info-nivel').textContent = empleo.nivel_experiencia || '-';
                 document.getElementById('info-tipo').textContent = empleo.tipo_contrato || '-';
                 document.getElementById('info-ubicacion').textContent = empleo.ubicacion || '-';
@@ -221,12 +233,10 @@
                 document.getElementById('info-tiempo').textContent = calcularTiempo(empleo.fecha_publicacion);
                 document.getElementById('info-cierre').textContent = formatearFecha(empleo.fecha_cierre);
 
-                // Empresa
                 document.getElementById('empresa-nombre').textContent = empleo.empresa_nombre || '-';
                 document.getElementById('empresa-sector').textContent = empleo.sector || '-';
                 document.getElementById('empresa-desc').textContent = empleo.empresa_desc || 'Empresa comprometida con el desarrollo del talento humano.';
 
-                // Descripción y listas
                 document.getElementById('descripcion-texto').textContent = empleo.descripcion || '-';
                 llenarLista('lista-responsabilidades', empleo.responsabilidades, 'seccion-responsabilidades');
                 llenarLista('lista-requisitos', empleo.requisitos, null);

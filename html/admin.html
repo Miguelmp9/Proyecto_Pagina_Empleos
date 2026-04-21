@@ -22,6 +22,9 @@
         <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
         <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
         <a href="admin.html" class="nav-link activo"><i data-lucide="layout-grid"></i> Admin</a>
+        <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+            <i data-lucide="log-out"></i> Cerrar Sesión
+        </button>
     </div>
 </nav>
 
@@ -206,6 +209,21 @@ const API = 'http://localhost:3000';
 
 lucide.createIcons();
 
+// ── Cerrar sesión ─────────────────────────────────────
+const usuario = JSON.parse(localStorage.getItem('usuario'));
+const btnLogout = document.getElementById('btn-logout');
+
+if (usuario) {
+    btnLogout.style.display = 'inline-flex';
+    btnLogout.style.alignItems = 'center';
+    btnLogout.style.gap = '6px';
+}
+
+btnLogout.addEventListener('click', () => {
+    localStorage.removeItem('usuario');
+    window.location.href = 'login.html';
+});
+
 // ─── Utilidades ───────────────────────────────────────────────
 function formatFecha(fechaStr) {
     if (!fechaStr) return '—';
@@ -246,7 +264,6 @@ function mostrarVista(vista) {
 // ─── DASHBOARD ───────────────────────────────────────────────
 async function cargarDashboard() {
     try {
-        // Stats
         const res = await fetch(`${API}/admin/stats`);
         const stats = await res.json();
         document.getElementById('stat-usuarios').textContent = stats.total_usuarios?.toLocaleString() || '0';
@@ -258,7 +275,6 @@ async function cargarDashboard() {
     }
 
     try {
-        // Usuarios recientes
         const resU = await fetch(`${API}/admin/usuarios-recientes`);
         const usuarios = await resU.json();
         const contenedor = document.getElementById('lista-usuarios-recientes');
@@ -279,7 +295,6 @@ async function cargarDashboard() {
     }
 
     try {
-        // Empresas recientes
         const resE = await fetch(`${API}/admin/empresas-recientes`);
         const empresas = await resE.json();
         const contenedor = document.getElementById('lista-empresas-recientes');

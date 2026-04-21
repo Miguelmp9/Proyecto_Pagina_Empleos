@@ -24,6 +24,9 @@
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -96,8 +99,7 @@
         <h2 id="titulo-articulos">Artículos y Guías</h2>
         <div class="grid-articulos">
 
-            <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link"
-                data-categoria="entrevistas">
+            <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -110,8 +112,7 @@
                 </div>
             </a>
 
-            <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link"
-                data-categoria="curriculum">
+            <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link" data-categoria="curriculum">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -124,8 +125,7 @@
                 </div>
             </a>
 
-            <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link"
-                data-categoria="carrera profesional">
+            <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -138,8 +138,7 @@
                 </div>
             </a>
 
-            <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link"
-                data-categoria="carrera profesional">
+            <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -152,8 +151,7 @@
                 </div>
             </a>
 
-            <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link"
-                data-categoria="habilidades">
+            <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link" data-categoria="habilidades">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -165,8 +163,7 @@
                 </div>
             </a>
 
-            <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link"
-                data-categoria="entrevistas">
+            <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
                     <div class="articulo-tags">
@@ -183,8 +180,7 @@
 
         <div class="newsletter">
             <h2>Suscríbete a Nuestro Newsletter</h2>
-            <p>Recibe consejos de carrera, tendencias del mercado laboral y recursos exclusivos directamente en tu
-                correo</p>
+            <p>Recibe consejos de carrera, tendencias del mercado laboral y recursos exclusivos directamente en tu correo</p>
             <div class="newsletter-form">
                 <input type="email" placeholder="tu@email.com">
                 <button>Suscribirse</button>
@@ -198,6 +194,32 @@
 
     <script>
         lucide.createIcons();
+
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        // Ocultar boton admin si no es admin
+        const btnAdmin = document.querySelector('a[href="admin.html"]');
+        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+            btnAdmin.style.display = 'none';
+        }
+
+        // Ocultar boton publicar si no es empresa
+        const btnPublicar = document.querySelector('a[href="publicar.html"]');
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+            btnPublicar.style.display = 'none';
+        }
+
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
 
         const pills = document.querySelectorAll('.categoria-pill');
         const articulos = document.querySelectorAll('.tarjeta-articulo-link');
@@ -219,14 +241,12 @@
 
         function obtenerCategoriaBoton(textoBoton) {
             const texto = normalizarTexto(textoBoton);
-
             if (texto === 'todos') return 'todos';
             if (texto === 'carrera profesional') return 'carrera profesional';
             if (texto === 'entrevistas') return 'entrevistas';
             if (texto === 'curriculum') return 'curriculum';
             if (texto === 'habilidades') return 'habilidades';
             if (texto === 'videos') return 'videos';
-
             return texto;
         }
 
@@ -293,10 +313,7 @@
 
         pills.forEach(function (pill) {
             pill.addEventListener('click', function () {
-                pills.forEach(function (p) {
-                    p.classList.remove('activo');
-                });
-
+                pills.forEach(function (p) { p.classList.remove('activo'); });
                 this.classList.add('activo');
                 categoriaActiva = obtenerCategoriaBoton(this.textContent);
                 filtrarRecursos();
@@ -308,20 +325,6 @@
         });
 
         filtrarRecursos();
-
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-        // Ocultar boton admin si no es admin
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
-            btnAdmin.style.display = 'none';
-        }
-
-        // Ocultar boton publicar si no es empresa
-        const btnPublicar = document.querySelector('a[href="publicar.html"]');
-        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
-            btnPublicar.style.display = 'none';
-        }
     </script>
 </body>
 

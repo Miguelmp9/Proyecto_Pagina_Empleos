@@ -11,6 +11,7 @@ import PostulacionRoutes from './routes/Postulaciones.js';
 import ValoracionRoutes from './routes/Valoracion.js';
 import AlertaRoutes from './routes/Alerta.js';
 import HabilidadRoutes from './routes/Habilidades.js';
+import AdminRoutes from './routes/admin.js';        // ← AGREGADO
 
 import { errorHandler } from './Middlewares/errorhandler.js';
 
@@ -39,6 +40,7 @@ app.use('/postulaciones', PostulacionRoutes);
 app.use('/valoraciones', ValoracionRoutes);
 app.use('/alertas', AlertaRoutes);
 app.use('/habilidades', HabilidadRoutes);
+app.use('/admin', AdminRoutes);                     // ← AGREGADO
 
 app.use(errorHandler);
 

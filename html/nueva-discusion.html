@@ -24,6 +24,9 @@
         <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
         <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
         <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
+        <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+            <i data-lucide="log-out"></i> Cerrar Sesión
+        </button>
     </div>
 </nav>
 
@@ -162,9 +165,6 @@
 <script>
     const API = 'http://localhost:3000';
 
-
-
-
     lucide.createIcons();
 
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -180,6 +180,18 @@
     if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
         btnPublicar.style.display = 'none';
     }
+
+    // ── Cerrar sesión ─────────────────────────────────────
+    const btnLogout = document.getElementById('btn-logout');
+    if (usuario) {
+        btnLogout.style.display = 'inline-flex';
+        btnLogout.style.alignItems = 'center';
+        btnLogout.style.gap = '6px';
+    }
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
 
     // ── Cargar categorías desde la API ──
     fetch(API + '/foros/categorias')
@@ -286,7 +298,6 @@
         var categoria = document.getElementById('categoria').value;
         var hayError = false;
 
-        // Limpiar errores
         ['titulo', 'contenido', 'categoria'].forEach(id => {
             document.getElementById(id).style.borderColor = '';
         });
@@ -301,7 +312,6 @@
             return;
         }
 
-        // Deshabilitar botón mientras se envía
         var btn = document.getElementById('btn-publicar');
         btn.disabled = true;
         btn.textContent = 'Publicando...';
@@ -337,7 +347,6 @@
             });
     });
 
-    // Limpiar bordes de error al escribir
     ['titulo', 'contenido'].forEach(function (id) {
         document.getElementById(id).addEventListener('input', function () {
             this.style.borderColor = '';
@@ -349,5 +358,4 @@
 </script>
 
 </body>
-
 </html>

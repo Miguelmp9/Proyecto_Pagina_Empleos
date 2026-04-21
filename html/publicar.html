@@ -25,6 +25,9 @@
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -71,8 +74,7 @@
                     </div>
                 </div>
                 <div id="tab-candidatos" style="display:none;">
-                    <p style="color:var(--texto2); text-align:center; padding:2rem;">Próximamente podrás ver los
-                        candidatos aquí.</p>
+                    <p style="color:var(--texto2); text-align:center; padding:2rem;">Próximamente podrás ver los candidatos aquí.</p>
                 </div>
             </div>
         </div>
@@ -197,8 +199,7 @@
 
                 <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:0.5rem;">
                     <button class="btn btn-borde" onclick="mostrarPanel()">Cancelar</button>
-                    <button class="btn btn-primario" id="btn-publicar" onclick="publicarEmpleo()">Publicar
-                        Empleo</button>
+                    <button class="btn btn-primario" id="btn-publicar" onclick="publicarEmpleo()">Publicar Empleo</button>
                 </div>
             </div>
         </div>
@@ -206,8 +207,7 @@
     </div>
 
     <footer>
-        <div style="text-align:center; padding:1rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los
-            derechos reservados.</div>
+        <div style="text-align:center; padding:1rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los derechos reservados.</div>
     </footer>
 
     <script>
@@ -222,6 +222,18 @@
         if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
             btnAdmin.style.display = 'none';
         }
+
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
 
         lucide.createIcons();
 
@@ -373,27 +385,27 @@
                 }
 
                 contenedor.innerHTML = postulaciones.map(p => `
-            <div style="background:var(--tarjeta2); border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-weight:600;">${p.nombre_completo}</div>
-                        <div style="font-size:0.8rem; color:var(--texto2);">${p.titulo_profesional || '-'} • ${p.ubicacion || '-'}</div>
-                        <div style="font-size:0.8rem; color:var(--morado); margin-top:4px;">Aplicó a: ${p.empleo_titulo}</div>
-                        <div style="font-size:0.8rem; color:var(--texto2);">📧 ${p.email} • 📞 ${p.telefono || '-'}</div>
+                    <div style="background:var(--tarjeta2); border-radius:8px; padding:1rem; margin-bottom:0.75rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-weight:600;">${p.nombre_completo}</div>
+                                <div style="font-size:0.8rem; color:var(--texto2);">${p.titulo_profesional || '-'} • ${p.ubicacion || '-'}</div>
+                                <div style="font-size:0.8rem; color:var(--morado); margin-top:4px;">Aplicó a: ${p.empleo_titulo}</div>
+                                <div style="font-size:0.8rem; color:var(--texto2);">📧 ${p.email} • 📞 ${p.telefono || '-'}</div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-end;">
+                                <span style="font-size:0.75rem; background:var(--morado-claro); color:var(--morado); padding:2px 8px; border-radius:4px;">${p.estado}</span>
+                                <select onchange="actualizarEstado(${p.id}, this.value)" style="font-size:0.75rem; padding:4px 8px; border-radius:6px; background:var(--tarjeta); border:1px solid var(--borde); color:var(--texto); cursor:pointer;">
+                                    <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                                    <option value="revisado" ${p.estado === 'revisado' ? 'selected' : ''}>Revisado</option>
+                                    <option value="entrevista" ${p.estado === 'entrevista' ? 'selected' : ''}>Entrevista</option>
+                                    <option value="rechazado" ${p.estado === 'rechazado' ? 'selected' : ''}>Rechazado</option>
+                                    <option value="aceptado" ${p.estado === 'aceptado' ? 'selected' : ''}>Aceptado</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-end;">
-                        <span style="font-size:0.75rem; background:var(--morado-claro); color:var(--morado); padding:2px 8px; border-radius:4px;">${p.estado}</span>
-                        <select onchange="actualizarEstado(${p.id}, this.value)" style="font-size:0.75rem; padding:4px 8px; border-radius:6px; background:var(--tarjeta); border:1px solid var(--borde); color:var(--texto); cursor:pointer;">
-                            <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                            <option value="revisado" ${p.estado === 'revisado' ? 'selected' : ''}>Revisado</option>
-                            <option value="entrevista" ${p.estado === 'entrevista' ? 'selected' : ''}>Entrevista</option>
-                            <option value="rechazado" ${p.estado === 'rechazado' ? 'selected' : ''}>Rechazado</option>
-                            <option value="aceptado" ${p.estado === 'aceptado' ? 'selected' : ''}>Aceptado</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+                `).join('');
             } catch (error) {
                 console.error('Error al cargar candidatos:', error);
             }

@@ -21,6 +21,9 @@
         <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
         <a href="perfil.html" class="nav-link activo"><i data-lucide="user"></i> Mi Perfil</a>
         <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+        <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+            <i data-lucide="log-out"></i> Cerrar Sesión
+        </button>
     </div>
 </nav>
 
@@ -28,7 +31,6 @@
 
     <!-- Header del perfil -->
     <div class="perfil-header">
-        <!-- NUEVO: foto de perfil con upload -->
         <div class="perfil-avatar" style="position:relative; cursor:pointer; width:80px; height:80px;" onclick="document.getElementById('input-foto').click()">
             <img id="foto-perfil-img"
                  src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>"
@@ -48,7 +50,7 @@
         </div>
     </div>
 
-    <!-- Stats del perfil — MODIFICADO: ids agregados a visitas y guardados, completitud dinámica -->
+    <!-- Stats del perfil -->
     <div class="perfil-stats">
         <div><div class="perfil-stat-numero" id="stat-visitas">-</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
         <div><div class="perfil-stat-numero" id="stat-postulaciones">-</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
@@ -75,7 +77,6 @@
             </div>
             <div class="seccion-perfil">
                 <h3>Currículum</h3>
-                <!-- NUEVO: CV con upload -->
                 <div class="tarjeta-cv">
                     <div class="cv-icono-wrap">
                         <div class="cv-icono"><i data-lucide="file-text"></i></div>
@@ -177,8 +178,6 @@
             <div class="seccion-perfil">
                 <h3>Mis Habilidades</h3>
                 <div id="mensaje-habilidades" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
-
-                <!-- Agregar habilidad -->
                 <div style="display:flex; gap:1rem; margin-bottom:1.5rem; align-items:center;">
                     <input class="input" type="text" id="nueva-habilidad" placeholder="Ej: JavaScript, React, Python..." style="flex:1;">
                     <select class="input" id="nivel-habilidad" style="width:160px;">
@@ -189,8 +188,6 @@
                     </select>
                     <button class="btn btn-primario" onclick="agregarHabilidad()">+ Agregar</button>
                 </div>
-
-                <!-- Lista de habilidades -->
                 <div id="lista-habilidades" style="display:flex; flex-wrap:wrap; gap:0.75rem;">
                     <p style="color:var(--texto2);">Cargando habilidades...</p>
                 </div>
@@ -300,15 +297,25 @@
         btnPublicar.style.display = 'none';
     }
 
+    // ── Cerrar sesión ─────────────────────────────────────
+    const btnLogout = document.getElementById('btn-logout');
+    if (usuario) {
+        btnLogout.style.display = 'inline-flex';
+        btnLogout.style.alignItems = 'center';
+        btnLogout.style.gap = '6px';
+    }
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
+
     // Si no hay usuario redirigimos al login
     if (!usuario) {
         window.location.href = 'login.html';
     }
 
-    // Datos completos del usuario desde la API
     let datosUsuario = {};
 
-    // Cargar datos del perfil
     fetch(`${API}/usuarios/${usuario.id}`)
         .then(res => res.json())
         .then(data => {
@@ -325,7 +332,6 @@
             document.getElementById('perfil-sector').textContent = data.sector_preferido || '-';
             document.getElementById('perfil-disponibilidad').textContent = 'Disponibilidad: ' + (data.disponibilidad || '-');
 
-            // Llenar formulario de editar
             document.getElementById('edit-nombre').value = data.nombre_completo || '';
             document.getElementById('edit-email').value = data.email || '';
             document.getElementById('edit-telefono').value = data.telefono || '';
@@ -338,15 +344,12 @@
             document.getElementById('edit-github').value = data.github_url || '';
             document.getElementById('edit-sobre-mi').value = data.sobre_mi || '';
 
-            // NUEVO: cargar foto de perfil si existe
             if (data.foto_perfil) {
                 document.getElementById('foto-perfil-img').src = `../contenido_multimedia/${data.foto_perfil}`;
             }
 
-            // NUEVO: visitas al perfil
             document.getElementById('stat-visitas').textContent = data.visitas_perfil || 0;
 
-            // NUEVO: empleos guardados
             fetch(`${API}/postulaciones/guardados/${usuario.id}`)
                 .then(r => r.json())
                 .then(g => {
@@ -354,7 +357,6 @@
                 })
                 .catch(() => document.getElementById('stat-guardados').textContent = 0);
 
-            // NUEVO: completitud del perfil calculada dinamicamente
             const campos = [
                 data.nombre_completo, data.email, data.telefono, data.ubicacion,
                 data.titulo_profesional, data.sobre_mi, data.sector_preferido,
@@ -365,7 +367,6 @@
         })
         .catch(error => console.error('Error al cargar perfil:', error));
 
-    // Cambiar tabs
     function cambiarTab(elemento, tabId) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
         document.querySelectorAll('.contenido-tab').forEach(c => c.style.display = 'none');
@@ -378,7 +379,6 @@
         if (tabId === 'alertas') cargarAlertas();
     }
 
-    // Guardar cambios del perfil
     async function guardarPerfil() {
         const datos = {
             nombre_completo: document.getElementById('edit-nombre').value.trim(),
@@ -413,10 +413,8 @@
                 return;
             }
 
-            // Actualizar localStorage
             localStorage.setItem('usuario', JSON.stringify({ ...usuario, nombre_completo: datos.nombre_completo, email: datos.email }));
 
-            // Actualizar header del perfil
             document.getElementById('perfil-nombre').textContent = datos.nombre_completo;
             document.getElementById('perfil-cargo').textContent = datos.titulo_profesional;
             document.getElementById('perfil-ubicacion').textContent = '📍 ' + datos.ubicacion;
@@ -425,7 +423,6 @@
             document.getElementById('perfil-experiencia').textContent = '💼 ' + datos.anios_experiencia + ' años de experiencia';
             document.getElementById('perfil-sobre-mi').textContent = datos.sobre_mi;
 
-            // NUEVO: recalcular completitud al guardar
             const campos = [
                 datos.nombre_completo, datos.email, datos.telefono, datos.ubicacion,
                 datos.titulo_profesional, datos.sobre_mi, datos.sector_preferido,
@@ -439,7 +436,6 @@
             msg.style.backgroundColor = '#4CAF5033';
             msg.style.color = '#4CAF50';
             msg.style.border = '1px solid #4CAF50';
-
             setTimeout(() => msg.style.display = 'none', 3000);
 
         } catch (error) {
@@ -447,9 +443,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // HABILIDADES — desde la BD
-    // ═══════════════════════════════════════════
     async function cargarHabilidades() {
         try {
             const res = await fetch(`${API}/habilidades/usuario/${usuario.id}`);
@@ -509,9 +502,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // POSTULACIONES — desde la BD
-    // ═══════════════════════════════════════════
     const estadoColores = {
         'pendiente':   { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
         'en_revision': { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
@@ -566,9 +556,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // VALORACIONES — desde la BD
-    // ═══════════════════════════════════════════
     async function cargarEmpresasSelect() {
         try {
             const res = await fetch(`${API}/empresas`);
@@ -678,9 +665,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // ALERTAS — desde la BD
-    // ═══════════════════════════════════════════
     async function cargarAlertas() {
         try {
             const res = await fetch(`${API}/alertas/usuario/${usuario.id}`);
@@ -771,9 +755,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // NUEVO: FOTO DE PERFIL
-    // ═══════════════════════════════════════════
     async function subirFoto(input) {
         const file = input.files[0];
         if (!file) return;
@@ -793,9 +774,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════
-    // NUEVO: CURRICULUM
-    // ═══════════════════════════════════════════
     async function subirCV(input) {
         const file = input.files[0];
         if (!file) return;

@@ -27,6 +27,9 @@
             <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -153,6 +156,18 @@
             btnPublicar.style.display = 'none';
         }
 
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
+
         // ── Obtener iniciales del autor ──
         function getIniciales(nombre) {
             return nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -230,7 +245,6 @@
                     }).join('');
                     document.getElementById('lista-categorias').innerHTML = html;
 
-                    // Eventos de click en categorías
                     document.querySelectorAll('.categoria-item').forEach(function (item) {
                         item.addEventListener('click', function () {
                             document.querySelectorAll('.categoria-item').forEach(c => c.classList.remove('activo'));
@@ -256,18 +270,15 @@
             fetch(url)
                 .then(r => r.json())
                 .then(function (discusiones) {
-                    // Stats
                     document.getElementById('stat-discusiones').textContent = discusiones.length;
                     var totalRespuestas = discusiones.reduce((acc, d) => acc + d.total_respuestas, 0);
                     document.getElementById('stat-respuestas').textContent = totalRespuestas;
 
-                    // ← AGREGAR AQUÍ
                     fetch(API + '/usuarios')
                         .then(r => r.json())
                         .then(function (usuarios) {
                             document.getElementById('stat-miembros').textContent = usuarios.length;
                         });
-                    // ← HASTA AQUÍ
 
                     renderDiscusiones(discusiones);
 
