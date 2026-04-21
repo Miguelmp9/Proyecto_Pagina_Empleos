@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
- 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,383 @@
     <link rel="stylesheet" href="../css/recursos.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        /* ── Panel Admin Upload ───────────────────────── */
+        .admin-upload-panel {
+            display: none;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border: 1px solid #4f46e5;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin: 0 auto 40px auto;
+            max-width: 900px;
+        }
+
+        .admin-upload-panel.visible {
+            display: block;
+        }
+
+        .admin-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .admin-panel-header h3 {
+            color: #e0e7ff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .admin-badge {
+            background: #4f46e5;
+            color: #c7d2fe;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 99px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .upload-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .upload-tab {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #a5b4fc;
+            border-radius: 8px;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upload-tab:hover {
+            background: rgba(99,102,241,0.25);
+            color: #e0e7ff;
+        }
+
+        .upload-tab.activo {
+            background: #4f46e5;
+            border-color: #6366f1;
+            color: #fff;
+        }
+
+        .upload-form-section {
+            display: none;
+        }
+
+        .upload-form-section.activo {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-field label {
+            color: #a5b4fc;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #e0e7ff;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: rgba(165,180,252,0.4);
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: #6366f1;
+            background: rgba(99,102,241,0.1);
+        }
+
+        .form-field select option {
+            background: #1e1b4b;
+            color: #e0e7ff;
+        }
+
+        .pdf-drop-zone {
+            border: 2px dashed rgba(99,102,241,0.5);
+            border-radius: 10px;
+            padding: 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(99,102,241,0.05);
+        }
+
+        .pdf-drop-zone:hover,
+        .pdf-drop-zone.dragover {
+            border-color: #6366f1;
+            background: rgba(99,102,241,0.12);
+        }
+
+        .pdf-drop-zone .drop-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .pdf-drop-zone p {
+            color: #a5b4fc;
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        .pdf-drop-zone span {
+            color: #818cf8;
+            font-size: 0.78rem;
+        }
+
+        .pdf-drop-zone input[type="file"] {
+            display: none;
+        }
+
+        #nombre-archivo-seleccionado {
+            color: #6ee7b7;
+            font-size: 0.82rem;
+            margin-top: 6px;
+        }
+
+        .btn-subir {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+            margin-top: 8px;
+        }
+
+        .btn-subir:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-subir:active { transform: translateY(0); }
+        .btn-subir:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .upload-feedback {
+            margin-top: 12px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .upload-feedback.exito {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid #059669;
+            color: #6ee7b7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-feedback.error {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid #dc2626;
+            color: #fca5a5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── Recursos dinámicos de BD ─────────────────── */
+        .seccion-bd {
+            margin-bottom: 40px;
+        }
+
+        .seccion-bd h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e1b4b;
+            margin-bottom: 20px;
+        }
+
+        .grid-recursos-bd {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tarjeta-recurso-bd {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tarjeta-recurso-bd:hover {
+            box-shadow: 0 8px 30px rgba(79,70,229,0.12);
+            transform: translateY(-2px);
+        }
+
+        .recurso-tipo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            padding: 4px 10px;
+            border-radius: 99px;
+            width: fit-content;
+        }
+
+        .tipo-documento  { background: #ede9fe; color: #6d28d9; }
+        .tipo-video      { background: #fee2e2; color: #dc2626; }
+        .tipo-articulo   { background: #dbeafe; color: #1d4ed8; }
+        .tipo-infografia { background: #d1fae5; color: #065f46; }
+        .tipo-podcast    { background: #fef3c7; color: #92400e; }
+
+        .recurso-titulo {
+            font-size: 0.97rem;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.4;
+        }
+
+        .recurso-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .recurso-acciones {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .btn-recurso {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .btn-recurso-ver {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .btn-recurso-ver:hover { background: #ddd6fe; }
+
+        .btn-recurso-descargar {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .btn-recurso-descargar:hover { background: #4338ca; }
+
+        .btn-recurso-link {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .btn-recurso-link:hover { background: #dc2626; }
+
+        .estado-vacio {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+
+        .spinner-carga {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #4f46e5;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Divisor entre secciones */
+        .divisor-seccion {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .upload-tabs { flex-wrap: wrap; }
+            .admin-upload-panel { padding: 20px 16px; }
+        }
+    </style>
 </head>
- 
+
 <body>
     <nav>
         <a href="home.html" class="nav-logo">
@@ -29,35 +404,160 @@
             </button>
         </div>
     </nav>
- 
+
     <div class="encabezado-recursos">
         <h1>Centro de Recursos</h1>
         <p>Aprende, crece y destaca en tu carrera profesional con nuestros recursos exclusivos</p>
     </div>
- 
-    <div class="barra-busqueda-recursos">
-        <input type="text" placeholder="Buscar artículos, tutoriales, videos..." id="buscador-recursos">
-    </div>
- 
-    <div class="categorias-recursos">
-        <button class="categoria-pill activo">Todos</button>
-        <button class="categoria-pill">Carrera Profesional</button>
-        <button class="categoria-pill">Entrevistas</button>
-        <button class="categoria-pill">Currículum</button>
-        <button class="categoria-pill">Habilidades</button>
-        <button class="categoria-pill">Videos</button>
-    </div>
- 
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL ADMIN: solo visible para rol === 'admin'
+    ════════════════════════════════════════════════ -->
     <div class="contenido-recursos">
+
+        <div class="admin-upload-panel" id="panel-admin">
+            <div class="admin-panel-header">
+                <i data-lucide="shield-check" style="color:#818cf8; width:20px; height:20px;"></i>
+                <h3>Publicar Nuevo Recurso</h3>
+                <span class="admin-badge">Solo Admin</span>
+            </div>
+
+            <!-- Tabs: PDF o URL -->
+            <div class="upload-tabs">
+                <button class="upload-tab activo" data-tab="pdf" onclick="cambiarTab(this, 'pdf')">
+                    <i data-lucide="file-text" style="width:15px;height:15px;"></i> Subir PDF
+                </button>
+                <button class="upload-tab" data-tab="url" onclick="cambiarTab(this, 'url')">
+                    <i data-lucide="link" style="width:15px;height:15px;"></i> Agregar URL / Video
+                </button>
+            </div>
+
+            <!-- Formulario PDF -->
+            <div class="upload-form-section activo" id="form-pdf">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Título *</label>
+                        <input type="text" id="pdf-titulo" placeholder="Ej. Guía de Entrevistas 2026">
+                    </div>
+                    <div class="form-field">
+                        <label>Categoría</label>
+                        <select id="pdf-categoria">
+                            <option value="">Seleccionar categoría</option>
+                            <option value="entrevistas">Entrevistas</option>
+                            <option value="curriculum">Currículum</option>
+                            <option value="carrera profesional">Carrera Profesional</option>
+                            <option value="habilidades">Habilidades</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Tipo</label>
+                        <select id="pdf-tipo">
+                            <option value="documento">Documento</option>
+                            <option value="articulo">Artículo</option>
+                            <option value="infografia">Infografía</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Tiempo de lectura (min)</label>
+                        <input type="number" id="pdf-tiempo" placeholder="Ej. 8" min="1">
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Archivo PDF *</label>
+                        <div class="pdf-drop-zone" id="drop-zone" onclick="document.getElementById('input-pdf').click()">
+                            <div class="drop-icon">📄</div>
+                            <p>Haz clic o arrastra tu PDF aquí</p>
+                            <span>Máximo 10 MB · Solo archivos .pdf</span>
+                            <input type="file" id="input-pdf" accept=".pdf">
+                        </div>
+                        <div id="nombre-archivo-seleccionado"></div>
+                    </div>
+                </div>
+                <button class="btn-subir" id="btn-subir-pdf" onclick="subirPDF()">
+                    <i data-lucide="upload-cloud" style="width:18px;height:18px;"></i>
+                    Publicar PDF
+                </button>
+                <div class="upload-feedback" id="feedback-pdf"></div>
+            </div>
+
+            <!-- Formulario URL/Video -->
+            <div class="upload-form-section" id="form-url">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Título *</label>
+                        <input type="text" id="url-titulo" placeholder="Ej. Cómo hacer networking efectivo">
+                    </div>
+                    <div class="form-field">
+                        <label>Categoría</label>
+                        <select id="url-categoria">
+                            <option value="">Seleccionar categoría</option>
+                            <option value="entrevistas">Entrevistas</option>
+                            <option value="curriculum">Currículum</option>
+                            <option value="carrera profesional">Carrera Profesional</option>
+                            <option value="habilidades">Habilidades</option>
+                            <option value="videos">Videos</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Tipo</label>
+                        <select id="url-tipo">
+                            <option value="video">Video</option>
+                            <option value="articulo">Artículo</option>
+                            <option value="podcast">Podcast</option>
+                        </select>
+                    </div>
+                    <div class="form-field full-width">
+                        <label>URL del recurso *</label>
+                        <input type="url" id="url-link" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                    <div class="form-field full-width">
+                        <label>URL de miniatura (opcional)</label>
+                        <input type="url" id="url-thumbnail" placeholder="https://...imagen.jpg">
+                    </div>
+                </div>
+                <button class="btn-subir" id="btn-subir-url" onclick="subirURL()">
+                    <i data-lucide="link-2" style="width:18px;height:18px;"></i>
+                    Publicar Enlace
+                </button>
+                <div class="upload-feedback" id="feedback-url"></div>
+            </div>
+        </div><!-- /panel-admin -->
+
+        <!-- ═══════════════════════════════════════
+             RECURSOS DESDE BASE DE DATOS
+        ════════════════════════════════════════ -->
+        <div class="barra-busqueda-recursos" style="margin-bottom: 24px;">
+            <input type="text" placeholder="Buscar artículos, tutoriales, videos..." id="buscador-recursos">
+        </div>
+
+        <div class="categorias-recursos">
+            <button class="categoria-pill activo">Todos</button>
+            <button class="categoria-pill">Carrera Profesional</button>
+            <button class="categoria-pill">Entrevistas</button>
+            <button class="categoria-pill">Currículum</button>
+            <button class="categoria-pill">Habilidades</button>
+            <button class="categoria-pill">Videos</button>
+        </div>
+
+        <!-- Recursos dinámicos de BD -->
+        <div class="seccion-bd" id="seccion-bd">
+            <h2 id="titulo-bd">Recursos Publicados</h2>
+            <div class="grid-recursos-bd" id="grid-recursos-bd">
+                <div class="spinner-carga"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <hr class="divisor-seccion">
+
+        <!-- ═══════════════════════════════════════
+             RECURSOS ESTÁTICOS ORIGINALES
+        ════════════════════════════════════════ -->
         <h2 id="titulo-videos">Videos Destacados</h2>
         <div class="grid-videos" id="seccion-videos">
- 
+
             <div class="tarjeta-video" data-categoria="videos entrevistas">
                 <a href="https://www.youtube.com/watch?v=N_eOfwNmdx4" target="_blank" class="video-link">
                     <img src="https://img.youtube.com/vi/N_eOfwNmdx4/hqdefault.jpg" alt="Entrevista Virtual">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
-                    </div>
+                    <div class="play-overlay"><div class="play-btn">&#9654;</div></div>
                     <span class="video-duracion">Video 1</span>
                 </a>
                 <div class="video-info">
@@ -65,13 +565,11 @@
                     <span>Recurso recomendado</span>
                 </div>
             </div>
- 
+
             <div class="tarjeta-video" data-categoria="videos carrera profesional">
                 <a href="https://www.youtube.com/watch?v=McfYGVLsPDo" target="_blank" class="video-link">
                     <img src="https://img.youtube.com/vi/McfYGVLsPDo/hqdefault.jpg" alt="Portfolio Profesional">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
-                    </div>
+                    <div class="play-overlay"><div class="play-btn">&#9654;</div></div>
                     <span class="video-duracion">Video 2</span>
                 </a>
                 <div class="video-info">
@@ -79,13 +577,11 @@
                     <span>Recurso recomendado</span>
                 </div>
             </div>
- 
+
             <div class="tarjeta-video" data-categoria="videos carrera profesional">
                 <a href="https://www.youtube.com/watch?v=lDhOVbR_4Kg" target="_blank" class="video-link">
                     <img src="https://img.youtube.com/vi/lDhOVbR_4Kg/hqdefault.jpg" alt="Networking">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
-                    </div>
+                    <div class="play-overlay"><div class="play-btn">&#9654;</div></div>
                     <span class="video-duracion">Video 3</span>
                 </a>
                 <div class="video-info">
@@ -93,12 +589,12 @@
                     <span>Recurso recomendado</span>
                 </div>
             </div>
- 
+
         </div>
- 
+
         <h2 id="titulo-articulos">Artículos y Guías</h2>
         <div class="grid-articulos">
- 
+
             <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -111,7 +607,7 @@
                     <p class="articulo-autor">María López — 10 Mar 2026</p>
                 </div>
             </a>
- 
+
             <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link" data-categoria="curriculum">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -124,7 +620,7 @@
                     <p class="articulo-autor">Carlos Ruiz — 8 Mar 2026</p>
                 </div>
             </a>
- 
+
             <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -137,7 +633,7 @@
                     <p class="articulo-autor">Ana García — 5 Mar 2026</p>
                 </div>
             </a>
- 
+
             <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link" data-categoria="carrera profesional">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -150,7 +646,7 @@
                     <p class="articulo-autor">David Martín — 3 Mar 2026</p>
                 </div>
             </a>
- 
+
             <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link" data-categoria="habilidades">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -162,7 +658,7 @@
                     <p class="articulo-autor">Laura Sánchez — 1 Mar 2026</p>
                 </div>
             </a>
- 
+
             <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link" data-categoria="entrevistas">
                 <div class="tarjeta-articulo">
                     <div class="articulo-thumb"><i data-lucide="download"></i></div>
@@ -175,9 +671,9 @@
                     <p class="articulo-autor">Pedro Gómez — 28 Feb 2026</p>
                 </div>
             </a>
- 
+
         </div>
- 
+
         <div class="newsletter">
             <h2>Suscríbete a Nuestro Newsletter</h2>
             <p>Recibe consejos de carrera, tendencias del mercado laboral y recursos exclusivos directamente en tu correo</p>
@@ -186,36 +682,34 @@
                 <button>Suscribirse</button>
             </div>
         </div>
-    </div>
- 
+
+    </div><!-- /contenido-recursos -->
+
     <footer>
         <div class="footer-bottom">© 2026 Shovel. Todos los derechos reservados.</div>
     </footer>
- 
+
     <script>
         lucide.createIcons();
- 
+
+        // ──────────────────────────────────────────────────────────
+        //  CONFIGURACIÓN — ajusta BASE_URL a tu backend real
+        // ──────────────────────────────────────────────────────────
+        const BASE_URL = 'https://tu-api.shovel.com'; // ← cambia esto
+
         const usuario = JSON.parse(localStorage.getItem('usuario'));
- 
-        // Ocultar boton admin si no es admin
+        const esAdmin = usuario && usuario.rol === 'admin';
+
+        // ── Permisos de nav ───────────────────────────────────────
         const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
-            btnAdmin.style.display = 'none';
-        }
- 
-        // Ocultar boton publicar si no es empresa
+        if (btnAdmin && !esAdmin) btnAdmin.style.display = 'none';
+
         const btnPublicar = document.querySelector('a[href="publicar.html"]');
-        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
-            btnPublicar.style.display = 'none';
-        }
- 
-        // Ocultar Mi Perfil si es admin
+        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) btnPublicar.style.display = 'none';
+
         const linkPerfil = document.getElementById('link-perfil');
-        if (linkPerfil && usuario && usuario.rol === 'admin') {
-            linkPerfil.style.display = 'none';
-        }
- 
-        // ── Cerrar sesión ─────────────────────────────────────
+        if (linkPerfil && esAdmin) linkPerfil.style.display = 'none';
+
         const btnLogout = document.getElementById('btn-logout');
         if (usuario) {
             btnLogout.style.display = 'inline-flex';
@@ -226,7 +720,263 @@
             localStorage.removeItem('usuario');
             window.location.href = 'login.html';
         });
- 
+
+        // ── Mostrar panel admin ───────────────────────────────────
+        if (esAdmin) {
+            document.getElementById('panel-admin').classList.add('visible');
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  TABS DEL FORMULARIO ADMIN
+        // ──────────────────────────────────────────────────────────
+        function cambiarTab(btn, tab) {
+            document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('activo'));
+            document.querySelectorAll('.upload-form-section').forEach(s => s.classList.remove('activo'));
+            btn.classList.add('activo');
+            document.getElementById('form-' + tab).classList.add('activo');
+            lucide.createIcons();
+        }
+
+        // ── Drag & Drop PDF ───────────────────────────────────────
+        const dropZone = document.getElementById('drop-zone');
+        const inputPdf = document.getElementById('input-pdf');
+        const nombreArchivo = document.getElementById('nombre-archivo-seleccionado');
+
+        inputPdf.addEventListener('change', () => {
+            if (inputPdf.files[0]) mostrarNombreArchivo(inputPdf.files[0]);
+        });
+
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                inputPdf.files = dt.files;
+                mostrarNombreArchivo(file);
+            } else {
+                mostrarFeedback('feedback-pdf', 'error', 'Solo se permiten archivos PDF.');
+            }
+        });
+
+        function mostrarNombreArchivo(file) {
+            nombreArchivo.textContent = '✓ ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  SUBIR PDF → POST /api/recursos (multipart/form-data)
+        // ──────────────────────────────────────────────────────────
+        async function subirPDF() {
+            const titulo    = document.getElementById('pdf-titulo').value.trim();
+            const categoria = document.getElementById('pdf-categoria').value;
+            const tipo      = document.getElementById('pdf-tipo').value;
+            const tiempo    = document.getElementById('pdf-tiempo').value;
+            const archivo   = inputPdf.files[0];
+
+            if (!titulo) return mostrarFeedback('feedback-pdf', 'error', 'El título es obligatorio.');
+            if (!archivo) return mostrarFeedback('feedback-pdf', 'error', 'Debes seleccionar un archivo PDF.');
+            if (archivo.size > 10 * 1024 * 1024) return mostrarFeedback('feedback-pdf', 'error', 'El archivo supera el límite de 10 MB.');
+
+            const btn = document.getElementById('btn-subir-pdf');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;height:16px;"></i> Subiendo...';
+            lucide.createIcons();
+
+            try {
+                const formData = new FormData();
+                formData.append('titulo', titulo);
+                formData.append('tipo', tipo);
+                formData.append('categoria', categoria);
+                formData.append('tiempo_lectura', tiempo || 0);
+                formData.append('autor_id', usuario.id);
+                formData.append('estado', 'activo');
+                formData.append('archivo', archivo); // el backend guarda en servidor y pone la ruta en archivo_url
+
+                const res = await fetch(`${BASE_URL}/api/recursos`, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + (usuario.token || '') },
+                    body: formData
+                });
+
+                if (!res.ok) throw new Error('Error del servidor: ' + res.status);
+
+                mostrarFeedback('feedback-pdf', 'exito', '✓ PDF publicado correctamente.');
+                limpiarFormPDF();
+                cargarRecursosBD(); // refresca la lista
+            } catch (err) {
+                mostrarFeedback('feedback-pdf', 'error', 'No se pudo publicar: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="upload-cloud" style="width:18px;height:18px;"></i> Publicar PDF';
+                lucide.createIcons();
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  SUBIR URL → POST /api/recursos (JSON)
+        // ──────────────────────────────────────────────────────────
+        async function subirURL() {
+            const titulo     = document.getElementById('url-titulo').value.trim();
+            const categoria  = document.getElementById('url-categoria').value;
+            const tipo       = document.getElementById('url-tipo').value;
+            const videoUrl   = document.getElementById('url-link').value.trim();
+            const thumbnail  = document.getElementById('url-thumbnail').value.trim();
+
+            if (!titulo)    return mostrarFeedback('feedback-url', 'error', 'El título es obligatorio.');
+            if (!videoUrl)  return mostrarFeedback('feedback-url', 'error', 'La URL es obligatoria.');
+
+            // Generar thumbnail automático desde YouTube si no se proporcionó
+            let thumbFinal = thumbnail;
+            if (!thumbFinal) {
+                const ytMatch = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+                if (ytMatch) thumbFinal = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+            }
+
+            const btn = document.getElementById('btn-subir-url');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;height:16px;"></i> Publicando...';
+            lucide.createIcons();
+
+            try {
+                const res = await fetch(`${BASE_URL}/api/recursos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + (usuario.token || '')
+                    },
+                    body: JSON.stringify({
+                        titulo,
+                        tipo,
+                        categoria,
+                        video_url: videoUrl,
+                        thumbnail_url: thumbFinal,
+                        autor_id: usuario.id,
+                        estado: 'activo'
+                    })
+                });
+
+                if (!res.ok) throw new Error('Error del servidor: ' + res.status);
+
+                mostrarFeedback('feedback-url', 'exito', '✓ Enlace publicado correctamente.');
+                limpiarFormURL();
+                cargarRecursosBD();
+            } catch (err) {
+                mostrarFeedback('feedback-url', 'error', 'No se pudo publicar: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="link-2" style="width:18px;height:18px;"></i> Publicar Enlace';
+                lucide.createIcons();
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  CARGAR RECURSOS DESDE BD → GET /api/recursos
+        // ──────────────────────────────────────────────────────────
+        async function cargarRecursosBD() {
+            const grid = document.getElementById('grid-recursos-bd');
+            grid.innerHTML = '<div class="spinner-carga"><div class="spinner"></div></div>';
+
+            try {
+                const res = await fetch(`${BASE_URL}/api/recursos?estado=activo`, {
+                    headers: { 'Authorization': 'Bearer ' + (usuario?.token || '') }
+                });
+
+                if (!res.ok) throw new Error('No se pudieron cargar los recursos.');
+                const data = await res.json();
+                // El backend debe devolver { recursos: [...] } o un array directamente
+                const lista = Array.isArray(data) ? data : (data.recursos || []);
+                renderizarRecursosBD(lista);
+            } catch (err) {
+                grid.innerHTML = `<div class="estado-vacio">⚠️ ${err.message}</div>`;
+            }
+        }
+
+        function renderizarRecursosBD(lista) {
+            const grid = document.getElementById('grid-recursos-bd');
+            const seccion = document.getElementById('seccion-bd');
+
+            if (!lista.length) {
+                grid.innerHTML = '<div class="estado-vacio">Aún no hay recursos publicados.</div>';
+                return;
+            }
+
+            // Filtrar según búsqueda y categoría activa
+            const texto = document.getElementById('buscador-recursos').value.trim().toLowerCase();
+            const filtrada = lista.filter(r => {
+                const coincideCategoria =
+                    categoriaActiva === 'todos' ||
+                    (r.categoria || '').toLowerCase().includes(categoriaActiva) ||
+                    (categoriaActiva === 'videos' && r.tipo === 'video');
+                const coincideTexto =
+                    !texto ||
+                    (r.titulo || '').toLowerCase().includes(texto) ||
+                    (r.categoria || '').toLowerCase().includes(texto);
+                return coincideCategoria && coincideTexto;
+            });
+
+            if (!filtrada.length) {
+                grid.innerHTML = '<div class="estado-vacio">No se encontraron recursos con ese filtro.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtrada.map(r => tarjetaRecursoBD(r)).join('');
+            lucide.createIcons();
+        }
+
+        function tarjetaRecursoBD(r) {
+            const tipoBadge = {
+                documento:  ['tipo-documento',  '📄'],
+                video:      ['tipo-video',       '▶️'],
+                articulo:   ['tipo-articulo',    '📰'],
+                infografia: ['tipo-infografia',  '🗂️'],
+                podcast:    ['tipo-podcast',     '🎙️'],
+            }[r.tipo] || ['tipo-articulo', '📄'];
+
+            const vistas = r.total_vistas ? `👁 ${r.total_vistas.toLocaleString()}` : '';
+            const tiempo = r.tiempo_lectura ? `🕐 ${r.tiempo_lectura} min` : '';
+            const fecha  = r.fecha_publicacion ? new Date(r.fecha_publicacion).toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' }) : '';
+
+            // Botones según tipo
+            let acciones = '';
+            if (r.tipo === 'documento' || r.tipo === 'infografia') {
+                // PDF: ver en nueva pestaña + descargar
+                acciones = `
+                    <a href="${BASE_URL}/${r.archivo_url}" target="_blank" class="btn-recurso btn-recurso-ver">
+                        <i data-lucide="eye" style="width:14px;height:14px;"></i> Ver
+                    </a>
+                    <a href="${BASE_URL}/${r.archivo_url}" download class="btn-recurso btn-recurso-descargar">
+                        <i data-lucide="download" style="width:14px;height:14px;"></i> Descargar
+                    </a>`;
+            } else {
+                // Video / Artículo / Podcast: abrir enlace externo
+                acciones = `
+                    <a href="${r.video_url}" target="_blank" rel="noopener noreferrer" class="btn-recurso btn-recurso-link">
+                        <i data-lucide="external-link" style="width:14px;height:14px;"></i> Abrir enlace
+                    </a>`;
+            }
+
+            return `
+            <div class="tarjeta-recurso-bd">
+                ${r.thumbnail_url ? `<img src="${r.thumbnail_url}" alt="${r.titulo}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">` : ''}
+                <div>
+                    <span class="recurso-tipo-badge ${tipoBadge[0]}">${tipoBadge[1]} ${r.tipo}</span>
+                </div>
+                <p class="recurso-titulo">${r.titulo}</p>
+                <div class="recurso-meta">
+                    ${tiempo ? `<span>${tiempo}</span>` : ''}
+                    ${vistas ? `<span>${vistas}</span>` : ''}
+                    ${fecha  ? `<span>📅 ${fecha}</span>` : ''}
+                </div>
+                <div class="recurso-acciones">${acciones}</div>
+            </div>`;
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  FILTROS (pills + buscador) aplican a sección BD también
+        // ──────────────────────────────────────────────────────────
         const pills = document.querySelectorAll('.categoria-pill');
         const articulos = document.querySelectorAll('.tarjeta-articulo-link');
         const videos = document.querySelectorAll('.tarjeta-video');
@@ -234,104 +984,121 @@
         const tituloVideos = document.getElementById('titulo-videos');
         const seccionVideos = document.getElementById('seccion-videos');
         const tituloArticulos = document.getElementById('titulo-articulos');
- 
+
         let categoriaActiva = 'todos';
- 
+        let recursosCache = [];
+
         function normalizarTexto(texto) {
-            return texto
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .trim();
+            return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
- 
+
         function obtenerCategoriaBoton(textoBoton) {
-            const texto = normalizarTexto(textoBoton);
-            if (texto === 'todos') return 'todos';
-            if (texto === 'carrera profesional') return 'carrera profesional';
-            if (texto === 'entrevistas') return 'entrevistas';
-            if (texto === 'curriculum') return 'curriculum';
-            if (texto === 'habilidades') return 'habilidades';
-            if (texto === 'videos') return 'videos';
-            return texto;
+            const t = normalizarTexto(textoBoton);
+            const mapa = {
+                'todos': 'todos',
+                'carrera profesional': 'carrera profesional',
+                'entrevistas': 'entrevistas',
+                'curriculum': 'curriculum',
+                'habilidades': 'habilidades',
+                'videos': 'videos'
+            };
+            return mapa[t] || t;
         }
- 
+
         function coincideBusqueda(texto, busqueda) {
             return normalizarTexto(texto).includes(normalizarTexto(busqueda));
         }
- 
+
         function filtrarRecursos() {
             const textoBusqueda = buscador.value.trim();
-            let articulosVisibles = 0;
-            let videosVisibles = 0;
- 
-            articulos.forEach(function (articulo) {
-                const categorias = articulo.dataset.categoria || '';
-                const titulo = articulo.querySelector('.articulo-titulo')?.textContent || '';
-                const autor = articulo.querySelector('.articulo-autor')?.textContent || '';
-                const tags = articulo.querySelector('.articulo-tags')?.textContent || '';
- 
-                const coincideCategoria =
-                    categoriaActiva === 'todos' ||
-                    categorias.includes(categoriaActiva);
- 
-                const coincideTexto =
-                    textoBusqueda === '' ||
-                    coincideBusqueda(titulo, textoBusqueda) ||
-                    coincideBusqueda(autor, textoBusqueda) ||
-                    coincideBusqueda(tags, textoBusqueda);
- 
-                if (coincideCategoria && coincideTexto) {
-                    articulo.style.display = 'block';
-                    articulosVisibles++;
-                } else {
-                    articulo.style.display = 'none';
-                }
+            let articulosVisibles = 0, videosVisibles = 0;
+
+            articulos.forEach(a => {
+                const categorias = a.dataset.categoria || '';
+                const titulo = a.querySelector('.articulo-titulo')?.textContent || '';
+                const autor  = a.querySelector('.articulo-autor')?.textContent  || '';
+                const tags   = a.querySelector('.articulo-tags')?.textContent   || '';
+                const ok = (categoriaActiva === 'todos' || categorias.includes(categoriaActiva)) &&
+                           (!textoBusqueda || coincideBusqueda(titulo, textoBusqueda) ||
+                            coincideBusqueda(autor, textoBusqueda) || coincideBusqueda(tags, textoBusqueda));
+                a.style.display = ok ? 'block' : 'none';
+                if (ok) articulosVisibles++;
             });
- 
-            videos.forEach(function (video) {
-                const categorias = video.dataset.categoria || '';
-                const titulo = video.querySelector('.video-info p')?.textContent || '';
-                const descripcion = video.querySelector('.video-info span')?.textContent || '';
- 
-                const coincideCategoria =
-                    categoriaActiva === 'todos' ||
-                    categoriaActiva === 'videos' ||
-                    categorias.includes(categoriaActiva);
- 
-                const coincideTexto =
-                    textoBusqueda === '' ||
-                    coincideBusqueda(titulo, textoBusqueda) ||
-                    coincideBusqueda(descripcion, textoBusqueda);
- 
-                if (coincideCategoria && coincideTexto) {
-                    video.style.display = 'block';
-                    videosVisibles++;
-                } else {
-                    video.style.display = 'none';
-                }
+
+            videos.forEach(v => {
+                const categorias = v.dataset.categoria || '';
+                const titulo = v.querySelector('.video-info p')?.textContent || '';
+                const ok = (categoriaActiva === 'todos' || categoriaActiva === 'videos' || categorias.includes(categoriaActiva)) &&
+                           (!textoBusqueda || coincideBusqueda(titulo, textoBusqueda));
+                v.style.display = ok ? 'block' : 'none';
+                if (ok) videosVisibles++;
             });
- 
-            tituloVideos.style.display = videosVisibles > 0 ? 'block' : 'none';
-            seccionVideos.style.display = videosVisibles > 0 ? 'grid' : 'none';
-            tituloArticulos.style.display = articulosVisibles > 0 ? 'block' : 'none';
+
+            tituloVideos.style.display     = videosVisibles    > 0 ? 'block' : 'none';
+            seccionVideos.style.display    = videosVisibles    > 0 ? 'grid'  : 'none';
+            tituloArticulos.style.display  = articulosVisibles > 0 ? 'block' : 'none';
+
+            // Re-renderizar también la sección de BD con el filtro actual
+            if (recursosCache.length) renderizarRecursosBD(recursosCache);
         }
- 
-        pills.forEach(function (pill) {
+
+        pills.forEach(pill => {
             pill.addEventListener('click', function () {
-                pills.forEach(function (p) { p.classList.remove('activo'); });
+                pills.forEach(p => p.classList.remove('activo'));
                 this.classList.add('activo');
                 categoriaActiva = obtenerCategoriaBoton(this.textContent);
                 filtrarRecursos();
             });
         });
- 
-        buscador.addEventListener('input', function () {
-            filtrarRecursos();
-        });
- 
+
+        buscador.addEventListener('input', filtrarRecursos);
+
+        // ──────────────────────────────────────────────────────────
+        //  HELPERS
+        // ──────────────────────────────────────────────────────────
+        function mostrarFeedback(id, tipo, msg) {
+            const el = document.getElementById(id);
+            el.className = 'upload-feedback ' + tipo;
+            el.textContent = msg;
+            el.style.display = 'flex';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function limpiarFormPDF() {
+            document.getElementById('pdf-titulo').value = '';
+            document.getElementById('pdf-categoria').value = '';
+            document.getElementById('pdf-tiempo').value = '';
+            inputPdf.value = '';
+            nombreArchivo.textContent = '';
+        }
+
+        function limpiarFormURL() {
+            document.getElementById('url-titulo').value = '';
+            document.getElementById('url-categoria').value = '';
+            document.getElementById('url-link').value = '';
+            document.getElementById('url-thumbnail').value = '';
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  INIT
+        // ──────────────────────────────────────────────────────────
         filtrarRecursos();
+
+        // Carga recursos de BD y los guarda en caché para re-filtrar
+        (async () => {
+            try {
+                const res = await fetch(`${BASE_URL}/api/recursos?estado=activo`, {
+                    headers: { 'Authorization': 'Bearer ' + (usuario?.token || '') }
+                });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                recursosCache = Array.isArray(data) ? data : (data.recursos || []);
+                renderizarRecursosBD(recursosCache);
+            } catch {
+                document.getElementById('grid-recursos-bd').innerHTML =
+                    '<div class="estado-vacio">No se pudieron cargar los recursos de la base de datos.</div>';
+            }
+        })();
     </script>
 </body>
- 
 </html>
