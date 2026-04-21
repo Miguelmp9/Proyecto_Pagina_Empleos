@@ -119,7 +119,7 @@
                     </div>
                     <div class="grupo-input">
                         <label>Teléfono</label>
-                        <input class="input" type="text" id="edit-telefono" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9\-]/g, '')">
+                        <input class="input" type="text" id="edit-telefono" inputmode="numeric" maxlength="9" oninput="let v = this.value.replace(/[^0-9]/g, ''); if (v.length > 4) v = v.slice(0,4) + '-' + v.slice(4,8); this.value = v;">
                     </div>
                     <div class="grupo-input">
                         <label>Ubicación</label>
