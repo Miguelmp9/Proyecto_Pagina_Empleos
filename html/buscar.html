@@ -147,10 +147,16 @@
         lucide.createIcons();
 
         const usuario = JSON.parse(localStorage.getItem('usuario'));
+
         const btnAdmin = document.querySelector('a[href="admin.html"]');
         if (btnAdmin && (!usuario || usuario.rol !== 'admin')) btnAdmin.style.display = 'none';
+
         const btnPublicar = document.querySelector('a[href="publicar.html"]');
         if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) btnPublicar.style.display = 'none';
+
+        // ── Ocultar "Mi Perfil" para administradores ──────────
+        const btnPerfil = document.querySelector('a[href="perfil.html"]');
+        if (btnPerfil && usuario && usuario.rol === 'admin') btnPerfil.style.display = 'none';
 
         // ── Cerrar sesión ─────────────────────────────────────
         const btnLogout = document.getElementById('btn-logout');

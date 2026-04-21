@@ -156,6 +156,10 @@
             btnPublicar.style.display = 'none';
         }
 
+        // ── Ocultar "Mi Perfil" para administradores ──────────
+        const btnPerfil = document.querySelector('a[href="perfil.html"]');
+        if (btnPerfil && usuario && usuario.rol === 'admin') btnPerfil.style.display = 'none';
+
         // ── Cerrar sesión ─────────────────────────────────────
         const btnLogout = document.getElementById('btn-logout');
         if (usuario) {

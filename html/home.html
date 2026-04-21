@@ -25,7 +25,7 @@
             <a href="publicar.html" class="nav-link" id="btn-publicar"><i data-lucide="briefcase"></i> Publicar Empleo</a>
             <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="perfil.html" class="nav-link" id="btn-perfil"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link" id="btn-admin"><i data-lucide="layout-grid"></i> Admin</a>
             <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
                 <i data-lucide="log-out"></i> Cerrar Sesión
@@ -138,6 +138,7 @@
         // ── Visibilidad de botones según rol ──────────────────
         const btnAdmin    = document.getElementById('btn-admin');
         const btnPublicar = document.getElementById('btn-publicar');
+        const btnPerfil   = document.getElementById('btn-perfil');
         const btnLogout   = document.getElementById('btn-logout');
 
         if (!usuario || usuario.rol !== 'admin') {
@@ -146,6 +147,11 @@
 
         if (!usuario || usuario.rol !== 'empresa') {
             btnPublicar.style.display = 'none';
+        }
+
+        // ── Ocultar "Mi Perfil" para administradores ──────────
+        if (usuario && usuario.rol === 'admin') {
+            btnPerfil.style.display = 'none';
         }
 
         if (usuario) {
