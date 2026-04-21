@@ -17,19 +17,17 @@
     </a>
     <div class="nav-links">
         <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
-        <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
         <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
         <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-        <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
         <a href="admin.html" class="nav-link activo"><i data-lucide="layout-grid"></i> Admin</a>
         <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
             <i data-lucide="log-out"></i> Cerrar Sesión
         </button>
     </div>
 </nav>
-
+ 
 <div class="layout-admin">
-
+ 
     <!-- Sidebar admin -->
     <div class="sidebar-admin">
         <h3>Panel Admin</h3>
@@ -37,14 +35,12 @@
         <a class="nav-admin-item" id="nav-usuarios" onclick="mostrarVista('usuarios')"><i data-lucide="users"></i> Usuarios</a>
         <a class="nav-admin-item" id="nav-empresas" onclick="mostrarVista('empresas')"><i data-lucide="briefcase"></i> Empresas</a>
         <a class="nav-admin-item" id="nav-vacantes" onclick="mostrarVista('vacantes')"><i data-lucide="file-text"></i> Vacantes</a>
-        <a class="nav-admin-item" id="nav-moderacion" onclick="mostrarVista('moderacion')"><i data-lucide="shield"></i> Moderación</a>
-        <a class="nav-admin-item" id="nav-estadisticas" onclick="mostrarVista('estadisticas')"><i data-lucide="bar-chart-2"></i> Estadísticas</a>
         <a class="nav-admin-item" id="nav-configuracion" onclick="mostrarVista('configuracion')"><i data-lucide="settings"></i> Configuración</a>
     </div>
-
+ 
     <!-- Contenido principal -->
     <div class="contenido-admin">
-
+ 
         <!-- ===================== DASHBOARD ===================== -->
         <div id="vista-dashboard">
             <h1>Dashboard Principal</h1>
@@ -82,7 +78,7 @@
                     <div class="etiqueta">Postulaciones</div>
                 </div>
             </div>
-
+ 
             <div class="grid-graficas">
                 <div class="tarjeta-grafica">
                     <h3>Crecimiento de Usuarios y Empresas</h3>
@@ -93,7 +89,7 @@
                     <canvas id="graficaCategorias" height="200"></canvas>
                 </div>
             </div>
-
+ 
             <div class="grid-listas">
                 <div class="lista-reciente">
                     <h3>Usuarios Recientes</h3>
@@ -109,7 +105,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- ===================== USUARIOS ===================== -->
         <div id="vista-usuarios" style="display:none;">
             <div class="encabezado-tabla">
@@ -133,7 +129,7 @@
                 </table>
             </div>
         </div>
-
+ 
         <!-- ===================== EMPRESAS ===================== -->
         <div id="vista-empresas" style="display:none;">
             <div class="encabezado-tabla">
@@ -156,7 +152,7 @@
                 </table>
             </div>
         </div>
-
+ 
         <!-- ===================== VACANTES ===================== -->
         <div id="vista-vacantes" style="display:none;">
             <div class="encabezado-tabla">
@@ -180,50 +176,38 @@
                 </table>
             </div>
         </div>
-
-        <!-- ===================== MODERACIÓN ===================== -->
-        <div id="vista-moderacion" style="display:none;">
-            <h1>Moderación</h1>
-            <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
-        </div>
-
-        <!-- ===================== ESTADÍSTICAS ===================== -->
-        <div id="vista-estadisticas" style="display:none;">
-            <h1>Estadísticas</h1>
-            <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
-        </div>
-
+ 
         <!-- ===================== CONFIGURACIÓN ===================== -->
         <div id="vista-configuracion" style="display:none;">
             <h1>Configuración</h1>
             <p style="color:var(--texto2); margin-top:1rem;">Esta sección se conectará al backend con Node.js.</p>
         </div>
-
+ 
     </div>
 </div>
-
+ 
 <footer><div style="text-align:center; padding:0.75rem; font-size:0.8rem; color:var(--texto3);">© 2026 Shovel. Todos los derechos reservados.</div></footer>
-
+ 
 <script>
 const API = 'http://localhost:3000';
-
+ 
 lucide.createIcons();
-
+ 
 // ── Cerrar sesión ─────────────────────────────────────
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 const btnLogout = document.getElementById('btn-logout');
-
+ 
 if (usuario) {
     btnLogout.style.display = 'inline-flex';
     btnLogout.style.alignItems = 'center';
     btnLogout.style.gap = '6px';
 }
-
+ 
 btnLogout.addEventListener('click', () => {
     localStorage.removeItem('usuario');
     window.location.href = 'login.html';
 });
-
+ 
 // ─── Utilidades ───────────────────────────────────────────────
 function formatFecha(fechaStr) {
     if (!fechaStr) return '—';
@@ -235,7 +219,7 @@ function formatFecha(fechaStr) {
     if (diff < 7) return `Hace ${diff} días`;
     return fecha.toLocaleDateString('es-ES');
 }
-
+ 
 function badgeEstado(estado) {
     if (!estado) return '<span class="badge badge-amarillo">—</span>';
     const e = estado.toLowerCase();
@@ -243,10 +227,10 @@ function badgeEstado(estado) {
     if (e === 'inactivo' || e === 'inactiva') return `<span class="badge badge-rojo">${estado}</span>`;
     return `<span class="badge badge-amarillo">${estado}</span>`;
 }
-
+ 
 // ─── Navegación ──────────────────────────────────────────────
-var vistas = ['dashboard', 'usuarios', 'empresas', 'vacantes', 'moderacion', 'estadisticas', 'configuracion'];
-
+var vistas = ['dashboard', 'usuarios', 'empresas', 'vacantes', 'configuracion'];
+ 
 function mostrarVista(vista) {
     vistas.forEach(function(v) {
         document.getElementById('vista-' + v).style.display = 'none';
@@ -254,15 +238,19 @@ function mostrarVista(vista) {
     });
     document.getElementById('vista-' + vista).style.display = 'block';
     document.getElementById('nav-' + vista).classList.add('activo');
-
+ 
     if (vista === 'dashboard') cargarDashboard();
     if (vista === 'usuarios') cargarUsuarios();
     if (vista === 'empresas') cargarEmpresas();
     if (vista === 'vacantes') cargarVacantes();
 }
-
+ 
 // ─── DASHBOARD ───────────────────────────────────────────────
+var graficaCrecimientoInst = null;
+var graficaCategoriasInst = null;
+ 
 async function cargarDashboard() {
+    // Stats generales
     try {
         const res = await fetch(`${API}/admin/stats`);
         const stats = await res.json();
@@ -273,7 +261,8 @@ async function cargarDashboard() {
     } catch (e) {
         console.error('Error cargando stats:', e);
     }
-
+ 
+    // Usuarios recientes
     try {
         const resU = await fetch(`${API}/admin/usuarios-recientes`);
         const usuarios = await resU.json();
@@ -293,7 +282,8 @@ async function cargarDashboard() {
     } catch (e) {
         document.getElementById('lista-usuarios-recientes').innerHTML = '<div style="color:var(--texto2); padding:1rem;">Sin datos</div>';
     }
-
+ 
+    // Empresas recientes
     try {
         const resE = await fetch(`${API}/admin/empresas-recientes`);
         const empresas = await resE.json();
@@ -310,44 +300,138 @@ async function cargarDashboard() {
     } catch (e) {
         document.getElementById('lista-empresas-recientes').innerHTML = '<div style="color:var(--texto2); padding:1rem;">Sin datos</div>';
     }
-
-    inicializarGraficas();
+ 
+    // Gráficas con datos reales
+    await cargarGraficaCrecimiento();
+    await cargarGraficaCategorias();
 }
-
-// ─── GRÁFICAS ────────────────────────────────────────────────
-var graficasCreadas = false;
-
-function inicializarGraficas() {
-    if (graficasCreadas) return;
-    graficasCreadas = true;
-
-    var ctxLinea = document.getElementById('graficaCrecimiento').getContext('2d');
-    new Chart(ctxLinea, {
+ 
+// ─── GRÁFICA CRECIMIENTO (datos reales desde /admin/crecimiento) ──────────
+async function cargarGraficaCrecimiento() {
+    if (graficaCrecimientoInst) {
+        graficaCrecimientoInst.destroy();
+        graficaCrecimientoInst = null;
+    }
+ 
+    let labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
+    let dataUsuarios = [0, 0, 0, 0, 0, 0];
+    let dataEmpresas = [0, 0, 0, 0, 0, 0];
+ 
+    try {
+        const res = await fetch(`${API}/admin/crecimiento`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.meses && data.meses.length) labels = data.meses;
+            if (data.usuarios && data.usuarios.length) dataUsuarios = data.usuarios;
+            if (data.empresas && data.empresas.length) dataEmpresas = data.empresas;
+        }
+    } catch (e) {
+        console.warn('Endpoint /admin/crecimiento no disponible, mostrando datos vacíos.');
+    }
+ 
+    const ctxLinea = document.getElementById('graficaCrecimiento').getContext('2d');
+    graficaCrecimientoInst = new Chart(ctxLinea, {
         type: 'line',
         data: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            labels,
             datasets: [
-                { label: 'usuarios', data: [2000, 3500, 5000, 7000, 9500, 12000], borderColor: '#7c6fef', backgroundColor: 'rgba(124,111,239,0.1)', fill: true, tension: 0.4 },
-                { label: 'empresas', data: [300, 600, 1000, 1500, 2200, 3000], borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)', fill: true, tension: 0.4 }
+                {
+                    label: 'Usuarios',
+                    data: dataUsuarios,
+                    borderColor: '#7c6fef',
+                    backgroundColor: 'rgba(124,111,239,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#7c6fef',
+                    pointRadius: 4
+                },
+                {
+                    label: 'Empresas',
+                    data: dataEmpresas,
+                    borderColor: '#22c55e',
+                    backgroundColor: 'rgba(34,197,94,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#22c55e',
+                    pointRadius: 4
+                }
             ]
         },
-        options: { responsive: true, plugins: { legend: { labels: { color: '#a0a0b8', font: { size: 11 } } } }, scales: { x: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
-    });
-
-    var ctxDona = document.getElementById('graficaCategorias').getContext('2d');
-    new Chart(ctxDona, {
-        type: 'doughnut',
-        data: {
-            labels: ['Tecnología', 'Marketing', 'Diseño', 'Finanzas', 'Otros'],
-            datasets: [{ data: [2400, 1500, 1200, 1300, 800], backgroundColor: ['#7c6fef', '#6158d4', '#22c55e', '#f59e0b', '#ef4444'], borderWidth: 0 }]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#a0a0b8', font: { size: 11 } } } } }
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: '#a0a0b8', font: { size: 11 } } },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                x: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { ticks: { color: '#a0a0b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+            }
+        }
     });
 }
-
+ 
+// ─── GRÁFICA CATEGORÍAS (datos reales desde /admin/empleos-por-categoria) ──
+async function cargarGraficaCategorias() {
+    if (graficaCategoriasInst) {
+        graficaCategoriasInst.destroy();
+        graficaCategoriasInst = null;
+    }
+ 
+    let labels = ['Sin datos'];
+    let valores = [1];
+    const COLORES = ['#7c6fef', '#6158d4', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
+ 
+    try {
+        const res = await fetch(`${API}/admin/empleos-por-categoria`);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length) {
+                labels = data.map(d => d.categoria || d.sector || d.nombre || '—');
+                valores = data.map(d => d.total || d.cantidad || d.count || 0);
+            }
+        }
+    } catch (e) {
+        console.warn('Endpoint /admin/empleos-por-categoria no disponible, mostrando placeholder.');
+    }
+ 
+    const coloresFinal = labels.map((_, i) => COLORES[i % COLORES.length]);
+ 
+    const ctxDona = document.getElementById('graficaCategorias').getContext('2d');
+    graficaCategoriasInst = new Chart(ctxDona, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                data: valores,
+                backgroundColor: coloresFinal,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#a0a0b8', font: { size: 11 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                            return ` ${ctx.label}: ${ctx.raw.toLocaleString()} (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+ 
 // ─── USUARIOS ────────────────────────────────────────────────
 var todosLosUsuarios = [];
-
+ 
 async function cargarUsuarios() {
     const tbody = document.getElementById('tabla-usuarios-body');
     try {
@@ -358,7 +442,7 @@ async function cargarUsuarios() {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--rojo);">Error al cargar usuarios</td></tr>';
     }
 }
-
+ 
 function renderTablaUsuarios(usuarios) {
     const tbody = document.getElementById('tabla-usuarios-body');
     if (!usuarios.length) {
@@ -378,7 +462,7 @@ function renderTablaUsuarios(usuarios) {
         </tr>
     `).join('');
 }
-
+ 
 function filtrarUsuarios(texto) {
     const filtrados = todosLosUsuarios.filter(u =>
         u.nombre_completo.toLowerCase().includes(texto.toLowerCase()) ||
@@ -386,12 +470,12 @@ function filtrarUsuarios(texto) {
     );
     renderTablaUsuarios(filtrados);
 }
-
+ 
 function verUsuario(id) {
     const u = todosLosUsuarios.find(u => u.id === id);
     if (u) alert(`👤 ${u.nombre_completo}\n📧 ${u.email}\n📍 ${u.ubicacion || '—'}\n💼 ${u.titulo_profesional || '—'}\n🔖 Rol: ${u.rol}`);
 }
-
+ 
 async function eliminarUsuario(id, nombre) {
     if (!confirm(`¿Eliminar al usuario "${nombre}"? Esta acción no se puede deshacer.`)) return;
     try {
@@ -407,7 +491,7 @@ async function eliminarUsuario(id, nombre) {
         alert('Error al eliminar el usuario');
     }
 }
-
+ 
 // ─── EMPRESAS ────────────────────────────────────────────────
 async function cargarEmpresas() {
     const tbody = document.getElementById('tabla-empresas-body');
@@ -434,11 +518,11 @@ async function cargarEmpresas() {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--rojo);">Error al cargar empresas</td></tr>';
     }
 }
-
+ 
 function verEmpresa(id) {
     window.open(`${API}/empresas/${id}`, '_blank');
 }
-
+ 
 async function eliminarEmpresa(id, nombre) {
     if (!confirm(`¿Eliminar la empresa "${nombre}"?`)) return;
     try {
@@ -449,7 +533,7 @@ async function eliminarEmpresa(id, nombre) {
         alert('Error al eliminar empresa');
     }
 }
-
+ 
 // ─── VACANTES ────────────────────────────────────────────────
 async function cargarVacantes() {
     const tbody = document.getElementById('tabla-vacantes-body');
@@ -476,7 +560,7 @@ async function cargarVacantes() {
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--rojo);">Error al cargar vacantes</td></tr>';
     }
 }
-
+ 
 async function eliminarVacante(id, titulo) {
     if (!confirm(`¿Eliminar la vacante "${titulo}"?`)) return;
     try {
@@ -487,10 +571,10 @@ async function eliminarVacante(id, titulo) {
         alert('Error al eliminar vacante');
     }
 }
-
+ 
 // ─── Inicio ──────────────────────────────────────────────────
 cargarDashboard();
 </script>
-
+ 
 </body>
 </html>

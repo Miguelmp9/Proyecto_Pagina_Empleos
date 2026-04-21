@@ -1,4 +1,3 @@
-drop database shovel;
 create database shovel;
 use shovel;
 
@@ -518,3 +517,14 @@ TRUNCATE TABLE empresas;
 
 SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_SAFE_UPDATES = 1;
+
+SELECT TABLE_NAME 
+FROM information_schema.KEY_COLUMN_USAGE 
+WHERE REFERENCED_TABLE_NAME = 'usuarios' 
+AND TABLE_SCHEMA = 'shovel';
+
+
+DELETE FROM alertas_empleo WHERE usuario_id != 11;
+DELETE FROM usuario_habilidades WHERE usuario_id != 11;
+
+DELETE FROM usuarios WHERE id != 11;
