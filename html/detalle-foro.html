@@ -27,6 +27,9 @@
             <a href="foros.html" class="nav-link activo"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link" id="nav-admin"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -113,8 +116,6 @@
 
         lucide.createIcons();
 
-        var usuario = JSON.parse(localStorage.getItem('usuario'));
-
         // Ocultar boton admin si no es admin
         const btnAdmin = document.querySelector('a[href="admin.html"]');
         if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
@@ -126,6 +127,18 @@
         if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
             btnPublicar.style.display = 'none';
         }
+
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
 
         // ── Helpers ──
         function getIniciales(nombre) {
@@ -203,7 +216,6 @@
             document.title = 'Shovel - ' + d.titulo;
             lucide.createIcons();
 
-            // Like principal
             var likesGuardados = JSON.parse(localStorage.getItem('likes_discusiones') || '{}');
             var yaLiked = likesGuardados[discusionId];
             if (yaLiked) {
@@ -212,12 +224,10 @@
 
             document.getElementById('btn-like-principal').addEventListener('click', function () {
                 var likesGuardados = JSON.parse(localStorage.getItem('likes_discusiones') || '{}');
-
                 if (likesGuardados[discusionId]) {
                     mostrarToast('Ya le diste like a esta discusión');
                     return;
                 }
-
                 fetch(API + '/foros/' + discusionId + '/like', { method: 'POST' })
                     .then(r => r.json())
                     .then(function () {
@@ -228,8 +238,6 @@
                     });
             });
 
-
-            // Compartir
             document.getElementById('btn-compartir').addEventListener('click', function () {
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(window.location.href);
@@ -237,7 +245,6 @@
                 }
             });
 
-            // Renderizar respuestas
             renderRespuestas(d.respuestas || []);
         }
 
@@ -280,17 +287,14 @@
 
             lucide.createIcons();
 
-            // Like respuestas
             document.querySelectorAll('.btn-like[data-resp-id]').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     var rid = this.getAttribute('data-resp-id');
                     var likesResp = JSON.parse(localStorage.getItem('likes_respuestas') || '{}');
-
                     if (likesResp[rid]) {
                         mostrarToast('Ya le diste like a esta respuesta');
                         return;
                     }
-
                     fetch(API + '/foros/respuestas/' + rid + '/like', { method: 'POST' })
                         .then(r => r.json())
                         .then(function () {
@@ -301,7 +305,6 @@
                 });
             });
 
-            // Botón responder (rellena textarea)
             document.querySelectorAll('.btn-responder').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     var autor = this.getAttribute('data-autor');
@@ -336,7 +339,7 @@
                     if (data.error) { mostrarToast('Error: ' + data.error); return; }
                     document.getElementById('reply-input').value = '';
                     mostrarToast('¡Respuesta publicada!');
-                    cargarDiscusion(); // recargar para mostrar la nueva respuesta
+                    cargarDiscusion();
                 })
                 .catch(function () {
                     mostrarToast('Error al publicar la respuesta');

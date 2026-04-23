@@ -21,6 +21,9 @@
         <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
         <a href="perfil.html" class="nav-link activo"><i data-lucide="user"></i> Mi Perfil</a>
         <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+        <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+            <i data-lucide="log-out"></i> Cerrar Sesión
+        </button>
     </div>
 </nav>
 
@@ -28,7 +31,13 @@
 
     <!-- Header del perfil -->
     <div class="perfil-header">
-        <div class="perfil-avatar">👤</div>
+        <div class="perfil-avatar" style="position:relative; cursor:pointer; width:80px; height:80px;" onclick="document.getElementById('input-foto').click()">
+            <img id="foto-perfil-img"
+                 src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>"
+                 style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+            <div style="position:absolute; bottom:0; right:0; background:var(--morado); border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px;">📷</div>
+            <input type="file" id="input-foto" accept="image/*" style="display:none;" onchange="subirFoto(this)">
+        </div>
         <div class="perfil-info">
             <h1 id="perfil-nombre">Cargando...</h1>
             <p class="perfil-cargo" id="perfil-cargo">-</p>
@@ -43,10 +52,10 @@
 
     <!-- Stats del perfil -->
     <div class="perfil-stats">
-        <div><div class="perfil-stat-numero">342</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
-        <div><div class="perfil-stat-numero">18</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
-        <div><div class="perfil-stat-numero">8</div><div class="perfil-stat-label">Empleos Guardados</div></div>
-        <div><div class="perfil-stat-numero">92%</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
+        <div><div class="perfil-stat-numero" id="stat-visitas">-</div><div class="perfil-stat-label">Visitas al Perfil</div></div>
+        <div><div class="perfil-stat-numero" id="stat-postulaciones">-</div><div class="perfil-stat-label">Solicitudes Enviadas</div></div>
+        <div><div class="perfil-stat-numero" id="stat-guardados">-</div><div class="perfil-stat-label">Empleos Guardados</div></div>
+        <div><div class="perfil-stat-numero" id="stat-completitud">-</div><div class="perfil-stat-label">Completitud del Perfil</div></div>
     </div>
 
     <!-- Tarjeta con tabs -->
@@ -72,11 +81,15 @@
                     <div class="cv-icono-wrap">
                         <div class="cv-icono"><i data-lucide="file-text"></i></div>
                         <div>
-                            <div class="cv-nombre">CV_2026.pdf</div>
-                            <div class="cv-fecha">Actualizado: 1 Mar 2026</div>
+                            <div class="cv-nombre" id="cv-nombre">Sin CV subido</div>
+                            <div class="cv-fecha" id="cv-fecha">-</div>
                         </div>
                     </div>
-                    <button class="btn btn-borde btn-pequeno">↑ Actualizar CV</button>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <a id="cv-ver" href="#" target="_blank" style="display:none;" class="btn btn-borde btn-pequeno">👁 Ver CV</a>
+                        <button class="btn btn-borde btn-pequeno" onclick="document.getElementById('input-cv').click()">↑ Actualizar CV</button>
+                        <input type="file" id="input-cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="subirCV(this)">
+                    </div>
                 </div>
             </div>
             <div class="seccion-perfil">
@@ -106,7 +119,7 @@
                     </div>
                     <div class="grupo-input">
                         <label>Teléfono</label>
-                        <input class="input" type="text" id="edit-telefono" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9\-]/g, '')">
+                        <input class="input" type="text" id="edit-telefono" inputmode="numeric" maxlength="9" oninput="let v = this.value.replace(/[^0-9]/g, ''); if (v.length > 4) v = v.slice(0,4) + '-' + v.slice(4,8); this.value = v;">
                     </div>
                     <div class="grupo-input">
                         <label>Ubicación</label>
@@ -153,8 +166,10 @@
         <!-- Mis Postulaciones -->
         <div id="mis-postulaciones" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Mis Postulaciones</h3>
-                <p style="color:var(--texto2);">Próximamente podrás ver tus postulaciones aquí.</p>
+                <h3>Historial de Postulaciones</h3>
+                <div id="lista-postulaciones">
+                    <p style="color:var(--texto2);">Cargando postulaciones...</p>
+                </div>
             </div>
         </div>
 
@@ -163,8 +178,6 @@
             <div class="seccion-perfil">
                 <h3>Mis Habilidades</h3>
                 <div id="mensaje-habilidades" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
-
-                <!-- Agregar habilidad -->
                 <div style="display:flex; gap:1rem; margin-bottom:1.5rem; align-items:center;">
                     <input class="input" type="text" id="nueva-habilidad" placeholder="Ej: JavaScript, React, Python..." style="flex:1;">
                     <select class="input" id="nivel-habilidad" style="width:160px;">
@@ -175,10 +188,8 @@
                     </select>
                     <button class="btn btn-primario" onclick="agregarHabilidad()">+ Agregar</button>
                 </div>
-
-                <!-- Lista de habilidades -->
                 <div id="lista-habilidades" style="display:flex; flex-wrap:wrap; gap:0.75rem;">
-                    <p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>
+                    <p style="color:var(--texto2);">Cargando habilidades...</p>
                 </div>
             </div>
         </div>
@@ -186,16 +197,79 @@
         <!-- Mis Valoraciones -->
         <div id="mis-valoraciones" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Mis Valoraciones</h3>
-                <p style="color:var(--texto2);">Próximamente podrás ver tus valoraciones aquí.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3 style="margin:0;">Valoraciones de Empresas</h3>
+                    <button class="btn btn-primario btn-pequeno" onclick="abrirModalValoracion()">+ Nueva Valoración</button>
+                </div>
+
+                <div id="modal-valoracion" style="display:none; background:var(--tarjeta2); border:1px solid var(--borde); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+                    <h4 style="margin:0 0 1rem;">Nueva Valoración</h4>
+                    <div id="mensaje-valoracion" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div class="grupo-input">
+                            <label>Empresa</label>
+                            <select class="input" id="val-empresa-id">
+                                <option value="">Selecciona una empresa...</option>
+                            </select>
+                        </div>
+                        <div class="grupo-input">
+                            <label>Calificación (1-5)</label>
+                            <select class="input" id="val-calificacion">
+                                <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                                <option value="4">⭐⭐⭐⭐ Muy buena</option>
+                                <option value="3">⭐⭐⭐ Buena</option>
+                                <option value="2">⭐⭐ Regular</option>
+                                <option value="1">⭐ Mala</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grupo-input" style="margin-bottom:1rem;">
+                        <label>Comentario</label>
+                        <textarea class="input" id="val-comentario" rows="3" placeholder="Describe tu experiencia con esta empresa..." style="resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button class="btn btn-primario" onclick="guardarValoracion()">Guardar Valoración</button>
+                        <button class="btn btn-borde" onclick="cerrarModalValoracion()">Cancelar</button>
+                    </div>
+                </div>
+
+                <div id="lista-valoraciones">
+                    <p style="color:var(--texto2);">Cargando valoraciones...</p>
+                </div>
             </div>
         </div>
 
         <!-- Alertas -->
         <div id="alertas" class="contenido-tab" style="display:none;">
             <div class="seccion-perfil">
-                <h3>Alertas de Empleo</h3>
-                <p style="color:var(--texto2);">Próximamente podrás configurar tus alertas aquí.</p>
+                <h3>Alertas de Trabajo</h3>
+                <div style="background:var(--tarjeta2); border:1px solid var(--borde); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+                    <p style="margin:0 0 1rem; color:var(--texto2); font-size:0.875rem;">Configura tus alertas. Recibirás notificaciones cuando aparezcan empleos que coincidan con tus preferencias.</p>
+                    <div id="mensaje-alertas" style="display:none; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center; font-size:14px;"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div class="grupo-input">
+                            <label>Palabras Clave</label>
+                            <input class="input" type="text" id="alerta-palabras" placeholder="Ej: React, Frontend, JavaScript">
+                        </div>
+                        <div class="grupo-input">
+                            <label>Ubicación</label>
+                            <input class="input" type="text" id="alerta-ubicacion" placeholder="Ej: San Salvador, Remoto">
+                        </div>
+                    </div>
+                    <div class="grupo-input" style="margin-bottom:1rem;">
+                        <label>Frecuencia de Notificaciones</label>
+                        <select class="input" id="alerta-frecuencia" style="max-width:300px;">
+                            <option value="Diaria">Diaria</option>
+                            <option value="Semanal" selected>Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primario" onclick="guardarAlerta()">Guardar Alerta</button>
+                </div>
+                <h4 style="margin:0 0 1rem;">Mis Alertas Activas</h4>
+                <div id="lista-alertas">
+                    <p style="color:var(--texto2);">Cargando alertas...</p>
+                </div>
             </div>
         </div>
 
@@ -223,15 +297,25 @@
         btnPublicar.style.display = 'none';
     }
 
+    // ── Cerrar sesión ─────────────────────────────────────
+    const btnLogout = document.getElementById('btn-logout');
+    if (usuario) {
+        btnLogout.style.display = 'inline-flex';
+        btnLogout.style.alignItems = 'center';
+        btnLogout.style.gap = '6px';
+    }
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
+
     // Si no hay usuario redirigimos al login
     if (!usuario) {
         window.location.href = 'login.html';
     }
 
-    // Datos completos del usuario desde la API
     let datosUsuario = {};
 
-    // Cargar datos del perfil
     fetch(`${API}/usuarios/${usuario.id}`)
         .then(res => res.json())
         .then(data => {
@@ -248,7 +332,6 @@
             document.getElementById('perfil-sector').textContent = data.sector_preferido || '-';
             document.getElementById('perfil-disponibilidad').textContent = 'Disponibilidad: ' + (data.disponibilidad || '-');
 
-            // Llenar formulario de editar
             document.getElementById('edit-nombre').value = data.nombre_completo || '';
             document.getElementById('edit-email').value = data.email || '';
             document.getElementById('edit-telefono').value = data.telefono || '';
@@ -260,18 +343,42 @@
             document.getElementById('edit-linkedin').value = data.linkedin_url || '';
             document.getElementById('edit-github').value = data.github_url || '';
             document.getElementById('edit-sobre-mi').value = data.sobre_mi || '';
+
+            if (data.foto_perfil) {
+                document.getElementById('foto-perfil-img').src = `../contenido_multimedia/${data.foto_perfil}`;
+            }
+
+            document.getElementById('stat-visitas').textContent = data.visitas_perfil || 0;
+
+            fetch(`${API}/postulaciones/guardados/${usuario.id}`)
+                .then(r => r.json())
+                .then(g => {
+                    document.getElementById('stat-guardados').textContent = Array.isArray(g) ? g.length : 0;
+                })
+                .catch(() => document.getElementById('stat-guardados').textContent = 0);
+
+            const campos = [
+                data.nombre_completo, data.email, data.telefono, data.ubicacion,
+                data.titulo_profesional, data.sobre_mi, data.sector_preferido,
+                data.anios_experiencia, data.foto_perfil, data.linkedin_url
+            ];
+            const rellenos = campos.filter(c => c && String(c).trim() !== '').length;
+            document.getElementById('stat-completitud').textContent = Math.round((rellenos / campos.length) * 100) + '%';
         })
         .catch(error => console.error('Error al cargar perfil:', error));
 
-    // Cambiar tabs
     function cambiarTab(elemento, tabId) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
         document.querySelectorAll('.contenido-tab').forEach(c => c.style.display = 'none');
         elemento.classList.add('activo');
         document.getElementById(tabId).style.display = 'block';
+
+        if (tabId === 'mis-postulaciones') cargarPostulaciones();
+        if (tabId === 'habilidades') cargarHabilidades();
+        if (tabId === 'mis-valoraciones') { cargarValoraciones(); cargarEmpresasSelect(); }
+        if (tabId === 'alertas') cargarAlertas();
     }
 
-    // Guardar cambios del perfil
     async function guardarPerfil() {
         const datos = {
             nombre_completo: document.getElementById('edit-nombre').value.trim(),
@@ -306,10 +413,8 @@
                 return;
             }
 
-            // Actualizar localStorage
             localStorage.setItem('usuario', JSON.stringify({ ...usuario, nombre_completo: datos.nombre_completo, email: datos.email }));
 
-            // Actualizar header del perfil
             document.getElementById('perfil-nombre').textContent = datos.nombre_completo;
             document.getElementById('perfil-cargo').textContent = datos.titulo_profesional;
             document.getElementById('perfil-ubicacion').textContent = '📍 ' + datos.ubicacion;
@@ -318,12 +423,19 @@
             document.getElementById('perfil-experiencia').textContent = '💼 ' + datos.anios_experiencia + ' años de experiencia';
             document.getElementById('perfil-sobre-mi').textContent = datos.sobre_mi;
 
+            const campos = [
+                datos.nombre_completo, datos.email, datos.telefono, datos.ubicacion,
+                datos.titulo_profesional, datos.sobre_mi, datos.sector_preferido,
+                datos.anios_experiencia, datosUsuario.foto_perfil, datos.linkedin_url
+            ];
+            const rellenos = campos.filter(c => c && String(c).trim() !== '').length;
+            document.getElementById('stat-completitud').textContent = Math.round((rellenos / campos.length) * 100) + '%';
+
             msg.textContent = '✓ Perfil actualizado correctamente';
             msg.style.display = 'block';
             msg.style.backgroundColor = '#4CAF5033';
             msg.style.color = '#4CAF50';
             msg.style.border = '1px solid #4CAF50';
-
             setTimeout(() => msg.style.display = 'none', 3000);
 
         } catch (error) {
@@ -331,44 +443,359 @@
         }
     }
 
-    // Habilidades guardadas en localStorage
-    let habilidades = JSON.parse(localStorage.getItem('habilidades_' + usuario.id)) || [];
+    async function cargarHabilidades() {
+        try {
+            const res = await fetch(`${API}/habilidades/usuario/${usuario.id}`);
+            const data = await res.json();
+            renderHabilidades(data);
+        } catch (error) {
+            console.error('Error al cargar habilidades:', error);
+        }
+    }
 
-    function renderHabilidades() {
+    const nivelTexto = { 1: 'Básico', 2: 'Intermedio', 3: 'Intermedio+', 4: 'Avanzado', 5: 'Experto' };
+
+    function renderHabilidades(habilidades) {
         const lista = document.getElementById('lista-habilidades');
-        if (habilidades.length === 0) {
+        if (!habilidades || habilidades.length === 0) {
             lista.innerHTML = '<p style="color:var(--texto2);">No tienes habilidades agregadas aún.</p>';
             return;
         }
-        lista.innerHTML = habilidades.map((h, i) => `
+        lista.innerHTML = habilidades.map(h => `
             <div style="display:flex; align-items:center; gap:0.5rem; background:var(--tarjeta2); border:1px solid var(--borde); border-radius:20px; padding:6px 14px;">
                 <span style="font-size:0.875rem; font-weight:500;">${h.nombre}</span>
-                <span style="font-size:0.75rem; color:var(--morado);">${h.nivel}</span>
-                <button onclick="eliminarHabilidad(${i})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.75rem; padding:0; margin-left:4px;">✕</button>
+                <span style="font-size:0.75rem; color:var(--morado);">${nivelTexto[h.nivel] || 'Intermedio'}</span>
+                <button onclick="eliminarHabilidad(${h.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.75rem; padding:0; margin-left:4px;">✕</button>
             </div>
         `).join('');
     }
 
-    function agregarHabilidad() {
+    async function agregarHabilidad() {
         const nombre = document.getElementById('nueva-habilidad').value.trim();
         const nivel = document.getElementById('nivel-habilidad').value;
-
         if (!nombre) return;
-
-        habilidades.push({ nombre, nivel });
-        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
-        document.getElementById('nueva-habilidad').value = '';
-        renderHabilidades();
+        try {
+            const res = await fetch(`${API}/habilidades/usuario`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, nombre, nivel })
+            });
+            if (res.ok) {
+                document.getElementById('nueva-habilidad').value = '';
+                cargarHabilidades();
+            }
+        } catch (error) {
+            console.error('Error al agregar habilidad:', error);
+        }
     }
 
-    function eliminarHabilidad(index) {
-        habilidades.splice(index, 1);
-        localStorage.setItem('habilidades_' + usuario.id, JSON.stringify(habilidades));
-        renderHabilidades();
+    async function eliminarHabilidad(id) {
+        try {
+            await fetch(`${API}/habilidades/usuario/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarHabilidades();
+        } catch (error) {
+            console.error('Error al eliminar habilidad:', error);
+        }
     }
 
-    renderHabilidades();
+    const estadoColores = {
+        'pendiente':   { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
+        'en_revision': { bg: '#f59e0b22', color: '#f59e0b', texto: 'En Revisión' },
+        'entrevista':  { bg: '#6366f122', color: '#6366f1', texto: 'Entrevista Agendada' },
+        'activo':      { bg: '#22c55e22', color: '#22c55e', texto: 'Activo' },
+        'rechazado':   { bg: '#ef444422', color: '#ef4444', texto: 'No Pasó' },
+        'aceptado':    { bg: '#22c55e22', color: '#22c55e', texto: 'Aceptado' }
+    };
+
+    async function cargarPostulaciones() {
+        try {
+            const res = await fetch(`${API}/postulaciones/usuario/${usuario.id}`);
+            const data = await res.json();
+            document.getElementById('stat-postulaciones').textContent = data.length;
+            const lista = document.getElementById('lista-postulaciones');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No tienes postulaciones aún. <a href="buscar.html" style="color:var(--morado);">Busca empleos</a></p>';
+                return;
+            }
+            lista.innerHTML = data.map(p => {
+                const estado = estadoColores[p.estado] || { bg: '#ffffff11', color: '#aaa', texto: p.estado };
+                const fecha = new Date(p.fecha_aplicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                return `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; font-size:1rem; margin-bottom:4px;">${p.titulo}</div>
+                        <div style="color:var(--texto2); font-size:0.875rem;">${p.empresa_nombre} • ${p.ubicacion || ''}</div>
+                        <div style="color:var(--texto3); font-size:0.8rem; margin-top:4px;">Aplicado el ${fecha}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <span style="background:${estado.bg}; color:${estado.color}; border:1px solid ${estado.color}44; border-radius:20px; padding:4px 12px; font-size:0.8rem; font-weight:500; white-space:nowrap;">${estado.texto}</span>
+                        <button onclick="eliminarPostulacion(${p.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Retirar postulación">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error('Error al cargar postulaciones:', error);
+        }
+    }
+
+    async function eliminarPostulacion(id) {
+        if (!confirm('¿Deseas retirar esta postulación?')) return;
+        try {
+            await fetch(`${API}/postulaciones/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarPostulaciones();
+        } catch (error) {
+            console.error('Error al eliminar postulación:', error);
+        }
+    }
+
+    async function cargarEmpresasSelect() {
+        try {
+            const res = await fetch(`${API}/empresas`);
+            const data = await res.json();
+            const sel = document.getElementById('val-empresa-id');
+            if (sel.options.length <= 1) {
+                data.forEach(emp => {
+                    const opt = document.createElement('option');
+                    opt.value = emp.id;
+                    opt.textContent = emp.nombre;
+                    sel.appendChild(opt);
+                });
+            }
+        } catch (error) {
+            console.error('Error al cargar empresas:', error);
+        }
+    }
+
+    async function cargarValoraciones() {
+        try {
+            const res = await fetch(`${API}/valoraciones/usuario/${usuario.id}`);
+            const data = await res.json();
+            const lista = document.getElementById('lista-valoraciones');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No has valorado ninguna empresa aún.</p>';
+                return;
+            }
+            lista.innerHTML = data.map(v => {
+                const estrellas = '⭐'.repeat(v.calificacion) + '☆'.repeat(5 - v.calificacion);
+                const fecha = new Date(v.fecha_valoracion).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                return `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:600; font-size:1rem;">${v.empresa_nombre}</div>
+                            <div style="color:var(--texto2); font-size:0.8rem;">${v.industria || ''} • ${fecha}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:1rem;">${estrellas}</span>
+                            <button onclick="eliminarValoracion(${v.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Eliminar">✕</button>
+                        </div>
+                    </div>
+                    ${v.comentario ? `<p style="margin:0.5rem 0 0; color:var(--texto2); font-size:0.875rem;">${v.comentario}</p>` : ''}
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error('Error al cargar valoraciones:', error);
+        }
+    }
+
+    function abrirModalValoracion() {
+        document.getElementById('modal-valoracion').style.display = 'block';
+    }
+
+    function cerrarModalValoracion() {
+        document.getElementById('modal-valoracion').style.display = 'none';
+        document.getElementById('val-comentario').value = '';
+        document.getElementById('mensaje-valoracion').style.display = 'none';
+    }
+
+    async function guardarValoracion() {
+        const empresa_id = document.getElementById('val-empresa-id').value;
+        const calificacion = document.getElementById('val-calificacion').value;
+        const comentario = document.getElementById('val-comentario').value.trim();
+        const msg = document.getElementById('mensaje-valoracion');
+        if (!empresa_id) {
+            msg.textContent = 'Selecciona una empresa.';
+            msg.style.display = 'block';
+            msg.style.backgroundColor = '#ff4d4d33';
+            msg.style.color = '#ff4d4d';
+            msg.style.border = '1px solid #ff4d4d';
+            return;
+        }
+        try {
+            const res = await fetch(`${API}/valoraciones`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, empresa_id, calificacion, comentario })
+            });
+            if (res.ok) {
+                cerrarModalValoracion();
+                cargarValoraciones();
+            } else {
+                const data = await res.json();
+                msg.textContent = data.error || 'Error al guardar valoración.';
+                msg.style.display = 'block';
+                msg.style.backgroundColor = '#ff4d4d33';
+                msg.style.color = '#ff4d4d';
+                msg.style.border = '1px solid #ff4d4d';
+            }
+        } catch (error) {
+            console.error('Error al guardar valoración:', error);
+        }
+    }
+
+    async function eliminarValoracion(id) {
+        if (!confirm('¿Eliminar esta valoración?')) return;
+        try {
+            await fetch(`${API}/valoraciones/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarValoraciones();
+        } catch (error) {
+            console.error('Error al eliminar valoración:', error);
+        }
+    }
+
+    async function cargarAlertas() {
+        try {
+            const res = await fetch(`${API}/alertas/usuario/${usuario.id}`);
+            const data = await res.json();
+            const lista = document.getElementById('lista-alertas');
+            if (!data || data.length === 0) {
+                lista.innerHTML = '<p style="color:var(--texto2);">No tienes alertas configuradas aún.</p>';
+                return;
+            }
+            lista.innerHTML = data.map(a => `
+                <div style="border:1px solid var(--borde); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; font-size:0.95rem; margin-bottom:4px;">🔍 ${a.palabras_clave || 'Sin palabras clave'}</div>
+                        <div style="color:var(--texto2); font-size:0.8rem;">📍 ${a.ubicacion || 'Cualquier lugar'} &nbsp;•&nbsp; 🔔 ${a.frecuencia}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <span style="background:${a.activa ? '#22c55e22' : '#ffffff11'}; color:${a.activa ? '#22c55e' : '#aaa'}; border:1px solid ${a.activa ? '#22c55e44' : '#ffffff22'}; border-radius:20px; padding:3px 10px; font-size:0.75rem; cursor:pointer;"
+                              onclick="toggleAlerta(${a.id}, ${a.activa})">${a.activa ? 'Activa' : 'Inactiva'}</span>
+                        <button onclick="eliminarAlerta(${a.id})" style="background:none; border:none; cursor:pointer; color:var(--texto3); font-size:0.8rem;" title="Eliminar">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error al cargar alertas:', error);
+        }
+    }
+
+    async function guardarAlerta() {
+        const palabras_clave = document.getElementById('alerta-palabras').value.trim();
+        const ubicacion = document.getElementById('alerta-ubicacion').value.trim();
+        const frecuencia = document.getElementById('alerta-frecuencia').value;
+        const msg = document.getElementById('mensaje-alertas');
+        if (!palabras_clave) {
+            msg.textContent = 'Ingresa al menos una palabra clave.';
+            msg.style.display = 'block';
+            msg.style.backgroundColor = '#ff4d4d33';
+            msg.style.color = '#ff4d4d';
+            msg.style.border = '1px solid #ff4d4d';
+            setTimeout(() => msg.style.display = 'none', 3000);
+            return;
+        }
+        try {
+            const res = await fetch(`${API}/alertas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, palabras_clave, ubicacion, frecuencia })
+            });
+            if (res.ok) {
+                document.getElementById('alerta-palabras').value = '';
+                document.getElementById('alerta-ubicacion').value = '';
+                msg.textContent = '✓ Alerta creada correctamente';
+                msg.style.display = 'block';
+                msg.style.backgroundColor = '#4CAF5033';
+                msg.style.color = '#4CAF50';
+                msg.style.border = '1px solid #4CAF50';
+                setTimeout(() => msg.style.display = 'none', 3000);
+                cargarAlertas();
+            }
+        } catch (error) {
+            console.error('Error al guardar alerta:', error);
+        }
+    }
+
+    async function toggleAlerta(id, activa) {
+        try {
+            await fetch(`${API}/alertas/${id}/toggle`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id, activa: !activa })
+            });
+            cargarAlertas();
+        } catch (error) {
+            console.error('Error al cambiar estado de alerta:', error);
+        }
+    }
+
+    async function eliminarAlerta(id) {
+        if (!confirm('¿Eliminar esta alerta?')) return;
+        try {
+            await fetch(`${API}/alertas/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuario.id })
+            });
+            cargarAlertas();
+        } catch (error) {
+            console.error('Error al eliminar alerta:', error);
+        }
+    }
+
+    async function subirFoto(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('foto', file);
+        try {
+            const res = await fetch(`${API}/usuarios/${usuario.id}/foto`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('foto-perfil-img').src = `../contenido_multimedia/${data.foto_perfil}`;
+            }
+        } catch (error) {
+            console.error('Error al subir foto:', error);
+        }
+    }
+
+    async function subirCV(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('cv', file);
+        try {
+            const res = await fetch(`${API}/usuarios/${usuario.id}/cv`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('cv-nombre').textContent = data.nombre_archivo;
+                document.getElementById('cv-fecha').textContent = 'Actualizado: ' + new Date().toLocaleDateString('es-ES');
+                const cvVer = document.getElementById('cv-ver');
+                cvVer.href = `../contenido_multimedia/${data.cv_url}`;
+                cvVer.style.display = 'inline-flex';
+            }
+        } catch (error) {
+            console.error('Error al subir CV:', error);
+        }
+    }
 </script>
 </body>
-
 </html>

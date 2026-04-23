@@ -59,3 +59,26 @@ export const updateEstadoPostulacion = async (id, estado) => {
     );
     return result;
 };
+// Obtener postulaciones por usuario
+export const getPostulacionesByUsuario = async (usuario_id) => {
+    const [rows] = await pool.query(`
+        SELECT p.id, p.estado, p.fecha_aplicacion, p.carta_presentacion,
+               e.titulo, e.ubicacion, e.tipo_contrato,
+               emp.nombre AS empresa_nombre, emp.logo AS empresa_logo
+        FROM postulaciones p
+        JOIN empleos e ON p.empleo_id = e.id
+        JOIN empresas emp ON e.empresa_id = emp.id
+        WHERE p.usuario_id = ?
+        ORDER BY p.fecha_aplicacion DESC
+    `, [usuario_id]);
+    return rows;
+};
+
+// Eliminar postulacion
+export const deletePostulacion = async (id, usuario_id) => {
+    const [result] = await pool.query(
+        'DELETE FROM postulaciones WHERE id = ? AND usuario_id = ?',
+        [id, usuario_id]
+    );
+    return result;
+};

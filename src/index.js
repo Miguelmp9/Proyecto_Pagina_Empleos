@@ -8,8 +8,13 @@ import ForosRoutes from './routes/forosRoutes.js';
 import EmpresaRoutes from './routes/Empresas.js';
 import EmpleoRoutes from './routes/Empleos.js';
 import PostulacionRoutes from './routes/Postulaciones.js';
+import ValoracionRoutes from './routes/Valoracion.js';
+import AlertaRoutes from './routes/Alerta.js';
+import HabilidadRoutes from './routes/Habilidades.js';
+import AdminRoutes from './routes/admin.js';        // ← AGREGADO
 
 import { errorHandler } from './Middlewares/errorhandler.js';
+import RecursoRoutes from './routes/Recursos.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -33,6 +38,11 @@ app.use('/foros', ForosRoutes);
 app.use('/empresas', EmpresaRoutes);
 app.use('/empleos', EmpleoRoutes);
 app.use('/postulaciones', PostulacionRoutes);
+app.use('/valoraciones', ValoracionRoutes);
+app.use('/alertas', AlertaRoutes);
+app.use('/habilidades', HabilidadRoutes);
+app.use('/admin', AdminRoutes);  
+app.use('/recursos', RecursoRoutes);                   // ← AGREGADO
 
 app.use(errorHandler);
 

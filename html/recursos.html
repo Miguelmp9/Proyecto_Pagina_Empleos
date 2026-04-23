@@ -9,21 +9,258 @@
     <link rel="stylesheet" href="../css/recursos.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        /* ── Panel Admin ──────────────────────────────── */
+        .admin-upload-panel {
+            display: none;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border: 1px solid #4f46e5;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin: 0 auto 40px auto;
+            max-width: 900px;
+        }
+        .admin-upload-panel.visible { display: block; }
+
+        .admin-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .admin-panel-header h3 { color: #e0e7ff; font-size: 1.1rem; font-weight: 700; margin: 0; }
+
+        .admin-badge {
+            background: #4f46e5; color: #c7d2fe;
+            font-size: 0.7rem; font-weight: 700;
+            padding: 3px 10px; border-radius: 99px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+        }
+
+        .upload-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+
+        .upload-tab {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #a5b4fc; border-radius: 8px;
+            padding: 8px 20px; cursor: pointer;
+            font-size: 0.88rem; font-weight: 500;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .upload-tab:hover  { background: rgba(99,102,241,0.25); color: #e0e7ff; }
+        .upload-tab.activo { background: #4f46e5; border-color: #6366f1; color: #fff; }
+
+        .upload-form-section       { display: none; }
+        .upload-form-section.activo{ display: block; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-grid .full-width { grid-column: 1 / -1; }
+
+        .form-field { display: flex; flex-direction: column; gap: 6px; }
+        .form-field label {
+            color: #a5b4fc; font-size: 0.82rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; color: #e0e7ff;
+            padding: 10px 14px; font-size: 0.92rem;
+            outline: none; transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-field input::placeholder,
+        .form-field textarea::placeholder { color: rgba(165,180,252,0.4); }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: #6366f1;
+            background: rgba(99,102,241,0.1);
+        }
+        .form-field select option { background: #1e1b4b; color: #e0e7ff; }
+        .form-field textarea { resize: vertical; min-height: 80px; }
+
+        /* Drop zone PDF */
+        .pdf-drop-zone {
+            border: 2px dashed rgba(99,102,241,0.5);
+            border-radius: 10px; padding: 28px;
+            text-align: center; cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(99,102,241,0.05);
+        }
+        .pdf-drop-zone:hover,
+        .pdf-drop-zone.dragover {
+            border-color: #6366f1;
+            background: rgba(99,102,241,0.12);
+        }
+        .pdf-drop-zone .drop-icon { font-size: 2rem; margin-bottom: 8px; }
+        .pdf-drop-zone p   { color: #a5b4fc; font-size: 0.88rem; margin: 0; }
+        .pdf-drop-zone span{ color: #818cf8; font-size: 0.78rem; }
+        .pdf-drop-zone input[type="file"] { display: none; }
+
+        #nombre-archivo-seleccionado { color: #6ee7b7; font-size: 0.82rem; margin-top: 6px; }
+
+        .barra-progreso-upload {
+            height: 4px; background: rgba(255,255,255,0.1);
+            border-radius: 2px; margin-top: 10px;
+            overflow: hidden; display: none;
+        }
+        .barra-progreso-upload .progreso {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .btn-subir {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff; border: none; border-radius: 10px;
+            padding: 12px 28px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: opacity 0.2s, transform 0.1s; margin-top: 8px;
+        }
+        .btn-subir:hover   { opacity: 0.9; transform: translateY(-1px); }
+        .btn-subir:active  { transform: translateY(0); }
+        .btn-subir:disabled{ opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .upload-feedback {
+            margin-top: 12px; padding: 10px 16px;
+            border-radius: 8px; font-size: 0.88rem; font-weight: 500;
+            display: none;
+        }
+        .upload-feedback.exito {
+            background: rgba(16,185,129,0.15); border: 1px solid #059669;
+            color: #6ee7b7; display: flex; align-items: center; gap: 8px;
+        }
+        .upload-feedback.error {
+            background: rgba(239,68,68,0.15); border: 1px solid #dc2626;
+            color: #fca5a5; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── Tarjetas de BD ───────────────────────────── */
+        .seccion-bd { margin-bottom: 40px; }
+        .seccion-bd h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; color: var(--texto); }
+
+        .grid-recursos-bd {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tarjeta-recurso-bd {
+            background: var(--tarjeta);
+            border: 1px solid var(--borde);
+            border-radius: var(--radio-grande);
+            padding: 20px;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative;
+        }
+        .tarjeta-recurso-bd:hover {
+            border-color: var(--morado);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .recurso-tipo-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.73rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            padding: 4px 10px; border-radius: 99px; width: fit-content;
+        }
+        .tipo-documento  { background: rgba(109,40,217,0.2); color: #a78bfa; }
+        .tipo-video      { background: rgba(220,38,38,0.2);  color: #fca5a5; }
+        .tipo-articulo   { background: rgba(29,78,216,0.2);  color: #93c5fd; }
+        .tipo-infografia { background: rgba(6,95,70,0.2);    color: #6ee7b7; }
+        .tipo-podcast    { background: rgba(146,64,14,0.2);  color: #fcd34d; }
+
+        .recurso-titulo { font-size: 0.97rem; font-weight: 600; color: var(--texto); line-height: 1.4; }
+
+        .recurso-meta {
+            display: flex; flex-wrap: wrap;
+            align-items: center; gap: 10px;
+            font-size: 0.8rem; color: var(--texto2);
+        }
+
+        .recurso-stats {
+            display: flex; gap: 12px;
+            font-size: 0.78rem; color: var(--texto2);
+        }
+
+        .recurso-acciones { display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap; }
+
+        .btn-recurso {
+            flex: 1; display: flex; align-items: center;
+            justify-content: center; gap: 6px;
+            padding: 9px 14px; border-radius: 8px;
+            font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; text-decoration: none;
+            border: none; transition: all 0.15s;
+            min-width: 80px;
+        }
+        .btn-recurso-ver        { background: rgba(109,40,217,0.2); color: #a78bfa; }
+        .btn-recurso-ver:hover  { background: rgba(109,40,217,0.35); }
+        .btn-recurso-descargar  { background: #4f46e5; color: #fff; }
+        .btn-recurso-descargar:hover { background: #4338ca; }
+        .btn-recurso-link       { background: rgba(220,38,38,0.2); color: #fca5a5; }
+        .btn-recurso-link:hover { background: rgba(220,38,38,0.35); }
+        .btn-recurso-like       { background: rgba(255,255,255,0.07); color: var(--texto2); border: none; cursor: pointer; }
+        .btn-recurso-like:hover { background: rgba(255,255,255,0.12); }
+        .btn-recurso-eliminar   {
+            background: rgba(220,38,38,0.15); color: #fca5a5;
+            border: none; cursor: pointer;
+            flex: 0 0 auto; padding: 9px 12px;
+        }
+        .btn-recurso-eliminar:hover { background: rgba(220,38,38,0.3); }
+
+        .estado-vacio {
+            grid-column: 1 / -1; text-align: center;
+            padding: 40px; color: var(--texto2); font-size: 0.95rem;
+        }
+        .spinner-carga { grid-column: 1/-1; display:flex; justify-content:center; padding:40px; }
+        .spinner {
+            width:32px; height:32px;
+            border: 3px solid var(--borde);
+            border-top-color: var(--morado);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .upload-tabs { flex-wrap: wrap; }
+            .admin-upload-panel { padding: 20px 16px; }
+        }
+    </style>
 </head>
 
 <body>
     <nav>
         <a href="home.html" class="nav-logo">
             <img src="../contenido_multimedia/logo.png"
-                style="width:36px; height:36px; border-radius:8px; object-fit:cover;">Shovel
+                style="width:36px;height:36px;border-radius:8px;object-fit:cover;">Shovel
         </a>
         <div class="nav-links">
-            <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
+            <a href="buscar.html"   class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
             <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
             <a href="recursos.html" class="nav-link activo"><i data-lucide="book-open"></i> Recursos</a>
-            <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
-            <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <a href="foros.html"    class="nav-link"><i data-lucide="message-square"></i> Foros</a>
+            <a href="perfil.html"   class="nav-link" id="link-perfil"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html"    class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout"
+                style="background:transparent;border:1px solid #ef4444;color:#ef4444;
+                       cursor:pointer;border-radius:8px;padding:6px 14px;display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -32,164 +269,162 @@
         <p>Aprende, crece y destaca en tu carrera profesional con nuestros recursos exclusivos</p>
     </div>
 
-    <div class="barra-busqueda-recursos">
-        <input type="text" placeholder="Buscar artículos, tutoriales, videos..." id="buscador-recursos">
-    </div>
-
-    <div class="categorias-recursos">
-        <button class="categoria-pill activo">Todos</button>
-        <button class="categoria-pill">Carrera Profesional</button>
-        <button class="categoria-pill">Entrevistas</button>
-        <button class="categoria-pill">Currículum</button>
-        <button class="categoria-pill">Habilidades</button>
-        <button class="categoria-pill">Videos</button>
-    </div>
-
     <div class="contenido-recursos">
-        <h2 id="titulo-videos">Videos Destacados</h2>
-        <div class="grid-videos" id="seccion-videos">
 
-            <div class="tarjeta-video" data-categoria="videos entrevistas">
-                <a href="https://www.youtube.com/watch?v=N_eOfwNmdx4" target="_blank" class="video-link">
-                    <img src="https://img.youtube.com/vi/N_eOfwNmdx4/hqdefault.jpg" alt="Entrevista Virtual">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
-                    </div>
-                    <span class="video-duracion">Video 1</span>
-                </a>
-                <div class="video-info">
-                    <p>Cómo Prepararte para una Entrevista Virtual</p>
-                    <span>Recurso recomendado</span>
-                </div>
+        <!-- PANEL ADMIN -->
+        <div class="admin-upload-panel" id="panel-admin">
+            <div class="admin-panel-header">
+                <i data-lucide="shield-check" style="color:#818cf8;width:20px;height:20px;"></i>
+                <h3>Publicar Nuevo Recurso</h3>
+                <span class="admin-badge">Solo Admin</span>
             </div>
 
-            <div class="tarjeta-video" data-categoria="videos carrera profesional">
-                <a href="https://www.youtube.com/watch?v=McfYGVLsPDo" target="_blank" class="video-link">
-                    <img src="https://img.youtube.com/vi/McfYGVLsPDo/hqdefault.jpg" alt="Portfolio Profesional">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
-                    </div>
-                    <span class="video-duracion">Video 2</span>
-                </a>
-                <div class="video-info">
-                    <p>Construye tu Portfolio Profesional</p>
-                    <span>Recurso recomendado</span>
-                </div>
+            <div class="upload-tabs">
+                <button class="upload-tab activo" data-tab="pdf" onclick="cambiarTab(this,'pdf')">
+                    <i data-lucide="file-text" style="width:15px;height:15px;"></i> Subir PDF
+                </button>
+                <button class="upload-tab" data-tab="url" onclick="cambiarTab(this,'url')">
+                    <i data-lucide="link" style="width:15px;height:15px;"></i> Agregar URL / Video
+                </button>
             </div>
 
-            <div class="tarjeta-video" data-categoria="videos carrera profesional">
-                <a href="https://www.youtube.com/watch?v=lDhOVbR_4Kg" target="_blank" class="video-link">
-                    <img src="https://img.youtube.com/vi/lDhOVbR_4Kg/hqdefault.jpg" alt="Networking">
-                    <div class="play-overlay">
-                        <div class="play-btn">&#9654;</div>
+            <!-- Tab PDF -->
+            <div class="upload-form-section activo" id="form-pdf">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Título *</label>
+                        <input type="text" id="pdf-titulo" placeholder="Ej. Guía de Entrevistas 2026">
                     </div>
-                    <span class="video-duracion">Video 3</span>
-                </a>
-                <div class="video-info">
-                    <p>Networking Efectivo para Encontrar Empleo</p>
-                    <span>Recurso recomendado</span>
+                    <div class="form-field">
+                        <label>Categoría</label>
+                        <select id="pdf-categoria">
+                            <option value="">Seleccionar categoría</option>
+                            <option value="entrevistas">Entrevistas</option>
+                            <option value="curriculum">Currículum</option>
+                            <option value="carrera profesional">Carrera Profesional</option>
+                            <option value="habilidades">Habilidades</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Tipo</label>
+                        <select id="pdf-tipo">
+                            <option value="documento">Documento</option>
+                            <option value="articulo">Artículo</option>
+                            <option value="infografia">Infografía</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Sector</label>
+                        <input type="text" id="pdf-sector" placeholder="Ej. Tecnología, Finanzas…">
+                    </div>
+                    <div class="form-field">
+                        <label>Tiempo de lectura (min)</label>
+                        <input type="number" id="pdf-tiempo" placeholder="Ej. 8" min="1">
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Descripción (opcional)</label>
+                        <textarea id="pdf-contenido" placeholder="Breve descripción del recurso…"></textarea>
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Archivo PDF *</label>
+                        <div class="pdf-drop-zone" id="drop-zone"
+                             onclick="document.getElementById('input-pdf').click()">
+                            <div class="drop-icon">📄</div>
+                            <p>Haz clic o arrastra tu PDF aquí</p>
+                            <span>Máximo 10 MB · Solo archivos .pdf</span>
+                            <input type="file" id="input-pdf" accept=".pdf">
+                        </div>
+                        <div id="nombre-archivo-seleccionado"></div>
+                        <div class="barra-progreso-upload" id="barra-pdf">
+                            <div class="progreso" id="progreso-pdf"></div>
+                        </div>
+                    </div>
                 </div>
+                <button class="btn-subir" id="btn-subir-pdf" onclick="subirPDF()">
+                    <i data-lucide="upload-cloud" style="width:18px;height:18px;"></i>
+                    Publicar PDF
+                </button>
+                <div class="upload-feedback" id="feedback-pdf"></div>
             </div>
 
-        </div>
-
-        <h2 id="titulo-articulos">Artículos y Guías</h2>
-        <div class="grid-articulos">
-
-            <a href="../contenido_multimedia/documento_1.pdf" download class="tarjeta-articulo-link"
-                data-categoria="entrevistas">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Entrevistas</span>
-                        <span class="badge badge-morado">Artículo</span>
+            <!-- Tab URL / Video -->
+            <div class="upload-form-section" id="form-url">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Título *</label>
+                        <input type="text" id="url-titulo" placeholder="Ej. Cómo hacer networking efectivo">
                     </div>
-                    <p class="articulo-titulo">10 Consejos para Triunfar en tu Próxima Entrevista de Trabajo</p>
-                    <div class="articulo-meta"><span>🕐 8 min</span><span>👁 1240</span></div>
-                    <p class="articulo-autor">María López — 10 Mar 2026</p>
-                </div>
-            </a>
-
-            <a href="../contenido_multimedia/documento_2.pdf" download class="tarjeta-articulo-link"
-                data-categoria="curriculum">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Currículum</span>
-                        <span class="badge badge-morado">Guía</span>
+                    <div class="form-field">
+                        <label>Categoría</label>
+                        <select id="url-categoria">
+                            <option value="">Seleccionar categoría</option>
+                            <option value="entrevistas">Entrevistas</option>
+                            <option value="curriculum">Currículum</option>
+                            <option value="carrera profesional">Carrera Profesional</option>
+                            <option value="habilidades">Habilidades</option>
+                            <option value="videos">Videos</option>
+                        </select>
                     </div>
-                    <p class="articulo-titulo">Cómo Crear un Currículum que Destaque en 2026</p>
-                    <div class="articulo-meta"><span>🕐 12 min</span><span>👁 2350</span></div>
-                    <p class="articulo-autor">Carlos Ruiz — 8 Mar 2026</p>
-                </div>
-            </a>
-
-            <a href="../contenido_multimedia/documento_3.pdf" download class="tarjeta-articulo-link"
-                data-categoria="carrera profesional">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Carrera</span>
-                        <span class="badge badge-morado">Artículo</span>
+                    <div class="form-field">
+                        <label>Tipo</label>
+                        <select id="url-tipo">
+                            <option value="video">Video</option>
+                            <option value="articulo">Artículo</option>
+                            <option value="podcast">Podcast</option>
+                        </select>
                     </div>
-                    <p class="articulo-titulo">Las Habilidades Más Demandadas en el Mercado Laboral</p>
-                    <div class="articulo-meta"><span>🕐 6 min</span><span>👁 1890</span></div>
-                    <p class="articulo-autor">Ana García — 5 Mar 2026</p>
-                </div>
-            </a>
-
-            <a href="../contenido_multimedia/documento_4.pdf" download class="tarjeta-articulo-link"
-                data-categoria="carrera profesional">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Carrera</span>
-                        <span class="badge badge-morado">Tutorial</span>
+                    <div class="form-field">
+                        <label>Sector</label>
+                        <input type="text" id="url-sector" placeholder="Ej. Tecnología, Salud…">
                     </div>
-                    <p class="articulo-titulo">Negociación Salarial: Estrategias para Conseguir el Mejor Sueldo</p>
-                    <div class="articulo-meta"><span>🕐 10 min</span><span>👁 3120</span></div>
-                    <p class="articulo-autor">David Martín — 3 Mar 2026</p>
-                </div>
-            </a>
-
-            <a href="../contenido_multimedia/documento_5.pdf" download class="tarjeta-articulo-link"
-                data-categoria="habilidades">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Habilidades</span>
+                    <div class="form-field">
+                        <label>Duración (segundos)</label>
+                        <input type="number" id="url-duracion" placeholder="Ej. 3600 = 1 hora" min="0">
                     </div>
-                    <p class="articulo-titulo">Desarrolla tu Marca Personal en LinkedIn</p>
-                    <div class="articulo-meta"><span>🕐 15 min</span><span>👁 1560</span></div>
-                    <p class="articulo-autor">Laura Sánchez — 1 Mar 2026</p>
-                </div>
-            </a>
-
-            <a href="../contenido_multimedia/documento_6.pdf" download class="tarjeta-articulo-link"
-                data-categoria="entrevistas">
-                <div class="tarjeta-articulo">
-                    <div class="articulo-thumb"><i data-lucide="download"></i></div>
-                    <div class="articulo-tags">
-                        <span class="badge badge-morado">Entrevistas</span>
-                        <span class="badge badge-morado">Artículo</span>
+                    <div class="form-field full-width">
+                        <label>URL del recurso *</label>
+                        <input type="url" id="url-link" placeholder="https://www.youtube.com/watch?v=...">
                     </div>
-                    <p class="articulo-titulo">Preguntas Frecuentes en Entrevistas Técnicas</p>
-                    <div class="articulo-meta"><span>🕐 7 min</span><span>👁 2890</span></div>
-                    <p class="articulo-autor">Pedro Gómez — 28 Feb 2026</p>
+                    <div class="form-field full-width">
+                        <label>URL de miniatura <span style="color:#6b7280;font-size:0.78rem;">(auto-detectada en YouTube)</span></label>
+                        <input type="url" id="url-thumbnail" placeholder="https://…imagen.jpg">
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Descripción (opcional)</label>
+                        <textarea id="url-contenido" placeholder="Breve descripción del recurso…"></textarea>
+                    </div>
                 </div>
-            </a>
-
-        </div>
-
-        <div class="newsletter">
-            <h2>Suscríbete a Nuestro Newsletter</h2>
-            <p>Recibe consejos de carrera, tendencias del mercado laboral y recursos exclusivos directamente en tu
-                correo</p>
-            <div class="newsletter-form">
-                <input type="email" placeholder="tu@email.com">
-                <button>Suscribirse</button>
+                <button class="btn-subir" id="btn-subir-url" onclick="subirURL()">
+                    <i data-lucide="link-2" style="width:18px;height:18px;"></i>
+                    Publicar Enlace
+                </button>
+                <div class="upload-feedback" id="feedback-url"></div>
             </div>
         </div>
+
+        <!-- FILTROS -->
+        <div class="barra-busqueda-recursos" style="margin-bottom:24px;">
+            <input type="text" placeholder="Buscar artículos, tutoriales, videos..."
+                   id="buscador-recursos">
+        </div>
+
+        <div class="categorias-recursos">
+            <button class="categoria-pill activo">Todos</button>
+            <button class="categoria-pill">Carrera Profesional</button>
+            <button class="categoria-pill">Entrevistas</button>
+            <button class="categoria-pill">Currículum</button>
+            <button class="categoria-pill">Habilidades</button>
+            <button class="categoria-pill">Videos</button>
+        </div>
+
+        <!-- RECURSOS DINÁMICOS DE BD -->
+        <div class="seccion-bd" id="seccion-bd">
+            <h2>Recursos Publicados</h2>
+            <div class="grid-recursos-bd" id="grid-recursos-bd">
+                <div class="spinner-carga"><div class="spinner"></div></div>
+            </div>
+        </div>
+
     </div>
 
     <footer>
@@ -199,130 +434,441 @@
     <script>
         lucide.createIcons();
 
-        const pills = document.querySelectorAll('.categoria-pill');
-        const articulos = document.querySelectorAll('.tarjeta-articulo-link');
-        const videos = document.querySelectorAll('.tarjeta-video');
-        const buscador = document.getElementById('buscador-recursos');
-        const tituloVideos = document.getElementById('titulo-videos');
-        const seccionVideos = document.getElementById('seccion-videos');
-        const tituloArticulos = document.getElementById('titulo-articulos');
+        const BASE_URL = 'http://localhost:3000';
+        const usuario  = JSON.parse(localStorage.getItem('usuario') || 'null');
+        const esAdmin  = usuario?.rol === 'admin';
+        const token    = usuario?.token || '';
 
-        let categoriaActiva = 'todos';
+        const navAdmin    = document.querySelector('a[href="admin.html"]');
+        const navPublicar = document.querySelector('a[href="publicar.html"]');
+        const linkPerfil  = document.getElementById('link-perfil');
+        const btnLogout   = document.getElementById('btn-logout');
 
-        function normalizarTexto(texto) {
-            return texto
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .trim();
+        if (navAdmin    && !esAdmin)                               navAdmin.style.display    = 'none';
+        if (navPublicar && (!usuario || usuario.rol !== 'empresa')) navPublicar.style.display = 'none';
+        if (linkPerfil  && esAdmin)                                linkPerfil.style.display  = 'none';
+
+        if (usuario) {
+            btnLogout.style.display    = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap        = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
+
+        if (esAdmin) document.getElementById('panel-admin').classList.add('visible');
+
+        function cambiarTab(btn, tab) {
+            document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('activo'));
+            document.querySelectorAll('.upload-form-section').forEach(s => s.classList.remove('activo'));
+            btn.classList.add('activo');
+            document.getElementById('form-' + tab).classList.add('activo');
+            lucide.createIcons();
         }
 
-        function obtenerCategoriaBoton(textoBoton) {
-            const texto = normalizarTexto(textoBoton);
+        const dropZone      = document.getElementById('drop-zone');
+        const inputPdf      = document.getElementById('input-pdf');
+        const nombreArchivo = document.getElementById('nombre-archivo-seleccionado');
 
-            if (texto === 'todos') return 'todos';
-            if (texto === 'carrera profesional') return 'carrera profesional';
-            if (texto === 'entrevistas') return 'entrevistas';
-            if (texto === 'curriculum') return 'curriculum';
-            if (texto === 'habilidades') return 'habilidades';
-            if (texto === 'videos') return 'videos';
+        inputPdf.addEventListener('change', () => {
+            if (inputPdf.files[0]) mostrarNombreArchivo(inputPdf.files[0]);
+        });
+        dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file?.type === 'application/pdf') {
+                const dt = new DataTransfer(); dt.items.add(file);
+                inputPdf.files = dt.files;
+                mostrarNombreArchivo(file);
+            } else {
+                mostrarFeedback('feedback-pdf', 'error', 'Solo se permiten archivos PDF.');
+            }
+        });
 
-            return texto;
+        function mostrarNombreArchivo(file) {
+            nombreArchivo.textContent =
+                '✓ ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
         }
 
-        function coincideBusqueda(texto, busqueda) {
-            return normalizarTexto(texto).includes(normalizarTexto(busqueda));
-        }
+        function subirPDF() {
+            const titulo    = document.getElementById('pdf-titulo').value.trim();
+            const categoria = document.getElementById('pdf-categoria').value;
+            const tipo      = document.getElementById('pdf-tipo').value;
+            const tiempo    = document.getElementById('pdf-tiempo').value;
+            const sector    = document.getElementById('pdf-sector').value.trim();
+            const contenido = document.getElementById('pdf-contenido').value.trim();
+            const archivo   = inputPdf.files[0];
 
-        function filtrarRecursos() {
-            const textoBusqueda = buscador.value.trim();
-            let articulosVisibles = 0;
-            let videosVisibles = 0;
+            if (!titulo)  return mostrarFeedback('feedback-pdf', 'error', 'El título es obligatorio.');
+            if (!archivo) return mostrarFeedback('feedback-pdf', 'error', 'Debes seleccionar un archivo PDF.');
+            if (archivo.size > 10 * 1024 * 1024)
+                return mostrarFeedback('feedback-pdf', 'error', 'El archivo supera el límite de 10 MB.');
 
-            articulos.forEach(function (articulo) {
-                const categorias = articulo.dataset.categoria || '';
-                const titulo = articulo.querySelector('.articulo-titulo')?.textContent || '';
-                const autor = articulo.querySelector('.articulo-autor')?.textContent || '';
-                const tags = articulo.querySelector('.articulo-tags')?.textContent || '';
+            const btn   = document.getElementById('btn-subir-pdf');
+            const bWrap = document.getElementById('barra-pdf');
+            const bFill = document.getElementById('progreso-pdf');
 
-                const coincideCategoria =
-                    categoriaActiva === 'todos' ||
-                    categorias.includes(categoriaActiva);
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;height:16px;"></i> Subiendo...';
+            lucide.createIcons();
+            bWrap.style.display = 'block';
+            bFill.style.width   = '0%';
 
-                const coincideTexto =
-                    textoBusqueda === '' ||
-                    coincideBusqueda(titulo, textoBusqueda) ||
-                    coincideBusqueda(autor, textoBusqueda) ||
-                    coincideBusqueda(tags, textoBusqueda);
+            const fd = new FormData();
+            fd.append('titulo',         titulo);
+            fd.append('tipo',           tipo);
+            fd.append('categoria',      categoria);
+            fd.append('tiempo_lectura', tiempo || 0);
+            fd.append('sector',         sector);
+            fd.append('contenido',      contenido);
+            fd.append('es_premium',     false);
+            fd.append('autor_id',       usuario?.id         || '');
+            fd.append('empresa_id',     usuario?.empresa_id || '');
+            fd.append('estado',         'activo');
+            fd.append('archivo',        archivo);
 
-                if (coincideCategoria && coincideTexto) {
-                    articulo.style.display = 'block';
-                    articulosVisibles++;
-                } else {
-                    articulo.style.display = 'none';
-                }
+            const xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', e => {
+                if (e.lengthComputable)
+                    bFill.style.width = Math.round((e.loaded / e.total) * 100) + '%';
             });
 
-            videos.forEach(function (video) {
-                const categorias = video.dataset.categoria || '';
-                const titulo = video.querySelector('.video-info p')?.textContent || '';
-                const descripcion = video.querySelector('.video-info span')?.textContent || '';
-
-                const coincideCategoria =
-                    categoriaActiva === 'todos' ||
-                    categoriaActiva === 'videos' ||
-                    categorias.includes(categoriaActiva);
-
-                const coincideTexto =
-                    textoBusqueda === '' ||
-                    coincideBusqueda(titulo, textoBusqueda) ||
-                    coincideBusqueda(descripcion, textoBusqueda);
-
-                if (coincideCategoria && coincideTexto) {
-                    video.style.display = 'block';
-                    videosVisibles++;
+            xhr.addEventListener('load', () => {
+                bWrap.style.display = 'none';
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    mostrarFeedback('feedback-pdf', 'exito', '✓ PDF publicado correctamente.');
+                    limpiarFormPDF();
+                    cargarRecursosBD();
                 } else {
-                    video.style.display = 'none';
+                    let msg = 'Error del servidor: ' + xhr.status;
+                    try { msg = JSON.parse(xhr.responseText).error || msg; } catch(_) {}
+                    mostrarFeedback('feedback-pdf', 'error', msg);
                 }
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="upload-cloud" style="width:18px;height:18px;"></i> Publicar PDF';
+                lucide.createIcons();
             });
 
-            tituloVideos.style.display = videosVisibles > 0 ? 'block' : 'none';
-            seccionVideos.style.display = videosVisibles > 0 ? 'grid' : 'none';
-            tituloArticulos.style.display = articulosVisibles > 0 ? 'block' : 'none';
+            xhr.addEventListener('error', () => {
+                bWrap.style.display = 'none';
+                mostrarFeedback('feedback-pdf', 'error', 'No se pudo conectar con el servidor.');
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="upload-cloud" style="width:18px;height:18px;"></i> Publicar PDF';
+                lucide.createIcons();
+            });
+
+            xhr.open('POST', `${BASE_URL}/recursos`);
+            if (token) xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            xhr.send(fd);
         }
 
-        pills.forEach(function (pill) {
-            pill.addEventListener('click', function () {
-                pills.forEach(function (p) {
-                    p.classList.remove('activo');
+        async function subirURL() {
+            const titulo    = document.getElementById('url-titulo').value.trim();
+            const categoria = document.getElementById('url-categoria').value;
+            const tipo      = document.getElementById('url-tipo').value;
+            const videoUrl  = document.getElementById('url-link').value.trim();
+            const sector    = document.getElementById('url-sector').value.trim();
+            const duracion  = document.getElementById('url-duracion').value;
+            const contenido = document.getElementById('url-contenido').value.trim();
+            let   thumbnail = document.getElementById('url-thumbnail').value.trim();
+
+            if (!titulo)   return mostrarFeedback('feedback-url', 'error', 'El título es obligatorio.');
+            if (!videoUrl) return mostrarFeedback('feedback-url', 'error', 'La URL es obligatoria.');
+
+            if (!thumbnail) {
+                const yt = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+                if (yt) thumbnail = `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`;
+            }
+
+            const btn = document.getElementById('btn-subir-url');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader" style="width:16px;height:16px;"></i> Publicando...';
+            lucide.createIcons();
+
+            try {
+                const res = await fetch(`${BASE_URL}/recursos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+                    },
+                    body: JSON.stringify({
+                        titulo,
+                        tipo,
+                        categoria,
+                        contenido:         contenido  || null,
+                        video_url:         videoUrl,
+                        thumbnail_url:     thumbnail  || null,
+                        duracion_segundos: duracion   ? Number(duracion) : null,
+                        sector:            sector     || null,
+                        es_premium:        false,
+                        autor_id:          usuario?.id          || null,
+                        empresa_id:        usuario?.empresa_id  || null,
+                        estado:            'activo'
+                    })
                 });
 
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error: ' + res.status);
+
+                mostrarFeedback('feedback-url', 'exito', '✓ Enlace publicado correctamente.');
+                limpiarFormURL();
+                cargarRecursosBD();
+            } catch (err) {
+                mostrarFeedback('feedback-url', 'error', 'No se pudo publicar: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="link-2" style="width:18px;height:18px;"></i> Publicar Enlace';
+                lucide.createIcons();
+            }
+        }
+
+        async function eliminarRecurso(id) {
+            if (!confirm('¿Eliminar este recurso permanentemente?')) return;
+            try {
+                const res = await fetch(`${BASE_URL}/recursos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error();
+                cargarRecursosBD();
+            } catch {
+                alert('No se pudo eliminar el recurso.');
+            }
+        }
+
+        async function darLike(id, btn) {
+            try {
+                const yaLikeado = btn.dataset.liked === '1';
+                const res = await fetch(`${BASE_URL}/recursos/${id}/like`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sumar: !yaLikeado })
+                });
+                if (!res.ok) throw new Error();
+                const span = btn.querySelector('.like-count');
+                const actual = parseInt(span.textContent) || 0;
+                if (yaLikeado) {
+                    span.textContent = actual - 1;
+                    btn.dataset.liked = '0';
+                } else {
+                    span.textContent = actual + 1;
+                    btn.dataset.liked = '1';
+                }
+            } catch { /* silencioso */ }
+        }
+
+        function registrarDescarga(id) {
+            fetch(`${BASE_URL}/recursos/${id}/descargas`, { method: 'PATCH' }).catch(() => {});
+        }
+
+        let recursosCache = [];
+
+        async function cargarRecursosBD() {
+            const grid = document.getElementById('grid-recursos-bd');
+            grid.innerHTML = '<div class="spinner-carga"><div class="spinner"></div></div>';
+            try {
+                const res = await fetch(`${BASE_URL}/recursos?estado=activo`, {
+                    headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+                });
+                if (!res.ok) throw new Error('No se pudieron cargar los recursos.');
+                const data = await res.json();
+                recursosCache = Array.isArray(data) ? data : (data.recursos || []);
+                renderizarRecursosBD(recursosCache);
+            } catch (err) {
+                grid.innerHTML = `<div class="estado-vacio">⚠️ ${err.message}</div>`;
+            }
+        }
+
+        function renderizarRecursosBD(lista) {
+            const grid  = document.getElementById('grid-recursos-bd');
+            const texto = document.getElementById('buscador-recursos').value.trim().toLowerCase();
+
+            const filtrada = lista.filter(r => {
+                const okCat =
+                    categoriaActiva === 'todos' ||
+                    (r.categoria || '').toLowerCase().includes(categoriaActiva) ||
+                    (r.sector    || '').toLowerCase().includes(categoriaActiva) ||
+                    (categoriaActiva === 'videos' && r.tipo === 'video');
+                const okTxt =
+                    !texto ||
+                    (r.titulo    || '').toLowerCase().includes(texto) ||
+                    (r.categoria || '').toLowerCase().includes(texto) ||
+                    (r.sector    || '').toLowerCase().includes(texto) ||
+                    (r.contenido || '').toLowerCase().includes(texto);
+                return okCat && okTxt;
+            });
+
+            if (!filtrada.length) {
+                grid.innerHTML = lista.length
+                    ? '<div class="estado-vacio">No se encontraron recursos con ese filtro.</div>'
+                    : '<div class="estado-vacio">Aún no hay recursos publicados.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtrada.map(r => tarjetaRecursoBD(r)).join('');
+            lucide.createIcons();
+        }
+
+        function tarjetaRecursoBD(r) {
+            const info = {
+                documento:  ['tipo-documento',  '📄'],
+                video:      ['tipo-video',       '▶️'],
+                articulo:   ['tipo-articulo',    '📰'],
+                infografia: ['tipo-infografia',  '🗂️'],
+                podcast:    ['tipo-podcast',     '🎙️'],
+            }[r.tipo] || ['tipo-articulo', '📄'];
+
+            let durStr = '';
+            if (r.duracion_segundos) {
+                const h = Math.floor(r.duracion_segundos / 3600);
+                const m = Math.floor((r.duracion_segundos % 3600) / 60);
+                const s = r.duracion_segundos % 60;
+                durStr = h > 0 ? `⏱ ${h}h ${m}m` : `⏱ ${m}m ${s > 0 ? s + 's' : ''}`;
+            }
+
+            const tiempo    = r.tiempo_lectura  ? `🕐 ${r.tiempo_lectura} min` : '';
+            const vistas    = r.total_vistas    ? `👁 ${Number(r.total_vistas).toLocaleString()}` : '';
+            const descargas = r.total_descargas ? `⬇️ ${Number(r.total_descargas).toLocaleString()}` : '';
+            const fecha     = r.fecha_publicacion
+                ? new Date(r.fecha_publicacion).toLocaleDateString('es-ES',
+                    { day:'numeric', month:'short', year:'numeric' })
+                : '';
+
+            let tamStr = '';
+            if (r.tamano_archivo) {
+                const mb = r.tamano_archivo / (1024 * 1024);
+                tamStr = mb >= 1 ? `📦 ${mb.toFixed(1)} MB` : `📦 ${Math.round(r.tamano_archivo / 1024)} KB`;
+            }
+
+            let acciones = '';
+            if (r.archivo_url) {
+                const url = `${BASE_URL}/${r.archivo_url}`;
+                acciones = `
+                    <a href="${url}" target="_blank" class="btn-recurso btn-recurso-ver">
+                        <i data-lucide="eye" style="width:14px;height:14px;"></i> Ver
+                    </a>
+                    <a href="${url}" download class="btn-recurso btn-recurso-descargar"
+                       onclick="registrarDescarga(${r.id})">
+                        <i data-lucide="download" style="width:14px;height:14px;"></i> Descargar
+                    </a>`;
+            } else if (r.video_url) {
+                acciones = `
+                    <a href="${r.video_url}" target="_blank" rel="noopener noreferrer"
+                       class="btn-recurso btn-recurso-link">
+                        <i data-lucide="external-link" style="width:14px;height:14px;"></i> Abrir enlace
+                    </a>`;
+            }
+
+            const btnLike = `
+                <button class="btn-recurso btn-recurso-like" data-liked="0" onclick="darLike(${r.id}, this)">
+                    ❤️ <span class="like-count">${r.total_likes || 0}</span>
+                </button>`;
+
+            const btnEliminar = esAdmin
+                ? `<button class="btn-recurso btn-recurso-eliminar"
+                           onclick="eliminarRecurso(${r.id})" title="Eliminar recurso">
+                       <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                   </button>`
+                : '';
+
+            return `
+            <div class="tarjeta-recurso-bd">
+                ${r.thumbnail_url
+                    ? `<img src="${r.thumbnail_url}" alt="${r.titulo}"
+                            style="width:100%;height:140px;object-fit:cover;border-radius:8px;"
+                            onerror="this.style.display='none'">`
+                    : ''}
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="recurso-tipo-badge ${info[0]}">${info[1]} ${r.tipo}</span>
+                    ${r.sector ? `<span style="font-size:0.75rem;color:var(--texto2);">📍 ${r.sector}</span>` : ''}
+                </div>
+                <p class="recurso-titulo">${r.titulo}</p>
+                ${r.contenido
+                    ? `<p style="font-size:0.82rem;color:var(--texto2);line-height:1.5;margin:0;">
+                           ${r.contenido.length > 120 ? r.contenido.slice(0,120) + '…' : r.contenido}
+                       </p>`
+                    : ''}
+                <div class="recurso-meta">
+                    ${tiempo    ? `<span>${tiempo}</span>`   : ''}
+                    ${durStr    ? `<span>${durStr}</span>`   : ''}
+                    ${tamStr    ? `<span>${tamStr}</span>`   : ''}
+                    ${fecha     ? `<span>📅 ${fecha}</span>` : ''}
+                    ${r.autor_nombre ? `<span>✍️ ${r.autor_nombre}</span>` : ''}
+                </div>
+                <div class="recurso-stats">
+                    ${vistas    ? `<span>${vistas}</span>`    : ''}
+                    ${descargas ? `<span>${descargas}</span>` : ''}
+                </div>
+                <div class="recurso-acciones">
+                    ${acciones}
+                    ${btnLike}
+                    ${btnEliminar}
+                </div>
+            </div>`;
+        }
+
+        const pills         = document.querySelectorAll('.categoria-pill');
+        const buscador      = document.getElementById('buscador-recursos');
+        let categoriaActiva = 'todos';
+
+        function norm(t) {
+            return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+        }
+
+        pills.forEach(pill => {
+            pill.addEventListener('click', function () {
+                pills.forEach(p => p.classList.remove('activo'));
                 this.classList.add('activo');
-                categoriaActiva = obtenerCategoriaBoton(this.textContent);
-                filtrarRecursos();
+                const mapa = {
+                    'todos':'todos',
+                    'carrera profesional':'carrera profesional',
+                    'entrevistas':'entrevistas',
+                    'curriculum':'curriculum',
+                    'curriculo':'curriculum',
+                    'habilidades':'habilidades',
+                    'videos':'videos'
+                };
+                categoriaActiva = mapa[norm(this.textContent)] || norm(this.textContent);
+                renderizarRecursosBD(recursosCache);
             });
         });
 
-        buscador.addEventListener('input', function () {
-            filtrarRecursos();
-        });
+        buscador.addEventListener('input', () => renderizarRecursosBD(recursosCache));
 
-        filtrarRecursos();
-
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-        // Ocultar boton admin si no es admin
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
-            btnAdmin.style.display = 'none';
+        function mostrarFeedback(id, tipo, msg) {
+            const el = document.getElementById(id);
+            el.className = 'upload-feedback ' + tipo;
+            el.textContent = msg;
+            el.style.display = 'flex';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
         }
 
-        // Ocultar boton publicar si no es empresa
-        const btnPublicar = document.querySelector('a[href="publicar.html"]');
-        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
-            btnPublicar.style.display = 'none';
+        function limpiarFormPDF() {
+            ['pdf-titulo','pdf-tiempo','pdf-sector','pdf-contenido'].forEach(
+                id => document.getElementById(id).value = ''
+            );
+            document.getElementById('pdf-categoria').value = '';
+            document.getElementById('pdf-tipo').value      = 'documento';
+            inputPdf.value = '';
+            nombreArchivo.textContent = '';
         }
+
+        function limpiarFormURL() {
+            ['url-titulo','url-link','url-thumbnail','url-sector','url-duracion','url-contenido'].forEach(
+                id => document.getElementById(id).value = ''
+            );
+            document.getElementById('url-categoria').value = '';
+            document.getElementById('url-tipo').value      = 'video';
+        }
+
+        cargarRecursosBD();
     </script>
 </body>
-
 </html>

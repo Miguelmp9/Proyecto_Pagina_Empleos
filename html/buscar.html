@@ -1,4 +1,3 @@
-!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -25,6 +24,9 @@
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
             <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
             <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -84,11 +86,9 @@
 
             <div class="barra-busqueda">
                 <div class="input-wrap">
-                    
                     <input type="text" id="buscador" placeholder="Título del empleo o palabra clave" oninput="aplicarFiltros()">
                 </div>
                 <div class="input-wrap" style="flex: 0.7;">
-                    
                     <input type="text" id="buscador-ubicacion" placeholder="Ubicación" style="padding-left: 34px;" oninput="aplicarFiltros()">
                 </div>
                 <button class="btn btn-primario" onclick="aplicarFiltros()">
@@ -147,15 +147,32 @@
         lucide.createIcons();
 
         const usuario = JSON.parse(localStorage.getItem('usuario'));
+
         const btnAdmin = document.querySelector('a[href="admin.html"]');
         if (btnAdmin && (!usuario || usuario.rol !== 'admin')) btnAdmin.style.display = 'none';
+
         const btnPublicar = document.querySelector('a[href="publicar.html"]');
         if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) btnPublicar.style.display = 'none';
+
+        // ── Ocultar "Mi Perfil" para administradores ──────────
+        const btnPerfil = document.querySelector('a[href="perfil.html"]');
+        if (btnPerfil && usuario && usuario.rol === 'admin') btnPerfil.style.display = 'none';
+
+        // ── Cerrar sesión ─────────────────────────────────────
+        const btnLogout = document.getElementById('btn-logout');
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
 
         let todosLosEmpleos = [];
         let filtrosActivos = { nivel: '', sector: '', contrato: '' };
 
-        // Cargar todos los empleos desde la API
         async function cargarEmpleos() {
             try {
                 const res = await fetch(`${API}/empleos`);
@@ -168,7 +185,6 @@
             }
         }
 
-        // Renderizar empleos
         function renderizarEmpleos(lista) {
             const contenedor = document.getElementById('lista-empleos');
             const conteo = document.getElementById('conteo-resultados');
@@ -195,7 +211,6 @@
                             <h3>${e.titulo}</h3>
                             <p class="empleo-empresa">${e.empresa_nombre || 'Empresa'}</p>
                         </div>
-                        <span class="icono-guardar">🔖</span>
                     </div>
                     <div class="empleo-meta">
                         <span>📍 ${e.ubicacion || '-'}</span>
@@ -216,7 +231,6 @@
             }).join('');
         }
 
-        // Calcular tiempo desde publicación
         function calcularTiempo(fecha) {
             const diff = Math.floor((new Date() - new Date(fecha)) / 60000);
             if (diff < 60) return `Hace ${diff} minutos`;
@@ -225,7 +239,6 @@
             return `Hace ${Math.floor(diff / 1440)} días`;
         }
 
-        // Aplicar todos los filtros
         function aplicarFiltros() {
             const texto = document.getElementById('buscador').value.toLowerCase();
             const ubicacion = document.getElementById('buscador-ubicacion').value.toLowerCase();
@@ -268,7 +281,6 @@
             renderizarEmpleos(resultado);
         }
 
-        // Toggle filtro del sidebar
         function toggleFiltro(elemento, tipo) {
             const estaActivo = elemento.classList.contains('activo');
             document.querySelectorAll(`.opcion-filtro`).forEach(op => {
@@ -293,7 +305,6 @@
             aplicarFiltros();
         }
 
-        // Limpiar filtros
         function limpiarFiltros() {
             document.querySelectorAll('.opcion-filtro').forEach(op => op.classList.remove('activo'));
             document.getElementById('buscador').value = '';
@@ -305,7 +316,6 @@
             filtrosActivos = { nivel: '', sector: '', contrato: '' };
             renderizarEmpleos(todosLosEmpleos);
         }
-        
 
         cargarEmpleos();
     </script>

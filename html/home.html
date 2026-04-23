@@ -22,11 +22,14 @@
         </a>
         <div class="nav-links">
             <a href="buscar.html" class="nav-link"><i data-lucide="search"></i> Buscar Empleos</a>
-            <a href="publicar.html" class="nav-link"><i data-lucide="briefcase"></i> Publicar Empleo</a>
+            <a href="publicar.html" class="nav-link" id="btn-publicar"><i data-lucide="briefcase"></i> Publicar Empleo</a>
             <a href="recursos.html" class="nav-link"><i data-lucide="book-open"></i> Recursos</a>
             <a href="foros.html" class="nav-link"><i data-lucide="message-square"></i> Foros</a>
-            <a href="perfil.html" class="nav-link"><i data-lucide="user"></i> Mi Perfil</a>
-            <a href="admin.html" class="nav-link"><i data-lucide="layout-grid"></i> Admin</a>
+            <a href="perfil.html" class="nav-link" id="btn-perfil"><i data-lucide="user"></i> Mi Perfil</a>
+            <a href="admin.html" class="nav-link" id="btn-admin"><i data-lucide="layout-grid"></i> Admin</a>
+            <button class="nav-link" id="btn-logout" style="background:transparent; border:1px solid #ef4444; color:#ef4444; cursor:pointer; border-radius:8px; padding:6px 14px; display:none;">
+                <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
         </div>
     </nav>
 
@@ -42,22 +45,22 @@
     <div class="grid-stats">
         <div class="tarjeta-stat">
             <div class="stat-icono"><i data-lucide="briefcase"></i></div>
-            <div class="stat-numero">5,000+</div>
+            <div class="stat-numero" id="stat-empresas">—</div>
             <div class="stat-etiqueta">Empresas</div>
         </div>
         <div class="tarjeta-stat">
             <div class="stat-icono"><i data-lucide="users"></i></div>
-            <div class="stat-numero">150,000+</div>
+            <div class="stat-numero" id="stat-usuarios">—</div>
             <div class="stat-etiqueta">Usuarios</div>
         </div>
         <div class="tarjeta-stat">
             <div class="stat-icono"><i data-lucide="file-text"></i></div>
-            <div class="stat-numero">12,500+</div>
+            <div class="stat-numero" id="stat-empleos">—</div>
             <div class="stat-etiqueta">Empleos Publicados</div>
         </div>
         <div class="tarjeta-stat">
             <div class="stat-icono"><i data-lucide="send"></i></div>
-            <div class="stat-numero">250,000+</div>
+            <div class="stat-numero" id="stat-solicitudes">—</div>
             <div class="stat-etiqueta">Solicitudes Recibidas</div>
         </div>
     </div>
@@ -78,8 +81,7 @@
             <div class="feature-tarjeta">
                 <div class="feature-icono"><i data-lucide="search"></i></div>
                 <h3>Búsqueda Inteligente</h3>
-                <p>Algoritmos avanzados para conectarte con los empleos más relevantes según tu perfil y experiencia.
-                </p>
+                <p>Algoritmos avanzados para conectarte con los empleos más relevantes según tu perfil y experiencia.</p>
             </div>
             <div class="feature-tarjeta">
                 <div class="feature-icono"><i data-lucide="shield-check"></i></div>
@@ -127,22 +129,65 @@
     </footer>
 
     <script>
-        lucide.createIcons();
+        const API = 'http://localhost:3000';
 
+        lucide.createIcons();
 
         const usuario = JSON.parse(localStorage.getItem('usuario'));
 
-        // Ocultar boton admin si no es admin
-        const btnAdmin = document.querySelector('a[href="admin.html"]');
-        if (btnAdmin && (!usuario || usuario.rol !== 'admin')) {
+        // ── Visibilidad de botones según rol ──────────────────
+        const btnAdmin    = document.getElementById('btn-admin');
+        const btnPublicar = document.getElementById('btn-publicar');
+        const btnPerfil   = document.getElementById('btn-perfil');
+        const btnLogout   = document.getElementById('btn-logout');
+
+        if (!usuario || usuario.rol !== 'admin') {
             btnAdmin.style.display = 'none';
         }
 
-        // Ocultar boton publicar si no es empresa
-        const btnPublicar = document.querySelector('a[href="publicar.html"]');
-        if (btnPublicar && (!usuario || usuario.rol !== 'empresa')) {
+        if (!usuario || usuario.rol !== 'empresa') {
             btnPublicar.style.display = 'none';
         }
+
+        // ── Ocultar "Mi Perfil" para administradores ──────────
+        if (usuario && usuario.rol === 'admin') {
+            btnPerfil.style.display = 'none';
+        }
+
+        if (usuario) {
+            btnLogout.style.display = 'inline-flex';
+            btnLogout.style.alignItems = 'center';
+            btnLogout.style.gap = '6px';
+        }
+
+        // ── Cerrar sesión ─────────────────────────────────────
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        });
+
+        // ── Stats dinámicas desde la API ──────────────────────
+        async function renderStats() {
+            try {
+                const res = await fetch(`${API}/admin/stats`);
+                const stats = await res.json();
+
+                document.getElementById('stat-empresas').textContent    = stats.total_empresas?.toLocaleString()      || '0';
+                document.getElementById('stat-usuarios').textContent    = stats.total_usuarios?.toLocaleString()      || '0';
+                document.getElementById('stat-empleos').textContent     = stats.total_empleos?.toLocaleString()       || '0';
+                document.getElementById('stat-solicitudes').textContent = stats.total_postulaciones?.toLocaleString() || '0';
+            } catch (e) {
+                console.error('Error cargando stats:', e);
+                document.getElementById('stat-empresas').textContent    = '—';
+                document.getElementById('stat-usuarios').textContent    = '—';
+                document.getElementById('stat-empleos').textContent     = '—';
+                document.getElementById('stat-solicitudes').textContent = '—';
+            }
+        }
+
+        // Carga inicial + refresco cada 30 segundos
+        renderStats();
+        setInterval(renderStats, 30000);
     </script>
 
 </body>

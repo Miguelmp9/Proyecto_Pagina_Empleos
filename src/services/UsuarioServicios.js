@@ -98,3 +98,11 @@ export const deleteUsuario = async (id) => {
     const [result] = await pool.query('DELETE FROM usuarios WHERE id = ?', [id]);
     return result;
 };
+// Incrementar visitas al perfil
+export const incrementarVisitas = async (id) => {
+    const [result] = await db.query(
+        'UPDATE usuarios SET visitas_perfil = COALESCE(visitas_perfil, 0) + 1 WHERE id = ?',
+        [id]
+    );
+    return result;
+};

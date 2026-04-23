@@ -1,0 +1,119 @@
+/* CSS para la pagina de publicar empleo */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.contenido {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    flex: 1;
+}
+
+.panel-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.panel-cabecera h1 {
+    font-size: 1.5rem;
+}
+
+.grid-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 1.25rem;
+}
+
+.stat-icono {
+    width: 36px;
+    height: 36px;
+    background: var(--morado-claro);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+.stat-icono i {
+    width: 18px;
+    height: 18px;
+    color: var(--morado);
+}
+
+.stat-num {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 0.78rem;
+    color: var(--texto2);
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--borde);
+    margin-bottom: 1.5rem;
+}
+
+.tab {
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--texto2);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.tab.activo {
+    color: var(--morado);
+    border-color: var(--morado);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.grupo {
+    margin-bottom: 1rem;
+}
+
+.grupo label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--texto2);
+    margin-bottom: 6px;
+}
+
+.grupo textarea {
+    resize: vertical;
+}
+
+.seccion-form {
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.seccion-form h4 {
+    font-size: 0.9rem;
+    color: var(--morado);
+    margin-bottom: 1rem;
+}

@@ -22,6 +22,17 @@ export const getEmpresaPorId = async (req, res) => {
     }
 };
 
+// Obtener empresa por usuario_id
+export const getEmpresaPorUsuario = async (req, res) => {
+    try {
+        const empresa = await empresaServicios.getEmpresaByUsuarioId(req.params.usuario_id);
+        if (!empresa) return res.status(404).json({ error: 'No tiene empresa registrada' });
+        res.json(empresa);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener la empresa' });
+    }
+};
+
 // Crear empresa
 export const postCrearEmpresa = async (req, res) => {
     try {
@@ -83,9 +94,8 @@ export const postLoginEmpresa = async (req, res) => {
                 email: empresa.email,
                 rol: 'empresa'
             }
-        })
+        });
     } catch (error) {
         res.status(500).json({ error: 'Error al iniciar sesión' });
     }
 };
-

@@ -53,3 +53,23 @@ export const putActualizarEstado = async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar el estado' });
     }
 };
+// Obtener postulaciones por usuario
+export const getPostulacionesPorUsuario = async (req, res) => {
+    try {
+        const postulaciones = await postulacionServicios.getPostulacionesByUsuario(req.params.usuario_id);
+        res.json(postulaciones);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener las postulaciones' });
+    }
+};
+
+// Eliminar postulacion
+export const deletePostulacion = async (req, res) => {
+    try {
+        const { usuario_id } = req.body;
+        await postulacionServicios.deletePostulacion(req.params.id, usuario_id);
+        res.json({ mensaje: 'Postulación eliminada' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar la postulación' });
+    }
+};

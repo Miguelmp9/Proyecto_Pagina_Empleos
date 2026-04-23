@@ -325,9 +325,6 @@ CREATE TABLE discusion_etiquetas (
     FOREIGN KEY (etiqueta_id) REFERENCES etiquetas(id)
 );
 
--- ══════════════════════════════════════════════════════════════
---  INSERTS FOROS
--- ══════════════════════════════════════════════════════════════
 
 INSERT INTO foros_categorias (nombre, descripcion, icono, total_discusiones) VALUES
 ('Tecnología',          'Programación, software, herramientas y tendencias tech',      'code',        89),
@@ -466,3 +463,68 @@ UPDATE empleos SET
     requisitos_deseables = 'Licencia de conducir categoría pesada, conocimiento de GPS y software logístico.',
     beneficios = 'Vehículo de empresa, seguro médico, bonos por eficiencia.'
 WHERE id = 10;
+
+
+Drop table recursos;
+
+CREATE TABLE recursos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    tipo ENUM('documento', 'video', 'articulo', 'infografia', 'podcast') NOT NULL,
+    categoria VARCHAR(100),
+    contenido TEXT,
+    autor_id INT,                          
+    empresa_id INT,                        
+    archivo_url VARCHAR(255),              
+    video_url VARCHAR(255),                
+    thumbnail_url VARCHAR(255),            
+    duracion_segundos INT,                 
+    tamano_archivo INT,                    
+    formato VARCHAR(50),                   
+    tiempo_lectura INT,                    
+    total_vistas INT DEFAULT 0,
+    total_descargas INT DEFAULT 0,         
+    total_likes INT DEFAULT 0,
+    es_premium BOOLEAN DEFAULT FALSE,      
+    estado VARCHAR(50) DEFAULT 'activo',
+    sector VARCHAR(100),                   
+    fecha_publicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (autor_id) REFERENCES usuarios(id),
+    FOREIGN KEY (empresa_id) REFERENCES empresas(id)
+);
+
+
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+DELETE FROM usuarios WHERE id != 11;
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+SET SQL_SAFE_UPDATES = 0;
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE postulaciones;
+TRUNCATE TABLE empleos_guardados;
+TRUNCATE TABLE empleos;
+TRUNCATE TABLE valoraciones_empresas;
+TRUNCATE TABLE empresas;
+
+SET FOREIGN_KEY_CHECKS = 1;
+SET SQL_SAFE_UPDATES = 1;
+
+SELECT TABLE_NAME 
+FROM information_schema.KEY_COLUMN_USAGE 
+WHERE REFERENCED_TABLE_NAME = 'usuarios' 
+AND TABLE_SCHEMA = 'shovel';
+
+
+DELETE FROM alertas_empleo WHERE usuario_id != 11;
+DELETE FROM usuario_habilidades WHERE usuario_id != 11;
+
+DELETE FROM usuarios WHERE id != 11;
