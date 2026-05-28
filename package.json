@@ -27,9 +27,14 @@
     "express-validator": "^7.3.2",
     "multer": "^2.1.1",
     "mysql2": "^3.21.0",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "svelte-routing": "^2.13.0",
+    "svelte-spa-router": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "nodemon": "^3.1.14",
+    "svelte": "^5.55.10",
+    "vite": "^8.0.14"
   }
 }
