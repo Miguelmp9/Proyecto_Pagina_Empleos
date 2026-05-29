@@ -73,7 +73,18 @@ export const getPostulacionesByUsuario = async (usuario_id) => {
     `, [usuario_id]);
     return rows;
 };
-
+export const getPostulacionesGuardadas = async (usuario_id) => {
+    const [rows] = await pool.query(`
+        SELECT e.id, e.titulo, e.ubicacion, e.tipo_contrato,
+               emp.nombre AS empresa_nombre
+        FROM postulaciones p
+        JOIN empleos e ON p.empleo_id = e.id
+        JOIN empresas emp ON e.empresa_id = emp.id
+        WHERE p.usuario_id = ? AND p.estado = 'guardado'
+        ORDER BY p.fecha_aplicacion DESC
+    `, [usuario_id]);
+    return rows;
+};
 // Eliminar postulacion
 export const deletePostulacion = async (id, usuario_id) => {
     const [result] = await pool.query(
