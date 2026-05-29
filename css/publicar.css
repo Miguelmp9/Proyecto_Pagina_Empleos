@@ -117,3 +117,20 @@ body {
     color: var(--morado);
     margin-bottom: 1rem;
 }
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.panel-cabecera {
+    padding: 2rem 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.panel-cabecera h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}

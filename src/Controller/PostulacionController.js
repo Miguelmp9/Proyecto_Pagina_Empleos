@@ -73,3 +73,12 @@ export const deletePostulacion = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar la postulación' });
     }
 };
+
+export const getPostulacionesGuardadas = async (req, res) => {
+    try {
+        const postulaciones = await postulacionServicios.getPostulacionesGuardadas(req.params.usuario_id);
+        res.json(postulaciones);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener guardados' });
+    }
+};
