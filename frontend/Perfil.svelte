@@ -9,7 +9,7 @@
   let usuario = null;
 
   // ── Tab activo ────────────────────────────────────────────
-  let tab = 'general'; // general | editar | postulaciones | habilidades | valoraciones | alertas
+  let tab = 'general';
 
   // ── Datos perfil ──────────────────────────────────────────
   let perfil = {};
@@ -28,6 +28,9 @@
   let edit = {};
   let msgEditar = '';
   let msgEditarTipo = '';
+
+  // ── Errores de validación por campo ──────────────────────
+  let errores = {};
 
   // ── Habilidades ───────────────────────────────────────────
   let habilidades    = [];
@@ -85,9 +88,98 @@
   }
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
+  // ── Validaciones ─────────────────────────────────────────
+  function validarPerfil() {
+    const e = {};
+    const esEmpresa = usuario?.rol === 'empresa';
+
+    // Nombre completo — requerido, solo letras y espacios
+    if (!edit.nombre_completo?.trim()) {
+      e.nombre_completo = 'El nombre es obligatorio.';
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/.test(edit.nombre_completo.trim())) {
+      e.nombre_completo = 'Solo se permiten letras y espacios.';
+    } else if (edit.nombre_completo.trim().length < 3) {
+      e.nombre_completo = 'Mínimo 3 caracteres.';
+    }
+
+    // Email — requerido y formato válido
+    if (!edit.email?.trim()) {
+      e.email = 'El correo es obligatorio.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(edit.email.trim())) {
+      e.email = 'Ingresa un correo electrónico válido.';
+    }
+
+    // Teléfono — opcional, pero si se llena debe tener formato XXXX-XXXX
+    if (edit.telefono?.trim() && !/^\d{4}-\d{4}$/.test(edit.telefono.trim())) {
+      e.telefono = 'Formato inválido. Ej: 7777-8888';
+    }
+
+    // Ubicación — opcional, máx 100 chars
+    if (edit.ubicacion?.trim() && edit.ubicacion.trim().length > 100) {
+      e.ubicacion = 'Máximo 100 caracteres.';
+    }
+
+    // Campos solo para NO empresa
+    if (!esEmpresa) {
+      // Título profesional — opcional, máx 80 chars
+      if (edit.titulo_profesional?.trim() && edit.titulo_profesional.trim().length > 80) {
+        e.titulo_profesional = 'Máximo 80 caracteres.';
+      }
+
+      // Años de experiencia — número entre 0 y 60
+      if (edit.anios_experiencia !== '' && edit.anios_experiencia !== null && edit.anios_experiencia !== undefined) {
+        const anios = parseInt(edit.anios_experiencia);
+        if (isNaN(anios) || anios < 0) {
+          e.anios_experiencia = 'Debe ser un número positivo.';
+        } else if (anios > 60) {
+          e.anios_experiencia = 'Valor máximo: 60 años.';
+        }
+      }
+    }
+
+    // Disponibilidad — opcional, máx 60 chars
+    if (edit.disponibilidad?.trim() && edit.disponibilidad.trim().length > 60) {
+      e.disponibilidad = 'Máximo 60 caracteres.';
+    }
+
+    // Sector preferido — opcional, máx 80 chars
+    if (edit.sector_preferido?.trim() && edit.sector_preferido.trim().length > 80) {
+      e.sector_preferido = 'Máximo 80 caracteres.';
+    }
+
+    // LinkedIn — opcional, debe ser URL de linkedin.com
+    if (edit.linkedin_url?.trim()) {
+      try {
+        const url = new URL(edit.linkedin_url.trim());
+        if (!url.hostname.includes('linkedin.com')) e.linkedin_url = 'Debe ser una URL de LinkedIn.';
+      } catch {
+        e.linkedin_url = 'Ingresa una URL válida. Ej: https://linkedin.com/in/tu-perfil';
+      }
+    }
+
+    // GitHub — opcional, debe ser URL de github.com
+    if (edit.github_url?.trim()) {
+      try {
+        const url = new URL(edit.github_url.trim());
+        if (!url.hostname.includes('github.com')) e.github_url = 'Debe ser una URL de GitHub.';
+      } catch {
+        e.github_url = 'Ingresa una URL válida. Ej: https://github.com/tu-usuario';
+      }
+    }
+
+    // Sobre mí / Sobre la empresa — opcional, máx 1000 chars
+    if (edit.sobre_mi?.trim() && edit.sobre_mi.trim().length > 1000) {
+      e.sobre_mi = 'Máximo 1000 caracteres.';
+    }
+
+    errores = e;
+    return Object.keys(e).length === 0;
+  }
+
   // ── Cambiar tab ───────────────────────────────────────────
   function cambiarTab(t) {
     tab = t;
+    errores = {};
     if (t === 'postulaciones') cargarPostulaciones();
     if (t === 'habilidades')   cargarHabilidades();
     if (t === 'valoraciones')  { cargarValoraciones(); cargarEmpresas(); }
@@ -97,7 +189,12 @@
   // ── Perfil ────────────────────────────────────────────────
   async function cargarPerfil() {
     try {
-      const res = await fetch(`${API}/usuarios/${usuario.id}`);
+      let res;
+      if (usuario.rol === 'empresa') {
+        res = await fetch(`${API}/empresas/por-usuario/${usuario.id}`);
+      } else {
+        res = await fetch(`${API}/usuarios/${usuario.id}`);
+      }
       perfil = await res.json();
       edit   = { ...perfil };
       fotoPerfil = perfil.foto_perfil ? `/contenido_multimedia/${perfil.foto_perfil}` : '';
@@ -111,23 +208,45 @@
   }
 
   async function guardarPerfil() {
+    if (!validarPerfil()) {
+      msgEditar = 'Corrige los errores antes de guardar.';
+      msgEditarTipo = 'error';
+      return;
+    }
+    msgEditar = '';
     try {
-      const res = await fetch(`${API}/usuarios/${usuario.id}`, {
+      const url = usuario.rol === 'empresa'
+        ? `${API}/empresas/${perfil.id}`
+        : `${API}/usuarios/${usuario.id}`;
+
+      const body = usuario.rol === 'empresa'
+        ? JSON.stringify({
+            nombre:       edit.nombre_completo || edit.nombre,
+            email:        edit.email,
+            telefono:     edit.telefono,
+            ubicacion:    edit.ubicacion,
+            descripcion:  edit.sobre_mi,
+            linkedin_url: edit.linkedin_url,
+            sitio_web:    edit.github_url,
+          })
+        : JSON.stringify({
+            nombre_completo:    edit.nombre_completo,
+            email:              edit.email,
+            telefono:           edit.telefono,
+            ubicacion:          edit.ubicacion,
+            titulo_profesional: edit.titulo_profesional,
+            anios_experiencia:  parseInt(edit.anios_experiencia) || 0,
+            disponibilidad:     edit.disponibilidad,
+            sector_preferido:   edit.sector_preferido,
+            linkedin_url:       edit.linkedin_url,
+            github_url:         edit.github_url,
+            sobre_mi:           edit.sobre_mi,
+          });
+
+      const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombre_completo:    edit.nombre_completo,
-          email:              edit.email,
-          telefono:           edit.telefono,
-          ubicacion:          edit.ubicacion,
-          titulo_profesional: edit.titulo_profesional,
-          anios_experiencia:  parseInt(edit.anios_experiencia) || 0,
-          disponibilidad:     edit.disponibilidad,
-          sector_preferido:   edit.sector_preferido,
-          linkedin_url:       edit.linkedin_url,
-          github_url:         edit.github_url,
-          sobre_mi:           edit.sobre_mi,
-        })
+        body
       });
       const data = await res.json();
       if (!res.ok) { msgEditar = data.error || 'Error al guardar'; msgEditarTipo = 'error'; return; }
@@ -430,24 +549,118 @@
             <div class="msg-feedback" class:error={msgEditarTipo==='error'} class:exito={msgEditarTipo==='exito'}>{msgEditar}</div>
           {/if}
           <div class="grid-2">
-            <div class="grupo-input"><label>Nombre completo</label><input class="input" type="text"   bind:value={edit.nombre_completo}></div>
-            <div class="grupo-input"><label>Email</label>          <input class="input" type="email"  bind:value={edit.email}></div>
-            <div class="grupo-input"><label>Teléfono</label>       <input class="input" type="text"   bind:value={edit.telefono}></div>
-            <div class="grupo-input"><label>Ubicación</label>      <input class="input" type="text"   bind:value={edit.ubicacion}></div>
-            <div class="grupo-input"><label>Título Profesional</label><input class="input" type="text" bind:value={edit.titulo_profesional}></div>
-            <div class="grupo-input"><label>Años de Experiencia</label><input class="input" type="number" min="0" bind:value={edit.anios_experiencia}></div>
-            <div class="grupo-input"><label>Disponibilidad</label> <input class="input" type="text"   bind:value={edit.disponibilidad}></div>
-            <div class="grupo-input"><label>Sector Preferido</label><input class="input" type="text"  bind:value={edit.sector_preferido}></div>
-            <div class="grupo-input"><label>LinkedIn</label>       <input class="input" type="text"   bind:value={edit.linkedin_url}></div>
-            <div class="grupo-input"><label>GitHub</label>         <input class="input" type="text"   bind:value={edit.github_url}></div>
+
+            <!-- Nombre completo -->
+            <div class="grupo-input" class:campo-error={errores.nombre_completo}>
+              <label>Nombre completo <span class="requerido">*</span></label>
+              <input class="input" type="text" bind:value={edit.nombre_completo}
+                on:input={() => { delete errores.nombre_completo; errores = errores; }}
+                placeholder="Ej: Juan Pérez">
+              {#if errores.nombre_completo}<span class="error-msg">{errores.nombre_completo}</span>{/if}
+            </div>
+
+            <!-- Email -->
+            <div class="grupo-input" class:campo-error={errores.email}>
+              <label>Email <span class="requerido">*</span></label>
+              <input class="input" type="email" bind:value={edit.email}
+                on:input={() => { delete errores.email; errores = errores; }}
+                placeholder="Ej: correo@ejemplo.com">
+              {#if errores.email}<span class="error-msg">{errores.email}</span>{/if}
+            </div>
+
+            <!-- Teléfono -->
+            <div class="grupo-input" class:campo-error={errores.telefono}>
+              <label>Teléfono</label>
+              <input class="input" type="text" bind:value={edit.telefono}
+                on:input={() => { delete errores.telefono; errores = errores; }}
+                placeholder="Ej: 7777-8888">
+              {#if errores.telefono}<span class="error-msg">{errores.telefono}</span>{/if}
+            </div>
+
+            <!-- Ubicación -->
+            <div class="grupo-input" class:campo-error={errores.ubicacion}>
+              <label>Ubicación</label>
+              <input class="input" type="text" bind:value={edit.ubicacion}
+                on:input={() => { delete errores.ubicacion; errores = errores; }}
+                placeholder="Ej: San Salvador, El Salvador">
+              {#if errores.ubicacion}<span class="error-msg">{errores.ubicacion}</span>{/if}
+            </div>
+
+            <!-- Solo para NO empresa -->
+            {#if usuario?.rol !== 'empresa'}
+              <div class="grupo-input" class:campo-error={errores.titulo_profesional}>
+                <label>Título Profesional</label>
+                <input class="input" type="text" bind:value={edit.titulo_profesional}
+                  on:input={() => { delete errores.titulo_profesional; errores = errores; }}
+                  placeholder="Ej: Desarrollador Full Stack">
+                {#if errores.titulo_profesional}<span class="error-msg">{errores.titulo_profesional}</span>{/if}
+              </div>
+
+              <div class="grupo-input" class:campo-error={errores.anios_experiencia}>
+                <label>Años de Experiencia</label>
+                <input class="input" type="number" min="0" max="60" bind:value={edit.anios_experiencia}
+                  on:input={() => { delete errores.anios_experiencia; errores = errores; }}
+                  placeholder="Ej: 3">
+                {#if errores.anios_experiencia}<span class="error-msg">{errores.anios_experiencia}</span>{/if}
+              </div>
+            {/if}
+
+            <!-- Disponibilidad -->
+            <div class="grupo-input" class:campo-error={errores.disponibilidad}>
+              <label>Disponibilidad</label>
+              <input class="input" type="text" bind:value={edit.disponibilidad}
+                on:input={() => { delete errores.disponibilidad; errores = errores; }}
+                placeholder="Ej: Inmediata, Remoto">
+              {#if errores.disponibilidad}<span class="error-msg">{errores.disponibilidad}</span>{/if}
+            </div>
+
+            <!-- Sector preferido -->
+            <div class="grupo-input" class:campo-error={errores.sector_preferido}>
+              <label>Sector Preferido</label>
+              <input class="input" type="text" bind:value={edit.sector_preferido}
+                on:input={() => { delete errores.sector_preferido; errores = errores; }}
+                placeholder="Ej: Tecnología, Salud">
+              {#if errores.sector_preferido}<span class="error-msg">{errores.sector_preferido}</span>{/if}
+            </div>
+
+            <!-- LinkedIn -->
+            <div class="grupo-input" class:campo-error={errores.linkedin_url}>
+              <label>LinkedIn</label>
+              <input class="input" type="text" bind:value={edit.linkedin_url}
+                on:input={() => { delete errores.linkedin_url; errores = errores; }}
+                placeholder="https://linkedin.com/in/tu-perfil">
+              {#if errores.linkedin_url}<span class="error-msg">{errores.linkedin_url}</span>{/if}
+            </div>
+
+            <!-- GitHub -->
+            <div class="grupo-input" class:campo-error={errores.github_url}>
+              <label>GitHub</label>
+              <input class="input" type="text" bind:value={edit.github_url}
+                on:input={() => { delete errores.github_url; errores = errores; }}
+                placeholder="https://github.com/tu-usuario">
+              {#if errores.github_url}<span class="error-msg">{errores.github_url}</span>{/if}
+            </div>
+
           </div>
-          <div class="grupo-input" style="margin-top:1rem;">
-            <label>Sobre Mí</label>
-            <textarea class="input" rows="4" style="resize:vertical;" bind:value={edit.sobre_mi}></textarea>
+
+          <!-- Sobre mí / Sobre la empresa -->
+          <div class="grupo-input" style="margin-top:1rem;" class:campo-error={errores.sobre_mi}>
+            <label>
+              {usuario?.rol === 'empresa' ? 'Sobre la Empresa' : 'Sobre Mí'}
+              <span class="char-count" class:char-limit={edit.sobre_mi?.length > 900}>
+                {edit.sobre_mi?.length || 0}/1000
+              </span>
+            </label>
+            <textarea class="input" rows="4" style="resize:vertical;" bind:value={edit.sobre_mi}
+              on:input={() => { delete errores.sobre_mi; errores = errores; }}
+              placeholder="{usuario?.rol === 'empresa' ? 'Describe tu empresa, misión y valores...' : 'Cuéntanos sobre ti, tu experiencia y objetivos...'}"></textarea>
+            {#if errores.sobre_mi}<span class="error-msg">{errores.sobre_mi}</span>{/if}
           </div>
-          <div style="margin-top:1rem;display:flex;gap:1rem;">
+
+          <div style="margin-top:1rem;display:flex;gap:1rem;align-items:center;">
             <button class="btn btn-primario" on:click={guardarPerfil}>Guardar Cambios</button>
-            <button class="btn btn-borde"    on:click={() => cambiarTab('general')}>Cancelar</button>
+            <button class="btn btn-borde" on:click={() => { cambiarTab('general'); errores = {}; }}>Cancelar</button>
+            <span style="font-size:0.78rem;color:var(--texto3);"><span class="requerido">*</span> Campos obligatorios</span>
           </div>
         </div>
       </div>
@@ -671,7 +884,14 @@
   /* ── Grid 2 cols ── */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .grupo-input { margin-bottom: 0; }
-  .grupo-input label { display: block; font-size: 0.85rem; color: var(--texto2); margin-bottom: 6px; }
+  .grupo-input label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--texto2); margin-bottom: 6px; }
+
+  /* ── Validaciones ── */
+  .requerido { color: #ef4444; font-weight: 700; margin-left: 2px; }
+  .error-msg { display: block; margin-top: 4px; font-size: 0.78rem; color: #ef4444; }
+  .campo-error .input { border-color: #ef4444 !important; background: #ef444408; }
+  .char-count { font-size: 0.75rem; color: var(--texto3); font-weight: 400; }
+  .char-count.char-limit { color: #f59e0b; }
 
   /* ── Feedback ── */
   .msg-feedback { padding: 10px; border-radius: 6px; margin-bottom: 10px; text-align: center; font-size: 14px; }
