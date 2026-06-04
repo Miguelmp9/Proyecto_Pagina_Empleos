@@ -37,3 +37,34 @@ export const getEmpresasRecientes = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener empresas recientes' });
     }
 };
+
+export const getEmpleosPorCategoria = async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT sector AS categoria, COUNT(*) AS total
+            FROM empleos
+            GROUP BY sector
+            ORDER BY total DESC
+        `);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener empleos por categoría' });
+    }
+};
+
+export const getCrecimiento = async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT 
+                DATE_FORMAT(fecha_registro, '%Y-%m') AS mes,
+                COUNT(*) AS total
+            FROM usuarios
+            GROUP BY mes
+            ORDER BY mes ASC
+            LIMIT 6
+        `);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener crecimiento' });
+    }
+};

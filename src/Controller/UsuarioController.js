@@ -1,6 +1,37 @@
 import * as usuariosServices from '../services/UsuarioServicios.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+export const postLogin = async (req, res) => {
+    try {
+        const { email, contrasena } = req.body;
+
+        const usuario = await usuariosServices.getUsuarioByEmail(email);
+        if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+        const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!contrasenaValida) return res.status(401).json({ error: 'Contraseña incorrecta' });
+
+        const token = jwt.sign(
+            { id: usuario.id, tipo: 'usuario' },
+            'clave_secreta_shovel',
+            { expiresIn: '8h' }
+        );
+
+        res.json({ 
+            mensaje: 'Login exitoso',
+            token,
+            usuario: { 
+                id: usuario.id, 
+                nombre_completo: usuario.nombre_completo, 
+                email: usuario.email,
+                rol: usuario.rol
+            } 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al iniciar sesión' });
+    }
+};
 // Obtener todos los usuarios
 export const getTodosLosUsuarios = async (req, res) => {
     try {
@@ -100,30 +131,7 @@ export const deleteEliminarUsuario = async (req, res) => {
     }
 };
 
-// Login
-export const postLogin = async (req, res) => {
-    try {
-        const { email, contrasena } = req.body;
 
-        const usuario = await usuariosServices.getUsuarioByEmail(email);
-        if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
-
-        const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
-        if (!contrasenaValida) return res.status(401).json({ error: 'Contraseña incorrecta' });
-
-        res.json({ 
-            mensaje: 'Login exitoso', 
-            usuario: { 
-                id: usuario.id, 
-                nombre_completo: usuario.nombre_completo, 
-                email: usuario.email,
-                rol: usuario.rol
-            } 
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al iniciar sesión' });
-    }
-};
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
