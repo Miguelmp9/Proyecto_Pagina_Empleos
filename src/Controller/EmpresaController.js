@@ -1,5 +1,8 @@
 import * as empresaServicios from '../services/EmpresaServicios.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+
 
 // Obtener todas las empresas
 export const getTodasLasEmpresas = async (req, res) => {
@@ -76,6 +79,7 @@ export const deleteEliminarEmpresa = async (req, res) => {
 };
 
 // Login empresa
+// Login empresa
 export const postLoginEmpresa = async (req, res) => {
     try {
         const { email, contrasena } = req.body;
@@ -86,8 +90,16 @@ export const postLoginEmpresa = async (req, res) => {
         const contrasenaValida = await bcrypt.compare(contrasena, empresa.contrasena);
         if (!contrasenaValida) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
+        // ── NUEVO: generar token ──
+        const token = jwt.sign(
+            { id: empresa.id, tipo: 'empresa' },
+            'clave_secreta_shovel',
+            { expiresIn: '8h' }
+        );
+
         res.json({
             mensaje: 'Login exitoso',
+            token,
             empresa: {
                 id: empresa.id,
                 nombre: empresa.nombre,
