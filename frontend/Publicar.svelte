@@ -232,7 +232,7 @@
                 <div style="font-weight:600;">{p.nombre_completo}</div>
                 <div style="font-size:0.8rem;color:var(--texto2);">{p.titulo_profesional || '-'} • {p.ubicacion || '-'}</div>
                 <div style="font-size:0.8rem;color:var(--morado);margin-top:4px;">Aplicó a: {p.empleo_titulo}</div>
-                <div style="font-size:0.8rem;color:var(--texto2);">📧 {p.email} • 📞 {p.telefono || '-'}</div>
+                <div style="font-size:0.8rem;color:var(--texto2);">{p.email} • {p.telefono || '-'}</div>
               </div>
               <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end;">
                 <span style="font-size:0.75rem;background:var(--morado-claro);color:var(--morado);padding:2px 8px;border-radius:4px;">{p.estado}</span>
