@@ -88,10 +88,9 @@
       }
 
       if (data.usuario) {
-        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-       localStorage.setItem('tipoUsuario', data.usuario.rol); // guarda 'admin' o 'usuario'
-        localStorage.setItem('token', data.token);
-      
+        localStorage.setItem("usuario", JSON.stringify(data.usuario));
+        localStorage.setItem("tipoUsuario", data.usuario.rol);
+        localStorage.setItem("token", data.token);
       } else if (data.empresa) {
         localStorage.setItem("usuario", JSON.stringify(data.empresa));
         localStorage.setItem("tipoUsuario", "empresa");
@@ -108,7 +107,6 @@
       loginCargando = false;
     }
   }
-
   // ── Registro ──────────────────────────────────────────────
   async function registrarse() {
     if (!regNombre || !regEmail || !regContrasena || !regConfirmar) {
@@ -244,16 +242,13 @@
           </div>
           <div class="grupo-input">
             <label>Contraseña</label>
-            <div class="input-con-icono">
-              <span class="icono-input">🔒</span>
-              <input
-                class="input"
-                type="password"
-                placeholder="••••••••"
-                bind:value={loginContrasena}
-                on:keydown={onKeyLogin}
-              />
-            </div>
+            <input
+              class="input"
+              type="password"
+              placeholder="••••••••"
+              bind:value={loginContrasena}
+              on:keydown={onKeyLogin}
+            />
           </div>
           <button
             class="btn btn-primario btn-ancho-completo"
@@ -327,27 +322,21 @@
           </div>
           <div class="grupo-input">
             <label>Contraseña</label>
-            <div class="input-con-icono">
-              <span class="icono-input">🔒</span>
-              <input
-                class="input"
-                type="password"
-                placeholder="••••••••"
-                bind:value={regContrasena}
-              />
-            </div>
+            <input
+              class="input"
+              type="password"
+              placeholder="••••••••"
+              bind:value={regContrasena}
+            />
           </div>
           <div class="grupo-input">
             <label>Confirmar contraseña</label>
-            <div class="input-con-icono">
-              <span class="icono-input">🔒</span>
-              <input
-                class="input"
-                type="password"
-                placeholder="••••••••"
-                bind:value={regConfirmar}
-              />
-            </div>
+            <input
+              class="input"
+              type="password"
+              placeholder="••••••••"
+              bind:value={regConfirmar}
+            />
           </div>
 
           {#if tipoRegistro === "empresa"}

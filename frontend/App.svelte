@@ -60,7 +60,7 @@
   <Recursos />
 
 {:else if ruta === '/admin'}
-  {#if token && (tipoUsuario === 'admin' || tipoUsuario === 'empresa')}
+  {#if token && tipoUsuario === 'admin'}
     <Admin />
   {:else}
     <Login />
