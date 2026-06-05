@@ -13,8 +13,7 @@
   import DetalleForo from './DetalleForo.svelte';
 
   let ruta = window.location.pathname;
-  let token = localStorage.getItem('token');
-  let tipoUsuario = localStorage.getItem('tipoUsuario');
+  let usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
 
   window.addEventListener('popstate', () => {
     ruta = window.location.pathname;
@@ -40,14 +39,14 @@
   <Buscar />
 
 {:else if ruta === '/publicar'}
-  {#if token && tipoUsuario === 'empresa'}
+  {#if usuario?.rol === 'empresa'}
     <Publicar />
   {:else}
     <Login />
   {/if}
 
 {:else if ruta === '/perfil'}
-  {#if token}
+  {#if usuario}
     <Perfil />
   {:else}
     <Login />
@@ -60,14 +59,14 @@
   <Recursos />
 
 {:else if ruta === '/admin'}
-  {#if token && tipoUsuario === 'admin'}
+  {#if usuario?.rol === 'admin'}
     <Admin />
   {:else}
     <Login />
   {/if}
 
 {:else if ruta === '/nueva-discusion'}
-  {#if token}
+  {#if usuario}
     <NuevaDiscusion />
   {:else}
     <Login />

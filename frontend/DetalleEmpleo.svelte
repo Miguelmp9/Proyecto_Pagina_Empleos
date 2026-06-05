@@ -23,11 +23,9 @@
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
 
-    // Leer el id desde la URL: /detalle-empleo/123
     const partes = window.location.pathname.split('/');
     empleoId = partes[partes.length - 1];
 
-    // Fallback: query param ?id=123
     if (!empleoId || isNaN(empleoId)) {
       const params = new URLSearchParams(window.location.search);
       empleoId = params.get('id');
@@ -94,8 +92,8 @@
       window.location.href = '/login';
       return;
     }
-    if (usuario.rol === 'empresa') {
-      alert('Las empresas no pueden postularse a empleos.');
+    if (usuario.rol === 'empresa' || usuario.rol === 'admin') {
+      alert('No tienes permiso para postularte a empleos.');
       return;
     }
     try {
@@ -146,7 +144,6 @@
 
   <a href="/buscar" class="boton-volver">← Volver a resultados</a>
 
-  <!-- Estado de carga / error -->
   {#if cargando}
     <p style="color:var(--texto2); text-align:center; padding:2rem;">Cargando empleo...</p>
 
@@ -155,7 +152,6 @@
 
   {:else if empleo}
 
-    <!-- Header empleo -->
     <div class="empleo-header">
       <div class="empleo-header-izq">
         <h1>{empleo.titulo}</h1>
@@ -175,10 +171,8 @@
       </div>
     </div>
 
-    <!-- Layout dos columnas -->
     <div class="detalle-layout">
 
-      <!-- Columna izquierda -->
       <div>
         <div class="seccion-descripcion">
           <h2>Descripción del Puesto</h2>
@@ -230,14 +224,24 @@
         {/if}
       </div>
 
-      <!-- Columna derecha -->
       <div class="sidebar-info">
 
         <div class="barra-postular">
-          <button class="btn btn-primario" style="width:100%; font-size:1rem; padding:14px;" on:click={postularse}>
-            Postularme Ahora
-          </button>
-          <p>Al postularte aceptas que tu perfil sea visible para la empresa</p>
+          {#if !usuario}
+            <button class="btn btn-primario" style="width:100%; font-size:1rem; padding:14px;" on:click={postularse}>
+              Postularme Ahora
+            </button>
+            <p>Al postularte aceptas que tu perfil sea visible para la empresa</p>
+          {:else if usuario.rol === 'usuario'}
+            <button class="btn btn-primario" style="width:100%; font-size:1rem; padding:14px;" on:click={postularse}>
+              Postularme Ahora
+            </button>
+            <p>Al postularte aceptas que tu perfil sea visible para la empresa</p>
+          {:else if usuario.rol === 'empresa'}
+            <p style="text-align:center; color:var(--texto2); font-size:0.9rem;">Las empresas no pueden postularse a empleos.</p>
+          {:else if usuario.rol === 'admin'}
+            <p style="text-align:center; color:var(--texto2); font-size:0.9rem;">Los administradores no pueden postularse a empleos.</p>
+          {/if}
         </div>
 
         <div class="tarjeta-info">
@@ -309,7 +313,6 @@
   }
   .boton-volver:hover { color: var(--morado); }
 
-  /* ── Header ── */
   .empleo-header {
     background-color: var(--tarjeta);
     border: 1px solid var(--borde);
@@ -330,10 +333,8 @@
 
   .tag { display: inline-flex; align-items: center; padding: 3px 10px; background-color: var(--morado-claro); color: var(--morado); border-radius: 4px; font-size: 0.78rem; font-weight: 500; }
 
-  /* ── Layout ── */
   .detalle-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
 
-  /* ── Secciones ── */
   .seccion-descripcion {
     background-color: var(--tarjeta);
     border: 1px solid var(--borde);
@@ -348,7 +349,6 @@
   .lista-requisitos li { font-size: 0.9rem; color: var(--texto2); padding: 6px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
   .lista-requisitos li::before { content: '✓'; color: var(--morado); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
 
-  /* ── Sidebar ── */
   .sidebar-info { display: flex; flex-direction: column; gap: 1rem; }
 
   .tarjeta-info, .tarjeta-empresa {
