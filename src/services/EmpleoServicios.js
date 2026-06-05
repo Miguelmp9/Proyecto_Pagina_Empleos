@@ -1,6 +1,6 @@
 import { pool } from '../db.js';
 
-// Obtener todos los empleos
+// - Obtener todos los empleos
 export const getAllEmpleos = async () => {
     const [rows] = await pool.query(`
         SELECT e.*, emp.nombre AS empresa_nombre
@@ -11,7 +11,7 @@ export const getAllEmpleos = async () => {
     return rows;
 };
 
-// Obtener empleos por empresa
+// - Obtener empleos por empresa
 export const getEmpleosByEmpresa = async (empresa_id) => {
     const [rows] = await pool.query(`
         SELECT * FROM empleos WHERE empresa_id = ?
@@ -20,7 +20,7 @@ export const getEmpleosByEmpresa = async (empresa_id) => {
     return rows;
 };
 
-// Obtener empleo por ID
+// - Obtener empleo por ID
 export const getEmpleoById = async (id) => {
     const [rows] = await pool.query(`
         SELECT e.*, emp.nombre AS empresa_nombre, emp.logo AS empresa_logo
@@ -31,7 +31,7 @@ export const getEmpleoById = async (id) => {
     return rows[0];
 };
 
-// Crear empleo
+// - Crear empleo
 export const createEmpleo = async (empleo) => {
     const {
         empresa_id, titulo, descripcion, responsabilidades, requisitos,
@@ -57,7 +57,7 @@ export const createEmpleo = async (empleo) => {
     return result;
 };
 
-// Actualizar empleo
+// - Actualizar empleo
 export const updateEmpleo = async (id, empleo) => {
     const {
         titulo, descripcion, responsabilidades, requisitos,
@@ -83,13 +83,13 @@ export const updateEmpleo = async (id, empleo) => {
     return result;
 };
 
-// Eliminar empleo
+//  - Eliminar empleo
 export const deleteEmpleo = async (id) => {
     const [result] = await pool.query('DELETE FROM empleos WHERE id = ?', [id]);
     return result;
 };
 
-// Stats de empresa
+//  - Stats de empresa
 export const getStatsByEmpresa = async (empresa_id) => {
     const [[stats]] = await pool.query(`
         SELECT 

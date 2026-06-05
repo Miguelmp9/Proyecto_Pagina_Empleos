@@ -5,20 +5,20 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión
   let usuario = null;
 
-  // ── Tab activo ────────────────────────────────────────────
+  // ─ Tab activo 
   let tab = 'general';
 
-  // ── Datos perfil ──────────────────────────────────────────
+  // ─ Datos perfil 
   let perfil = {};
   let fotoPerfil = '';
   let cvNombre = 'Sin CV subido';
   let cvFecha  = '-';
   let cvUrl    = '';
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats 
   let statVisitas       = '-';
   let statPostulaciones = '-';
   let statGuardados     = '-';
@@ -29,17 +29,17 @@
   let msgEditar = '';
   let msgEditarTipo = '';
 
-  // ── Errores de validación por campo ──────────────────────
+  // - Errores de validación por campo 
   let errores = {};
 
-  // ── Habilidades ───────────────────────────────────────────
+  // ─ Habilidades 
   let habilidades    = [];
   let nuevaHabilidad = '';
   let nivelHabilidad = 'Intermedio';
   const NIVELES_HAB  = ['Básico','Intermedio','Avanzado','Experto'];
   const nivelTexto   = { 1:'Básico', 2:'Intermedio', 3:'Intermedio+', 4:'Avanzado', 5:'Experto' };
 
-  // ── Postulaciones ─────────────────────────────────────────
+  // ─ Postulaciones 
   let postulaciones = [];
   const estadoColores = {
     'pendiente':   { bg:'#f59e0b22', color:'#f59e0b', texto:'En Revisión' },
@@ -50,8 +50,9 @@
     'aceptado':    { bg:'#22c55e22', color:'#22c55e', texto:'Aceptado' },
   };
 
-  // ── Valoraciones ──────────────────────────────────────────
+  // ─ Valoraciones 
   let valoraciones   = [];
+  let valoracionesRecibidas = [];
   let empresas       = [];
   let modalValoracion = false;
   let valEmpresaId   = '';
@@ -60,7 +61,7 @@
   let msgValoracion  = '';
   let msgValoracionTipo = '';
 
-  // ── Alertas ───────────────────────────────────────────────
+  // ─ Alertas
   let alertas        = [];
   let alertaPalabras = '';
   let alertaUbicacion= '';
@@ -68,14 +69,14 @@
   let msgAlertas     = '';
   let msgAlertasTipo = '';
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!usuario) { window.location.href = '/login'; return; }
     await cargarPerfil();
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers 
   function formatFecha(f) {
     return new Date(f).toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' });
   }
@@ -88,7 +89,7 @@
   }
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
-  // ── Teléfono auto-formato XXXX-XXXX ─────────────────────
+  // - Teléfono auto-formato XXXX-XXXX 
   function handleTelefonoInput(e) {
     let val = e.target.value.replace(/[^\d-]/g, '');
     const soloDigitos = val.replace(/-/g, '');
@@ -102,12 +103,11 @@
     errores = errores;
   }
 
-  // ── Validaciones ─────────────────────────────────────────
+  // ─ Validaciones
   function validarPerfil() {
     const e = {};
     const esEmpresa = usuario?.rol === 'empresa';
 
-    // Nombre completo — requerido, solo letras y espacios
     if (!edit.nombre_completo?.trim()) {
       e.nombre_completo = 'El nombre es obligatorio.';
     } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/.test(edit.nombre_completo.trim())) {
@@ -116,31 +116,24 @@
       e.nombre_completo = 'Mínimo 3 caracteres.';
     }
 
-    // Email — requerido y formato válido
     if (!edit.email?.trim()) {
       e.email = 'El correo es obligatorio.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(edit.email.trim())) {
       e.email = 'Ingresa un correo electrónico válido.';
     }
 
-    // Teléfono — opcional, formato XXXX-XXXX
     if (edit.telefono?.trim() && !/^\d{4}-\d{4}$/.test(edit.telefono.trim())) {
       e.telefono = 'Formato inválido. Ej: 7777-8888';
     }
 
-    // Ubicación — opcional, máx 100 chars
     if (edit.ubicacion?.trim() && edit.ubicacion.trim().length > 100) {
       e.ubicacion = 'Máximo 100 caracteres.';
     }
 
-    // Campos solo para NO empresa
     if (!esEmpresa) {
-      // Título profesional — opcional, máx 80 chars
       if (edit.titulo_profesional?.trim() && edit.titulo_profesional.trim().length > 80) {
         e.titulo_profesional = 'Máximo 80 caracteres.';
       }
-
-      // Años de experiencia — número entre 0 y 60
       if (edit.anios_experiencia !== '' && edit.anios_experiencia !== null && edit.anios_experiencia !== undefined) {
         const anios = parseInt(edit.anios_experiencia);
         if (isNaN(anios) || anios < 0) {
@@ -151,17 +144,14 @@
       }
     }
 
-    // Disponibilidad — opcional, máx 60 chars
     if (edit.disponibilidad?.trim() && edit.disponibilidad.trim().length > 60) {
       e.disponibilidad = 'Máximo 60 caracteres.';
     }
 
-    // Sector preferido — opcional, máx 80 chars
     if (edit.sector_preferido?.trim() && edit.sector_preferido.trim().length > 80) {
       e.sector_preferido = 'Máximo 80 caracteres.';
     }
 
-    // LinkedIn — opcional, debe ser URL de linkedin.com
     if (edit.linkedin_url?.trim()) {
       try {
         const url = new URL(edit.linkedin_url.trim());
@@ -171,7 +161,6 @@
       }
     }
 
-    // GitHub — opcional, debe ser URL de github.com
     if (edit.github_url?.trim()) {
       try {
         const url = new URL(edit.github_url.trim());
@@ -181,7 +170,6 @@
       }
     }
 
-    // Sobre mí / Sobre la empresa — opcional, máx 1000 chars
     if (edit.sobre_mi?.trim() && edit.sobre_mi.trim().length > 1000) {
       e.sobre_mi = 'Máximo 1000 caracteres.';
     }
@@ -190,17 +178,21 @@
     return Object.keys(e).length === 0;
   }
 
-  // ── Cambiar tab ───────────────────────────────────────────
+  // ─ Cambiar tab 
   function cambiarTab(t) {
     tab = t;
     errores = {};
     if (t === 'postulaciones') cargarPostulaciones();
     if (t === 'habilidades')   cargarHabilidades();
-    if (t === 'valoraciones')  { cargarValoraciones(); cargarEmpresas(); }
+    if (t === 'valoraciones')  {
+      cargarValoraciones();
+      cargarEmpresas();
+      if (usuario?.rol === 'empresa') cargarValoracionesRecibidas();
+    }
     if (t === 'alertas')       cargarAlertas();
   }
 
-  // ── Perfil ────────────────────────────────────────────────
+  // ─ Perfil
   async function cargarPerfil() {
     try {
       let res;
@@ -211,7 +203,6 @@
       }
       perfil = await res.json();
 
-      // ✅ FIX: Normalizar campos de empresa al mismo formato que usuario
       if (usuario.rol === 'empresa') {
         perfil.nombre_completo = perfil.nombre_completo || perfil.nombre || '';
         perfil.sobre_mi        = perfil.sobre_mi        || perfil.descripcion || '';
@@ -252,7 +243,6 @@
             sitio_web:       edit.github_url,
             disponibilidad:  edit.disponibilidad,
             sector_preferido: edit.sector_preferido,
-            // Preservar campos que no edita el usuario
             industria:       perfil.industria,
             tamano:          perfil.tamano,
             logo:            perfil.logo,
@@ -281,7 +271,6 @@
 
       perfil = { ...perfil, ...edit };
 
-      // ✅ FIX: Actualizar localStorage tanto para usuario como para empresa
       localStorage.setItem('usuario', JSON.stringify({
         ...usuario,
         nombre_completo: edit.nombre_completo,
@@ -323,7 +312,7 @@
     } catch (err) { console.error(err); }
   }
 
-  // ── Habilidades ───────────────────────────────────────────
+  // ─ Habilidades 
   async function cargarHabilidades() {
     try {
       const res = await fetch(`${API}/habilidades/usuario/${usuario.id}`);
@@ -354,7 +343,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Postulaciones ─────────────────────────────────────────
+  // ─ Postulaciones 
   async function cargarPostulaciones() {
     try {
       const res = await fetch(`${API}/postulaciones/usuario/${usuario.id}`);
@@ -375,12 +364,19 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Valoraciones ──────────────────────────────────────────
+  // ─ Valoraciones 
   async function cargarValoraciones() {
     try {
       const res = await fetch(`${API}/valoraciones/usuario/${usuario.id}`);
       valoraciones = await res.json();
     } catch (e) { valoraciones = []; }
+  }
+
+  async function cargarValoracionesRecibidas() {
+    try {
+      const res = await fetch(`${API}/valoraciones/empresa/${usuario.id}`);
+      valoracionesRecibidas = await res.json();
+    } catch (e) { valoracionesRecibidas = []; }
   }
 
   async function cargarEmpresas() {
@@ -422,7 +418,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Alertas ───────────────────────────────────────────────
+  // ─ Alertas 
   async function cargarAlertas() {
     try {
       const res = await fetch(`${API}/alertas/usuario/${usuario.id}`);
@@ -585,7 +581,6 @@
           {/if}
           <div class="grid-2">
 
-            <!-- Nombre completo -->
             <div class="grupo-input" class:campo-error={errores.nombre_completo}>
               <label>Nombre completo <span class="requerido">*</span></label>
               <input class="input" type="text" bind:value={edit.nombre_completo}
@@ -594,7 +589,6 @@
               {#if errores.nombre_completo}<span class="error-msg">{errores.nombre_completo}</span>{/if}
             </div>
 
-            <!-- Email -->
             <div class="grupo-input" class:campo-error={errores.email}>
               <label>Email <span class="requerido">*</span></label>
               <input class="input" type="email" bind:value={edit.email}
@@ -603,7 +597,6 @@
               {#if errores.email}<span class="error-msg">{errores.email}</span>{/if}
             </div>
 
-            <!-- Teléfono -->
             <div class="grupo-input" class:campo-error={errores.telefono}>
               <label>Teléfono</label>
               <input class="input" type="text" bind:value={edit.telefono}
@@ -613,7 +606,6 @@
               {#if errores.telefono}<span class="error-msg">{errores.telefono}</span>{/if}
             </div>
 
-            <!-- Ubicación -->
             <div class="grupo-input" class:campo-error={errores.ubicacion}>
               <label>Ubicación</label>
               <input class="input" type="text" bind:value={edit.ubicacion}
@@ -622,7 +614,6 @@
               {#if errores.ubicacion}<span class="error-msg">{errores.ubicacion}</span>{/if}
             </div>
 
-            <!-- Solo para NO empresa -->
             {#if usuario?.rol !== 'empresa'}
               <div class="grupo-input" class:campo-error={errores.titulo_profesional}>
                 <label>Título Profesional</label>
@@ -641,7 +632,6 @@
               </div>
             {/if}
 
-            <!-- Disponibilidad -->
             <div class="grupo-input" class:campo-error={errores.disponibilidad}>
               <label>Disponibilidad</label>
               <input class="input" type="text" bind:value={edit.disponibilidad}
@@ -650,7 +640,6 @@
               {#if errores.disponibilidad}<span class="error-msg">{errores.disponibilidad}</span>{/if}
             </div>
 
-            <!-- Sector preferido -->
             <div class="grupo-input" class:campo-error={errores.sector_preferido}>
               <label>Sector Preferido</label>
               <input class="input" type="text" bind:value={edit.sector_preferido}
@@ -659,7 +648,6 @@
               {#if errores.sector_preferido}<span class="error-msg">{errores.sector_preferido}</span>{/if}
             </div>
 
-            <!-- LinkedIn -->
             <div class="grupo-input" class:campo-error={errores.linkedin_url}>
               <label>LinkedIn</label>
               <input class="input" type="text" bind:value={edit.linkedin_url}
@@ -668,7 +656,6 @@
               {#if errores.linkedin_url}<span class="error-msg">{errores.linkedin_url}</span>{/if}
             </div>
 
-            <!-- GitHub / Sitio Web -->
             <div class="grupo-input" class:campo-error={errores.github_url}>
               <label>{usuario?.rol === 'empresa' ? 'Sitio Web' : 'GitHub'}</label>
               <input class="input" type="text" bind:value={edit.github_url}
@@ -679,7 +666,6 @@
 
           </div>
 
-          <!-- Sobre mí / Sobre la empresa -->
           <div class="grupo-input" style="margin-top:1rem;" class:campo-error={errores.sobre_mi}>
             <label>
               {usuario?.rol === 'empresa' ? 'Sobre la Empresa' : 'Sobre Mí'}
@@ -762,64 +748,89 @@
     {#if tab === 'valoraciones'}
       <div class="contenido-tab">
         <div class="seccion-perfil">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-            <h3 style="margin:0;">Valoraciones de Empresas</h3>
-            <button class="btn btn-primario btn-pequeno" on:click={() => modalValoracion = true}>+ Nueva Valoración</button>
-          </div>
 
-          {#if modalValoracion}
-            <div class="modal-inline">
-              <h4 style="margin:0 0 1rem;">Nueva Valoración</h4>
-              {#if msgValoracion}
-                <div class="msg-feedback" class:error={msgValoracionTipo==='error'} class:exito={msgValoracionTipo==='exito'}>{msgValoracion}</div>
-              {/if}
-              <div class="grid-2" style="margin-bottom:1rem;">
-                <div class="grupo-input">
-                  <label>Empresa</label>
-                  <select class="input" bind:value={valEmpresaId}>
-                    <option value="">Selecciona una empresa...</option>
-                    {#each empresas as e}<option value={e.id}>{e.nombre}</option>{/each}
-                  </select>
+          {#if usuario?.rol === 'empresa'}
+            <!-- Vista empresa: valoraciones recibidas -->
+            <h3>Valoraciones Recibidas</h3>
+            {#if valoracionesRecibidas.length === 0}
+              <p style="color:var(--texto2);">Aún no tienes valoraciones de usuarios.</p>
+            {:else}
+              {#each valoracionesRecibidas as v}
+                <div class="fila-postulacion">
+                  <div>
+                    <div style="font-weight:600;font-size:1rem;">{v.usuario_nombre || 'Usuario'}</div>
+                    <div style="color:var(--texto2);font-size:0.8rem;">{formatFecha(v.fecha_valoracion)}</div>
+                    {#if v.comentario}<p style="margin:0.5rem 0 0;color:var(--texto2);font-size:0.875rem;">{v.comentario}</p>{/if}
+                  </div>
+                  <div style="display:flex;align-items:center;">
+                    <span>{estrellas(v.calificacion)}</span>
+                  </div>
                 </div>
-                <div class="grupo-input">
-                  <label>Calificación (1-5)</label>
-                  <select class="input" bind:value={valCalificacion}>
-                    <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
-                    <option value="4">⭐⭐⭐⭐ Muy buena</option>
-                    <option value="3">⭐⭐⭐ Buena</option>
-                    <option value="2">⭐⭐ Regular</option>
-                    <option value="1">⭐ Mala</option>
-                  </select>
-                </div>
-              </div>
-              <div class="grupo-input" style="margin-bottom:1rem;">
-                <label>Comentario</label>
-                <textarea class="input" rows="3" placeholder="Describe tu experiencia..." style="resize:vertical;" bind:value={valComentario}></textarea>
-              </div>
-              <div style="display:flex;gap:1rem;">
-                <button class="btn btn-primario" on:click={guardarValoracion}>Guardar Valoración</button>
-                <button class="btn btn-borde" on:click={() => { modalValoracion = false; msgValoracion = ''; }}>Cancelar</button>
-              </div>
-            </div>
-          {/if}
+              {/each}
+            {/if}
 
-          {#if valoraciones.length === 0}
-            <p style="color:var(--texto2);">No has valorado ninguna empresa aún.</p>
           {:else}
-            {#each valoraciones as v}
-              <div class="fila-postulacion">
-                <div>
-                  <div style="font-weight:600;font-size:1rem;">{v.empresa_nombre}</div>
-                  <div style="color:var(--texto2);font-size:0.8rem;">{v.industria || ''} • {formatFecha(v.fecha_valoracion)}</div>
-                  {#if v.comentario}<p style="margin:0.5rem 0 0;color:var(--texto2);font-size:0.875rem;">{v.comentario}</p>{/if}
+            <!-- Vista usuario normal: valoraciones hechas -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+              <h3 style="margin:0;">Valoraciones de Empresas</h3>
+              <button class="btn btn-primario btn-pequeno" on:click={() => modalValoracion = true}>+ Nueva Valoración</button>
+            </div>
+
+            {#if modalValoracion}
+              <div class="modal-inline">
+                <h4 style="margin:0 0 1rem;">Nueva Valoración</h4>
+                {#if msgValoracion}
+                  <div class="msg-feedback" class:error={msgValoracionTipo==='error'} class:exito={msgValoracionTipo==='exito'}>{msgValoracion}</div>
+                {/if}
+                <div class="grid-2" style="margin-bottom:1rem;">
+                  <div class="grupo-input">
+                    <label>Empresa</label>
+                    <select class="input" bind:value={valEmpresaId}>
+                      <option value="">Selecciona una empresa...</option>
+                      {#each empresas as e}<option value={e.id}>{e.nombre}</option>{/each}
+                    </select>
+                  </div>
+                  <div class="grupo-input">
+                    <label>Calificación (1-5)</label>
+                    <select class="input" bind:value={valCalificacion}>
+                      <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                      <option value="4">⭐⭐⭐⭐ Muy buena</option>
+                      <option value="3">⭐⭐⭐ Buena</option>
+                      <option value="2">⭐⭐ Regular</option>
+                      <option value="1">⭐ Mala</option>
+                    </select>
+                  </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                  <span>{estrellas(v.calificacion)}</span>
-                  <button class="btn-x" on:click={() => eliminarValoracion(v.id)}>✕</button>
+                <div class="grupo-input" style="margin-bottom:1rem;">
+                  <label>Comentario</label>
+                  <textarea class="input" rows="3" placeholder="Describe tu experiencia..." style="resize:vertical;" bind:value={valComentario}></textarea>
+                </div>
+                <div style="display:flex;gap:1rem;">
+                  <button class="btn btn-primario" on:click={guardarValoracion}>Guardar Valoración</button>
+                  <button class="btn btn-borde" on:click={() => { modalValoracion = false; msgValoracion = ''; }}>Cancelar</button>
                 </div>
               </div>
-            {/each}
+            {/if}
+
+            {#if valoraciones.length === 0}
+              <p style="color:var(--texto2);">No has valorado ninguna empresa aún.</p>
+            {:else}
+              {#each valoraciones as v}
+                <div class="fila-postulacion">
+                  <div>
+                    <div style="font-weight:600;font-size:1rem;">{v.empresa_nombre}</div>
+                    <div style="color:var(--texto2);font-size:0.8rem;">{v.industria || ''} • {formatFecha(v.fecha_valoracion)}</div>
+                    {#if v.comentario}<p style="margin:0.5rem 0 0;color:var(--texto2);font-size:0.875rem;">{v.comentario}</p>{/if}
+                  </div>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <span>{estrellas(v.calificacion)}</span>
+                    <button class="btn-x" on:click={() => eliminarValoracion(v.id)}>✕</button>
+                  </div>
+                </div>
+              {/each}
+            {/if}
           {/if}
+
         </div>
       </div>
     {/if}
@@ -881,71 +892,58 @@
 <style>
   .contenido-perfil { max-width: 900px; margin: 0 auto; padding: 2rem; }
 
-  /* ── Header ── */
   .perfil-header { background: linear-gradient(135deg, #4c3fa0 0%, #7c6fef 60%, #9b8af0 100%); border-radius: var(--radio-grande); padding: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem; }
   .perfil-avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(0,0,0,0.2); border: 3px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
   .perfil-info h1 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
   .perfil-cargo { color: rgba(255,255,255,0.8); margin-bottom: 8px; }
   .perfil-contacto { display: flex; gap: 1.25rem; font-size: 0.82rem; color: rgba(255,255,255,0.7); flex-wrap: wrap; }
 
-  /* ── Stats ── */
   .perfil-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 1rem; margin-bottom: 1.5rem; text-align: center; }
   .perfil-stat-numero { font-size: 1.4rem; font-weight: 700; color: var(--morado); }
   .perfil-stat-label  { font-size: 0.75rem; color: var(--texto2); margin-top: 2px; }
 
-  /* ── Tabs ── */
   .tabs { display: flex; border-bottom: 1px solid var(--borde); margin-bottom: 1.5rem; overflow-x: auto; }
   .tab { padding: 10px 18px; cursor: pointer; font-size: 0.875rem; color: var(--texto2); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
   .tab.activo { color: var(--morado); border-color: var(--morado); }
   .tab:hover:not(.activo) { color: var(--texto); }
 
-  /* ── Secciones ── */
   .seccion-perfil { margin-bottom: 1.5rem; }
   .seccion-perfil h3 { font-size: 1rem; margin-bottom: 0.75rem; }
   .seccion-perfil p  { font-size: 0.875rem; color: var(--texto2); line-height: 1.7; }
 
-  /* ── CV ── */
   .tarjeta-cv { display: flex; align-items: center; justify-content: space-between; background: var(--tarjeta2); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; }
   .cv-icono-wrap { display: flex; align-items: center; gap: 10px; }
   .cv-icono { width: 36px; height: 36px; background: var(--morado-claro); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
   .cv-nombre { font-size: 0.875rem; font-weight: 500; }
   .cv-fecha  { font-size: 0.8rem; color: var(--texto2); }
 
-  /* ── Experiencia ── */
   .experiencia-item { border-left: 3px solid var(--morado); padding-left: 1rem; margin-bottom: 1rem; }
   .experiencia-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
   .experiencia-empresa { font-size: 0.82rem; color: var(--texto2); margin-bottom: 4px; }
   .experiencia-desc    { font-size: 0.85rem; color: var(--texto2); line-height: 1.5; }
 
-  /* ── Grid 2 cols ── */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .grupo-input { margin-bottom: 0; }
   .grupo-input label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--texto2); margin-bottom: 6px; }
 
-  /* ── Validaciones ── */
   .requerido { color: #ef4444; font-weight: 700; margin-left: 2px; }
   .error-msg { display: block; margin-top: 4px; font-size: 0.78rem; color: #ef4444; }
   .campo-error .input { border-color: #ef4444 !important; background: #ef444408; }
   .char-count { font-size: 0.75rem; color: var(--texto3); font-weight: 400; }
   .char-count.char-limit { color: #f59e0b; }
 
-  /* ── Feedback ── */
   .msg-feedback { padding: 10px; border-radius: 6px; margin-bottom: 10px; text-align: center; font-size: 14px; }
   .msg-feedback.error { background: #ff4d4d33; color: #ff4d4d; border: 1px solid #ff4d4d; }
   .msg-feedback.exito { background: #4CAF5033; color: #4CAF50; border: 1px solid #4CAF50; }
 
-  /* ── Filas lista ── */
   .fila-postulacion { border: 1px solid var(--borde); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
   .badge-estado { border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; font-weight: 500; white-space: nowrap; }
   .btn-x { background: none; border: none; cursor: pointer; color: var(--texto3); font-size: 0.8rem; }
 
-  /* ── Habilidades ── */
   .habilidad-pill { display: flex; align-items: center; gap: 0.5rem; background: var(--tarjeta2); border: 1px solid var(--borde); border-radius: 20px; padding: 6px 14px; }
 
-  /* ── Modal inline ── */
   .modal-inline { background: var(--tarjeta2); border: 1px solid var(--borde); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
 
-  /* ── Botones ── */
   .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px; border-radius: var(--radio); font-size: 0.875rem; font-weight: 600; font-family: inherit; cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s; }
   .btn-primario { background: linear-gradient(135deg, var(--morado), #9b6ef5); color: #fff; }
   .btn-primario:hover { opacity: 0.88; }
@@ -956,7 +954,6 @@
 
   footer .footer-bottom { text-align: center; padding: 0.75rem; font-size: 0.8rem; color: var(--texto3); border-top: 1px solid var(--borde); }
 
-  /* ── Teléfono con prefijo ── */
   .input-telefono-wrap { display: flex; align-items: center; background: var(--input-bg, #1e1e2e); border: 1px solid var(--borde); border-radius: var(--radio, 8px); overflow: hidden; }
   .campo-error .input-telefono-wrap { border-color: #ef4444 !important; background: #ef444408; }
   .telefono-prefix { padding: 0 10px; font-size: 0.875rem; color: var(--texto2); border-right: 1px solid var(--borde); background: rgba(255,255,255,0.04); white-space: nowrap; height: 100%; display: flex; align-items: center; }

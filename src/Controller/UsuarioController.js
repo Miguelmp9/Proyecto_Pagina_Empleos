@@ -32,7 +32,7 @@ export const postLogin = async (req, res) => {
         res.status(500).json({ error: 'Error al iniciar sesión' });
     }
 };
-// Obtener todos los usuarios
+// - Obtener todos los usuarios
 export const getTodosLosUsuarios = async (req, res) => {
     try {
         const usuarios = await usuariosServices.getAllUsuarios();
@@ -42,7 +42,7 @@ export const getTodosLosUsuarios = async (req, res) => {
     }
 };
 
-// Obtener usuario por ID
+// - Obtener usuario por ID
 export const getUsuarioPorId = async (req, res) => {
     try {
         const usuario = await usuariosServices.getUsuarioById(req.params.id);
@@ -53,7 +53,7 @@ export const getUsuarioPorId = async (req, res) => {
     }
 };
 
-// Obtener usuario por email
+// - Obtener usuario por email
 export const getUsuarioPorEmail = async (req, res) => {
     try {
         const usuario = await usuariosServices.getUsuarioByEmail(req.params.email);
@@ -65,7 +65,7 @@ export const getUsuarioPorEmail = async (req, res) => {
 };
 
 
-// Buscar por nombre
+// - Buscar por nombre
 export const getUsuarioPorNombre = async (req, res) => {
     try {
         const usuarios = await usuariosServices.getUsuarioByNombre(req.params.nombre);
@@ -75,7 +75,7 @@ export const getUsuarioPorNombre = async (req, res) => {
     }
 };
 
-// Buscar por sector
+// - Buscar por sector
 export const getUsuarioPorSector = async (req, res) => {
     try {
         const usuarios = await usuariosServices.getUsuarioBySector(req.params.sector);
@@ -85,7 +85,7 @@ export const getUsuarioPorSector = async (req, res) => {
     }
 };
 
-// Crear usuario
+// - Crear usuario
 export const postCrearUsuario = async (req, res) => {
     try {
         const { contrasena, ...resto } = req.body;
@@ -100,7 +100,7 @@ export const postCrearUsuario = async (req, res) => {
     }
 };
 
-// Actualizar usuario
+// - Actualizar usuario
 export const putActualizarUsuario = async (req, res) => {
     try {
         const { contrasena, ...resto } = req.body;
@@ -120,7 +120,7 @@ export const putActualizarUsuario = async (req, res) => {
     }
 };
 
-// Eliminar usuario
+// - Eliminar usuario
 export const deleteEliminarUsuario = async (req, res) => {
     try {
         const result = await usuariosServices.deleteUsuario(req.params.id);
@@ -150,7 +150,7 @@ const storageFoto = multer.diskStorage({
     }
 });
 
-// Configuracion de multer para CV
+// - Configuracion de multer para CV
 const storageCV = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../../contenido_multimedia'));
@@ -164,7 +164,7 @@ const storageCV = multer.diskStorage({
 const uploadFoto = multer({ storage: storageFoto });
 const uploadCV = multer({ storage: storageCV });
 
-// Subir foto de perfil
+// - Subir foto de perfil
 export const postSubirFoto = [
     uploadFoto.single('foto'),
     async (req, res) => {
@@ -179,7 +179,7 @@ export const postSubirFoto = [
     }
 ];
 
-// Subir CV
+// - Subir CV
 export const postSubirCV = [
     uploadCV.single('cv'),
     async (req, res) => {
@@ -192,7 +192,7 @@ export const postSubirCV = [
         }
     }
 ];
-// Registrar visita al perfil
+// - Registrar visita al perfil
 export const postRegistrarVisita = async (req, res) => {
     try {
         await usuariosServices.incrementarVisitas(req.params.id);

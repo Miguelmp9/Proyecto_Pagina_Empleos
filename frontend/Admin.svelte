@@ -4,31 +4,31 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Estado de navegación ──────────────────────────────────
+  // ─ Estado de navegación 
   let vistaActual = 'dashboard';
 
-  // ── Estado sesión ─────────────────────────────────────────
+  // ─ Estado sesión
   let usuario = null;
 
-  // ── Dashboard ─────────────────────────────────────────────
+  // ─ Dashboard
   let stats = { total_usuarios: 0, total_empresas: 0, total_empleos: 0, total_postulaciones: 0 };
   let usuariosRecientes = [];
   let empresasRecientes = [];
   let graficaCrecimientoInst = null;
   let graficaCategoriasInst  = null;
 
-  // ── Usuarios ──────────────────────────────────────────────
+  // ─ Usuarios
   let todosLosUsuarios = [];
   let usuariosFiltrados = [];
   let busquedaUsuarios = '';
 
-  // ── Empresas ─────────────────────────────────────────────
+  // ─ Empresas
   let empresas = [];
 
-  // ── Vacantes ─────────────────────────────────────────────
+  // ─ Vacantes
   let vacantes = [];
 
-  // ── Configuración ─────────────────────────────────────────
+  // ─ Configuración
   let cfg = {
     nombreSitio: 'Shovel',
     descripcion: '',
@@ -44,13 +44,13 @@
   };
   let feedbackVisible = false;
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(() => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     cargarDashboard();
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers 
   function formatFecha(fechaStr) {
     if (!fechaStr) return '—';
     const fecha = new Date(fechaStr);
@@ -66,7 +66,7 @@
     window.location.href = '/login';
   }
 
-  // ── Navegación ────────────────────────────────────────────
+  // ─ Navegación 
   function mostrarVista(vista) {
     vistaActual = vista;
     if (vista === 'dashboard')     cargarDashboard();
@@ -76,7 +76,7 @@
     if (vista === 'configuracion') cargarConfiguracion();
   }
 
-  // ── Dashboard ─────────────────────────────────────────────
+  // ─ Dashboard 
   async function cargarDashboard() {
     try {
       const res = await fetch(`${API}/admin/stats`);
@@ -169,7 +169,7 @@
     });
   }
 
-  // ── Usuarios ──────────────────────────────────────────────
+  // ─ Usuarios 
   async function cargarUsuarios() {
     try {
       const res = await fetch(`${API}/usuarios`);
@@ -202,7 +202,7 @@
     } catch (e) { alert('Error al eliminar el usuario'); }
   }
 
-  // ── Empresas ─────────────────────────────────────────────
+  // ─ Empresas 
   async function cargarEmpresas() {
     try {
       const res = await fetch(`${API}/empresas`);
@@ -221,7 +221,7 @@
     } catch (e) { alert('Error al eliminar empresa'); }
   }
 
-  // ── Vacantes ─────────────────────────────────────────────
+  // ─ Vacantes 
   async function cargarVacantes() {
     try {
       const res = await fetch(`${API}/empleos`);
@@ -238,7 +238,7 @@
     } catch (e) { alert('Error al eliminar vacante'); }
   }
 
-  // ── Configuración ─────────────────────────────────────────
+  // ─ Configuración 
   function cargarConfiguracion() {
     const guardada = JSON.parse(localStorage.getItem('shovel_config') || '{}');
     cfg = {

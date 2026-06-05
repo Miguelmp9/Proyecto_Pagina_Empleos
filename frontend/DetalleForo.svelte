@@ -4,29 +4,29 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión
   let usuario = null;
 
-  // ── Estado ────────────────────────────────────────────────
+  // ─ Estado
   let discusion     = null;
   let cargando      = true;
   let error         = '';
   let discusionId   = null;
 
-  // ── Respuestas ────────────────────────────────────────────
+  // - Respuestas 
   let respuestas    = [];
   let replyTexto    = '';
 
-  // ── Likes ─────────────────────────────────────────────────
+  // ─ Likes 
   let likedPrincipal  = false;
   let likeCount       = 0;
   let likesRespuestas = {};  // { [respuestaId]: true }
 
-  // ── Toast ─────────────────────────────────────────────────
+  // ─ Toast 
   let toastVisible = false;
   let toastMsg     = '';
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
 
@@ -47,7 +47,7 @@
     await cargarDiscusion();
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers 
   function getIniciales(nombre) {
     return nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   }
@@ -76,7 +76,7 @@
     window.location.href = '/login';
   }
 
-  // ── Carga ─────────────────────────────────────────────────
+  // ─ Carga 
   async function cargarDiscusion() {
     if (!discusionId) { error = 'No se especificó una discusión.'; cargando = false; return; }
     cargando = true;
@@ -94,7 +94,7 @@
     }
   }
 
-  // ── Like principal ────────────────────────────────────────
+  // ─ Like principal 
   async function likeDiscusion() {
     if (likedPrincipal) { mostrarToast('Ya le diste like a esta discusión'); return; }
     try {
@@ -107,7 +107,7 @@
     } catch (e) {}
   }
 
-  // ── Like respuesta ────────────────────────────────────────
+  // ─ Like respuesta
   async function likeRespuesta(rid) {
     if (likesRespuestas[rid]) { mostrarToast('Ya le diste like a esta respuesta'); return; }
     try {
@@ -119,7 +119,7 @@
     } catch (e) {}
   }
 
-  // ── Compartir ─────────────────────────────────────────────
+  // ─ Compartir 
   function compartir() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
@@ -127,14 +127,14 @@
     }
   }
 
-  // ── Responder citando ─────────────────────────────────────
+  // ─ Responder citando
   function responderA(autor) {
     replyTexto = `@${autor} `;
     document.getElementById('reply-textarea')?.focus();
     document.getElementById('reply-textarea')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // ── Publicar respuesta ────────────────────────────────────
+  // ─ Publicar respuesta
   async function publicarRespuesta() {
     const texto = replyTexto.trim();
     if (!texto) return;

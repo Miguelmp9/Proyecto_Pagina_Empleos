@@ -1,13 +1,13 @@
 import { pool } from '../db.js';
 
-// ── CATEGORÍAS ────────────────────────────────────────────────
+// ─ CATEGORÍAS 
 
 export const getAllCategorias = async () => {
     const [rows] = await pool.query('SELECT * FROM foros_categorias ORDER BY nombre ASC');
     return rows;
 };
 
-// ── DISCUSIONES ───────────────────────────────────────────────
+// ─ DISCUSIONES 
 
 export const getAllDiscusiones = async (categoria_id = null, orden = 'reciente') => {
     let query = `
@@ -106,7 +106,7 @@ export const deleteDiscusion = async (id) => {
     return result;
 };
 
-// ── ETIQUETAS ─────────────────────────────────────────────────
+// ─ ETIQUETAS 
 
 export const getEtiquetasByDiscusion = async (discusion_id) => {
     const [rows] = await pool.query(`
@@ -137,7 +137,7 @@ export const addEtiquetasToDiscusion = async (discusion_id, etiquetas) => {
     }
 };
 
-// ── RESPUESTAS ────────────────────────────────────────────────
+// ─ RESPUESTAS 
 
 export const getRespuestasByDiscusion = async (discusion_id) => {
     const [rows] = await pool.query(`

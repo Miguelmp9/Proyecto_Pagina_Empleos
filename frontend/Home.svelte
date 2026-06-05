@@ -4,10 +4,10 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión 
   let usuario = null;
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats
   let stats = {
     total_empresas:      '—',
     total_usuarios:      '—',
@@ -17,7 +17,7 @@
 
   let intervalo;
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(() => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     renderStats();
@@ -25,7 +25,7 @@
     return () => clearInterval(intervalo);
   });
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats
   async function renderStats() {
     try {
       const res  = await fetch(`${API}/admin/stats`);

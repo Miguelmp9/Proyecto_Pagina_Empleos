@@ -4,15 +4,15 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión 
   let usuario = null;
 
-  // ── Empleos ───────────────────────────────────────────────
+  // ─ Empleos 
   let todosLosEmpleos = [];
   let empleosFiltrados = [];
   let cargando = true;
 
-  // ── Filtros texto / selects ───────────────────────────────
+  // ─ Filtros texto / selects 
   let textoBusqueda = '';
   let textoCiudad   = '';
   let selectNivel   = '';
@@ -20,7 +20,7 @@
   let selectContrato= '';
   let selectSalario = '';
 
-  // ── Filtros sidebar (pills) ───────────────────────────────
+  // ─ Filtros sidebar (pills) 
   let filtroNivel   = '';
   let filtroSector  = '';
   let filtroContrato= '';
@@ -29,13 +29,13 @@
   const sectores   = ['Tecnología', 'Marketing', 'Diseño', 'Finanzas', 'Educación', 'Salud', 'Logística'];
   const contratos  = ['Tiempo Completo', 'Medio Tiempo', 'Remoto', 'Híbrido', 'Freelance'];
 
-  // ─────────────────────────────────────────────────────────
+  //
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     await cargarEmpleos();
   });
 
-  // ── Carga inicial ─────────────────────────────────────────
+  // ─ Carga inicial 
   async function cargarEmpleos() {
     cargando = true;
     try {
@@ -50,7 +50,7 @@
     }
   }
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers
   function calcularTiempo(fecha) {
     const diff = Math.floor((new Date() - new Date(fecha)) / 60000);
     if (diff < 60)   return `Hace ${diff} minutos`;
@@ -70,7 +70,7 @@
     window.location.href = '/login';
   }
 
-  // ── Filtrado ──────────────────────────────────────────────
+  // ─ Filtrado 
   function aplicarFiltros() {
     const texto    = textoBusqueda.toLowerCase();
     const ciudad   = textoCiudad.toLowerCase();
@@ -99,7 +99,7 @@
     });
   }
 
-  // ── Pills sidebar ─────────────────────────────────────────
+  // ─ Pills sidebar 
   function togglePill(tipo, valor) {
     if (tipo === 'nivel') {
       filtroNivel    = filtroNivel    === valor ? '' : valor;

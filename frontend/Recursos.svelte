@@ -3,20 +3,20 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión 
   let usuario = null;
   let esAdmin = false;
 
-  // ── Recursos ──────────────────────────────────────────────
+  // ─ Recursos 
   let recursosCache    = [];
   let cargando         = true;
   let categoriaActiva  = 'todos';
   let busqueda         = '';
 
-  // ── Tab admin ─────────────────────────────────────────────
+  // ─ Tab admin 
   let uploadTab = 'pdf'; // 'pdf' | 'url'
 
-  // ── Form PDF ──────────────────────────────────────────────
+  // ─ Form PDF 
   let pdfTitulo    = '';
   let pdfCategoria = '';
   let pdfTipo      = 'documento';
@@ -31,7 +31,7 @@
   let feedbackPdfTipo = '';
   let dragover     = false;
 
-  // ── Form URL ──────────────────────────────────────────────
+  // ─ Form URL 
   let urlTitulo    = '';
   let urlCategoria = '';
   let urlTipo      = 'video';
@@ -54,7 +54,7 @@
     podcast:    ['tipo-podcast',     '🎙️'],
   };
 
-  // ─────────────────────────────────────────────────────────
+
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     esAdmin = usuario?.rol === 'admin';
@@ -63,7 +63,7 @@
 
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
-  // ── Carga ─────────────────────────────────────────────────
+  // ─ Carga 
   async function cargarRecursos() {
     cargando = true;
     try {
@@ -74,7 +74,7 @@
     finally { cargando = false; }
   }
 
-  // ── Filtrado reactivo ─────────────────────────────────────
+  // ─ Filtrado reactivo 
   function norm(t) {
     return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   }
@@ -96,7 +96,7 @@
     return okCat && okTxt;
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers 
   function formatDuracion(seg) {
     if (!seg) return '';
     const h = Math.floor(seg / 3600);
@@ -116,7 +116,7 @@
     return new Date(f).toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' });
   }
 
-  // ── Like ──────────────────────────────────────────────────
+  // ─ Like 
   async function darLike(recurso) {
     try {
       const res = await fetch(`${API}/recursos/${recurso.id}/like`, {
@@ -136,7 +136,7 @@
     fetch(`${API}/recursos/${id}/descargas`, { method:'PATCH' }).catch(() => {});
   }
 
-  // ── Eliminar ──────────────────────────────────────────────
+  // ─ Eliminar
   async function eliminarRecurso(id) {
     if (!confirm('¿Eliminar este recurso permanentemente?')) return;
     try {
@@ -146,13 +146,13 @@
     } catch (e) { alert('No se pudo eliminar el recurso.'); }
   }
 
-  // ── Feedback ──────────────────────────────────────────────
+  // ─ Feedback 
   function mostrarFeedback(tipo, msg, esPdf) {
     if (esPdf) { feedbackPdf = msg; feedbackPdfTipo = tipo; setTimeout(() => feedbackPdf = '', 5000); }
     else       { feedbackUrl = msg; feedbackUrlTipo = tipo; setTimeout(() => feedbackUrl = '', 5000); }
   }
 
-  // ── Drag & Drop PDF ───────────────────────────────────────
+  // ─ Drag & Drop PDF 
   function onDrop(e) {
     e.preventDefault(); dragover = false;
     const file = e.dataTransfer.files[0];
@@ -165,7 +165,7 @@
     if (file) { pdfArchivo = file; pdfNombreArchivo = `✓ ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`; }
   }
 
-  // ── Subir PDF (XHR para progreso) ─────────────────────────
+  // ─ Subir PDF (XHR para progreso) 
   function subirPDF() {
     if (!pdfTitulo)  return mostrarFeedback('error', 'El título es obligatorio.', true);
     if (!pdfArchivo) return mostrarFeedback('error', 'Debes seleccionar un archivo PDF.', true);
@@ -211,7 +211,7 @@
     xhr.send(fd);
   }
 
-  // ── Subir URL ─────────────────────────────────────────────
+  // ─ Subir URL 
   async function subirURL() {
     if (!urlTitulo) return mostrarFeedback('error', 'El título es obligatorio.', false);
     if (!urlLink)   return mostrarFeedback('error', 'La URL es obligatoria.', false);

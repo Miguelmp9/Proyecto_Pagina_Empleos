@@ -1,6 +1,6 @@
 import * as postulacionServicios from '../services/PostulacionServicios.js';
 
-// Crear postulacion
+// - Crear postulacion
 export const postCrearPostulacion = async (req, res) => {
     try {
         const { usuario_id, empleo_id, carta_presentacion } = req.body;
@@ -32,7 +32,7 @@ export const getPostulacionesPorEmpleo = async (req, res) => {
     }
 };
 
-// Obtener postulaciones por empresa
+// - Obtener postulaciones por empresa
 export const getPostulacionesPorEmpresa = async (req, res) => {
     try {
         const postulaciones = await postulacionServicios.getPostulacionesByEmpresa(req.params.empresa_id);
@@ -53,7 +53,7 @@ export const putActualizarEstado = async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar el estado' });
     }
 };
-// Obtener postulaciones por usuario
+// - Obtener postulaciones por usuario
 export const getPostulacionesPorUsuario = async (req, res) => {
     try {
         const postulaciones = await postulacionServicios.getPostulacionesByUsuario(req.params.usuario_id);
@@ -63,7 +63,7 @@ export const getPostulacionesPorUsuario = async (req, res) => {
     }
 };
 
-// Eliminar postulacion
+// - Eliminar postulacion
 export const deletePostulacion = async (req, res) => {
     try {
         const { usuario_id } = req.body;
@@ -74,6 +74,7 @@ export const deletePostulacion = async (req, res) => {
     }
 };
 
+// - Obtener postulaciones guardadas
 export const getPostulacionesGuardadas = async (req, res) => {
     try {
         const postulaciones = await postulacionServicios.getPostulacionesGuardadas(req.params.usuario_id);

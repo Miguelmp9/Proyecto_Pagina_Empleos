@@ -528,3 +528,9 @@ DELETE FROM alertas_empleo WHERE usuario_id != 11;
 DELETE FROM usuario_habilidades WHERE usuario_id != 11;
 
 DELETE FROM usuarios WHERE id != 11;
+
+ALTER TABLE empresas 
+  ADD COLUMN telefono VARCHAR(50),
+  ADD COLUMN linkedin_url VARCHAR(255),
+  ADD COLUMN disponibilidad VARCHAR(100),
+  ADD COLUMN sector_preferido VARCHAR(100);

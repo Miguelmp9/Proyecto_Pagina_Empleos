@@ -27,7 +27,6 @@
 
   // ─────────────────────────────────────────────────────────
   onMount(() => {
-    // Si ya hay sesión, redirigir
     const u = localStorage.getItem("usuario");
     if (u) window.location.href = "/";
   });
@@ -92,7 +91,7 @@
         localStorage.setItem("tipoUsuario", data.usuario.rol);
         localStorage.setItem("token", data.token);
       } else if (data.empresa) {
-        localStorage.setItem("usuario", JSON.stringify(data.empresa));
+        localStorage.setItem("usuario", JSON.stringify({ ...data.empresa, rol: 'empresa' }));
         localStorage.setItem("tipoUsuario", "empresa");
         localStorage.setItem("token", data.token);
       }
@@ -107,6 +106,7 @@
       loginCargando = false;
     }
   }
+
   // ── Registro ──────────────────────────────────────────────
   async function registrarse() {
     if (!regNombre || !regEmail || !regContrasena || !regConfirmar) {
@@ -259,11 +259,10 @@
               Sesión{/if}
           </button>
           <p class="texto-link-auth">
-            ¿No tienes cuenta? <a
+            ¿No tienes cuenta? 
               href="#"
               on:click|preventDefault={() => cambiarTab("registro")}
-              >Regístrate aquí</a
-            >
+             <a>Regístrate aquí</a>
           </p>
         </div>
       {/if}
@@ -369,10 +368,10 @@
             Crear Cuenta
           </button>
           <p class="texto-link-auth">
-            ¿Ya tienes cuenta? <a
+            ¿Ya tienes cuenta? 
               href="#"
               on:click|preventDefault={() => cambiarTab("login")}
-              >Inicia sesión</a
+              <a>Inicia sesión</a
             >
           </p>
         </div>

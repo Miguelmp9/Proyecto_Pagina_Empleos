@@ -1,6 +1,6 @@
 import * as forosServices from '../services/ForosServicios.js';
 
-// ── CATEGORÍAS ────────────────────────────────────────────────
+// ─CATEGORÍAS
 
 export const getCategorias = async (req, res) => {
     try {
@@ -11,7 +11,7 @@ export const getCategorias = async (req, res) => {
     }
 };
 
-// ── DISCUSIONES ───────────────────────────────────────────────
+// ─DISCUSIONES 
 
 export const getDiscusiones = async (req, res) => {
     try {
@@ -90,7 +90,7 @@ export const deleteDiscusion = async (req, res) => {
     }
 };
 
-// ── RESPUESTAS ────────────────────────────────────────────────
+// ─ RESPUESTAS 
 
 export const getRespuestas = async (req, res) => {
     try {

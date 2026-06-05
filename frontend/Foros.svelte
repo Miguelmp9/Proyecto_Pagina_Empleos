@@ -4,33 +4,33 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión 
   let usuario = null;
 
-  // ── Estado ────────────────────────────────────────────────
+  // ─ Estado
   let discusiones    = [];
   let categorias     = [];
   let cargando       = true;
   let error          = '';
 
-  // ── Filtros ───────────────────────────────────────────────
+  // ─ Filtros
   let categoriaActiva = '';   // '' = todas
   let orden           = 'reciente';
   let busqueda        = '';
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats
   let statDiscusiones = 0;
   let statRespuestas  = 0;
   let statMiembros    = 0;
   let statCategorias  = 0;
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     await cargarDiscusiones('', 'reciente');
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers
   function getIniciales(nombre) {
     if (!nombre) return '??';
     return nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -54,7 +54,7 @@
     window.location.href = '/login';
   }
 
-  // ── Carga discusiones ─────────────────────────────────────
+  // ─ Carga discusiones
   async function cargarDiscusiones(cat_id, ord) {
     cargando = true;
     error = '';
@@ -85,7 +85,7 @@
     }
   }
 
-  // ── Carga categorías ──────────────────────────────────────
+  // ─ Carga categorías 
   async function cargarCategorias(total) {
     try {
       const res = await fetch(`${API}/foros/categorias`);
@@ -94,18 +94,18 @@
     } catch (e) { categorias = []; }
   }
 
-  // ── Cambiar categoría ─────────────────────────────────────
+  // ─ Cambiar categoría 
   function seleccionarCategoria(catId) {
     categoriaActiva = catId;
     cargarDiscusiones(catId, orden);
   }
 
-  // ── Cambiar orden ─────────────────────────────────────────
+  // ─ Cambiar orden 
   function cambiarOrden() {
     cargarDiscusiones(categoriaActiva, orden);
   }
 
-  // ── Filtrado local por búsqueda ───────────────────────────
+  // ─ Filtrado local por búsqueda 
   $: discusionesFiltradas = busqueda
     ? discusiones.filter(d => d.titulo.toLowerCase().includes(busqueda.toLowerCase()))
     : discusiones;
