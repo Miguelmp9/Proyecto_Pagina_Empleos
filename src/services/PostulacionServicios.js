@@ -1,6 +1,6 @@
 import { pool } from '../db.js';
 
-// Crear postulacion
+// - Crear postulacion
 export const createPostulacion = async (postulacion) => {
     const { usuario_id, empleo_id, carta_presentacion } = postulacion;
     const [result] = await pool.query(
@@ -15,7 +15,7 @@ export const createPostulacion = async (postulacion) => {
     return result;
 };
 
-// Obtener postulaciones por empleo
+// - Obtener postulaciones por empleo
 export const getPostulacionesByEmpleo = async (empleo_id) => {
     const [rows] = await pool.query(`
         SELECT p.*, u.nombre_completo, u.email, u.telefono, u.titulo_profesional,
@@ -28,7 +28,7 @@ export const getPostulacionesByEmpleo = async (empleo_id) => {
     return rows;
 };
 
-// Obtener postulaciones por empresa
+// - Obtener postulaciones por empresa
 export const getPostulacionesByEmpresa = async (empresa_id) => {
     const [rows] = await pool.query(`
         SELECT p.*, u.nombre_completo, u.email, u.telefono, u.titulo_profesional,
@@ -42,7 +42,7 @@ export const getPostulacionesByEmpresa = async (empresa_id) => {
     return rows;
 };
 
-// Verificar si ya se postuló
+// - Verificar si ya se postuló
 export const checkPostulacion = async (usuario_id, empleo_id) => {
     const [rows] = await pool.query(
         'SELECT id FROM postulaciones WHERE usuario_id = ? AND empleo_id = ?',
@@ -51,7 +51,7 @@ export const checkPostulacion = async (usuario_id, empleo_id) => {
     return rows[0];
 };
 
-// Actualizar estado de postulacion
+// - Actualizar estado de postulacion
 export const updateEstadoPostulacion = async (id, estado) => {
     const [result] = await pool.query(
         'UPDATE postulaciones SET estado = ? WHERE id = ?',
@@ -59,7 +59,7 @@ export const updateEstadoPostulacion = async (id, estado) => {
     );
     return result;
 };
-// Obtener postulaciones por usuario
+// - Obtener postulaciones por usuario
 export const getPostulacionesByUsuario = async (usuario_id) => {
     const [rows] = await pool.query(`
         SELECT p.id, p.estado, p.fecha_aplicacion, p.carta_presentacion,
@@ -85,7 +85,7 @@ export const getPostulacionesGuardadas = async (usuario_id) => {
     `, [usuario_id]);
     return rows;
 };
-// Eliminar postulacion
+// - Eliminar postulacion
 export const deletePostulacion = async (id, usuario_id) => {
     const [result] = await pool.query(
         'DELETE FROM postulaciones WHERE id = ? AND usuario_id = ?',

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 
 
-// Obtener todas las empresas
+// - Obtener todas las empresas
 export const getTodasLasEmpresas = async (req, res) => {
     try {
         const empresas = await empresaServicios.getAllEmpresas();
@@ -14,7 +14,7 @@ export const getTodasLasEmpresas = async (req, res) => {
     }
 };
 
-// Obtener empresa por ID
+// - Obtener empresa por ID
 export const getEmpresaPorId = async (req, res) => {
     try {
         const empresa = await empresaServicios.getEmpresaById(req.params.id);
@@ -25,7 +25,7 @@ export const getEmpresaPorId = async (req, res) => {
     }
 };
 
-// Obtener empresa por usuario_id
+// -Obtener empresa por usuario_id
 export const getEmpresaPorUsuario = async (req, res) => {
     try {
         const empresa = await empresaServicios.getEmpresaByUsuarioId(req.params.usuario_id);
@@ -36,7 +36,7 @@ export const getEmpresaPorUsuario = async (req, res) => {
     }
 };
 
-// Crear empresa
+// - Crear empresa
 export const postCrearEmpresa = async (req, res) => {
     try {
         const { contrasena, ...resto } = req.body;
@@ -48,7 +48,7 @@ export const postCrearEmpresa = async (req, res) => {
     }
 };
 
-// Actualizar empresa
+// - Actualizar empresa
 export const putActualizarEmpresa = async (req, res) => {
     try {
         const { contrasena, ...resto } = req.body;
@@ -67,7 +67,7 @@ export const putActualizarEmpresa = async (req, res) => {
     }
 };
 
-// Eliminar empresa
+// - Eliminar empresa
 export const deleteEliminarEmpresa = async (req, res) => {
     try {
         const result = await empresaServicios.deleteEmpresa(req.params.id);
@@ -78,8 +78,7 @@ export const deleteEliminarEmpresa = async (req, res) => {
     }
 };
 
-// Login empresa
-// Login empresa
+// - Login empresa
 export const postLoginEmpresa = async (req, res) => {
     try {
         const { email, contrasena } = req.body;

@@ -3,11 +3,11 @@ import * as forosController from '../Controller/ForosController.js';
 
 const router = Router();
 
-// ── CATEGORÍAS ────────────────────────────────────────────────
+// ─ CATEGORÍAS
 // GET /foros/categorias
 router.get('/categorias', forosController.getCategorias);
 
-// ── DISCUSIONES ───────────────────────────────────────────────
+// ─ DISCUSIONES 
 // GET /foros?categoria_id=1&orden=reciente
 router.get('/', forosController.getDiscusiones);
 
@@ -23,7 +23,7 @@ router.post('/:id/like', forosController.postLikeDiscusion);
 // DELETE /foros/:id
 router.delete('/:id', forosController.deleteDiscusion);
 
-// ── RESPUESTAS ────────────────────────────────────────────────
+// ─ RESPUESTAS
 // GET /foros/:id/respuestas
 router.get('/:id/respuestas', forosController.getRespuestas);
 

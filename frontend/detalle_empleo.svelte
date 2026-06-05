@@ -282,7 +282,7 @@
 </footer>
 
 <style>
-  /* ── Navbar ─────────────────────────────────────── */
+  /* ─ Navbar */
   nav {
     display: flex;
     align-items: center;
@@ -354,7 +354,7 @@
     background-color: rgba(239, 68, 68, 0.1);
   }
 
-  /* ── Contenedor ─────────────────────────────────── */
+  /* ─ Contenedor  */
   .contenedor-detalle {
     max-width: 1000px;
     margin: 0 auto;
@@ -374,7 +374,7 @@
 
   .boton-volver:hover { color: var(--morado); }
 
-  /* ── Header empleo ──────────────────────────────── */
+  /* ─ Header empleo */
   .empleo-header {
     background-color: var(--tarjeta);
     border: 1px solid var(--borde);
@@ -438,7 +438,7 @@
     color: var(--texto3);
   }
 
-  /* ── Layout dos columnas ────────────────────────── */
+  /* ─ Layout dos columnas */
   .detalle-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -446,7 +446,7 @@
     align-items: start;
   }
 
-  /* ── Secciones descripción ──────────────────────── */
+  /* ─ Secciones descripción */
   .seccion-descripcion {
     background-color: var(--tarjeta);
     border: 1px solid var(--borde);
@@ -493,7 +493,7 @@
     margin-top: 1px;
   }
 
-  /* ── Sidebar info ───────────────────────────────── */
+  /* -Sidebar info */
   .sidebar-info {
     display: flex;
     flex-direction: column;
@@ -558,7 +558,7 @@
   .empresa-sector { font-size: 0.85rem; color: var(--texto2); margin-bottom: 0.75rem; }
   .empresa-desc   { font-size: 0.85rem; color: var(--texto2); line-height: 1.6; }
 
-  /* ── Botones ────────────────────────────────────── */
+  /* ─ Botones  */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -583,7 +583,7 @@
 
   .btn-primario:hover { opacity: 0.88; transform: translateY(-1px); }
 
-  /* ── Footer ─────────────────────────────────────── */
+  /* ─ Footer */
   footer {
     border-top: 1px solid var(--borde);
     margin-top: 2rem;

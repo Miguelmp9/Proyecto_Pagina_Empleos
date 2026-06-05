@@ -1,16 +1,16 @@
 <script>
   import '../css/home.css';
-  import Home from './Home.svelte';
-  import Login from './Login.svelte';
-  import Buscar from './Buscar.svelte';
-  import Publicar from './Publicar.svelte';
-  import Perfil from './Perfil.svelte';
-  import Foros from './Foros.svelte';
-  import Recursos from './Recursos.svelte';
-  import Admin from './Admin.svelte';
-  import NuevaDiscusion from './NuevaDiscusion.svelte';
-  import DetalleEmpleo from './DetalleEmpleo.svelte';
-  import DetalleForo from './DetalleForo.svelte';
+  import Home from '/Home.svelte';
+  import Login from '/Login.svelte';
+  import Buscar from '/Buscar.svelte';
+  import Publicar from '/Publicar.svelte';
+  import Perfil from '/Perfil.svelte';
+  import Foros from '/Foros.svelte';
+  import Recursos from '/Recursos.svelte';
+  import Admin from '/Admin.svelte';
+  import NuevaDiscusion from '/NuevaDiscusion.svelte';
+  import DetalleEmpleo from '/DetalleEmpleo.svelte';
+  import DetalleForo from '/DetalleForo.svelte';
 
   let ruta = window.location.pathname;
   let usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
@@ -76,6 +76,9 @@
   <DetalleEmpleo />
 
 {:else if ruta.startsWith('/foro/')}
+  <DetalleForo />
+
+{:else if ruta.startsWith('/detalle-foro/')}
   <DetalleForo />
 
 {:else}

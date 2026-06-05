@@ -262,8 +262,7 @@
             ¿No tienes cuenta? 
               href="#"
               on:click|preventDefault={() => cambiarTab("registro")}
-              >Regístrate aquí</a
-            >
+             <a>Regístrate aquí</a>
           </p>
         </div>
       {/if}
@@ -372,7 +371,7 @@
             ¿Ya tienes cuenta? 
               href="#"
               on:click|preventDefault={() => cambiarTab("login")}
-              >Inicia sesión</a
+              <a>Inicia sesión</a
             >
           </p>
         </div>

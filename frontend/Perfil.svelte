@@ -5,20 +5,20 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión
   let usuario = null;
 
-  // ── Tab activo ────────────────────────────────────────────
+  // ─ Tab activo 
   let tab = 'general';
 
-  // ── Datos perfil ──────────────────────────────────────────
+  // ─ Datos perfil 
   let perfil = {};
   let fotoPerfil = '';
   let cvNombre = 'Sin CV subido';
   let cvFecha  = '-';
   let cvUrl    = '';
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats 
   let statVisitas       = '-';
   let statPostulaciones = '-';
   let statGuardados     = '-';
@@ -29,17 +29,17 @@
   let msgEditar = '';
   let msgEditarTipo = '';
 
-  // ── Errores de validación por campo ──────────────────────
+  // - Errores de validación por campo 
   let errores = {};
 
-  // ── Habilidades ───────────────────────────────────────────
+  // ─ Habilidades 
   let habilidades    = [];
   let nuevaHabilidad = '';
   let nivelHabilidad = 'Intermedio';
   const NIVELES_HAB  = ['Básico','Intermedio','Avanzado','Experto'];
   const nivelTexto   = { 1:'Básico', 2:'Intermedio', 3:'Intermedio+', 4:'Avanzado', 5:'Experto' };
 
-  // ── Postulaciones ─────────────────────────────────────────
+  // ─ Postulaciones 
   let postulaciones = [];
   const estadoColores = {
     'pendiente':   { bg:'#f59e0b22', color:'#f59e0b', texto:'En Revisión' },
@@ -50,7 +50,7 @@
     'aceptado':    { bg:'#22c55e22', color:'#22c55e', texto:'Aceptado' },
   };
 
-  // ── Valoraciones ──────────────────────────────────────────
+  // ─ Valoraciones 
   let valoraciones   = [];
   let valoracionesRecibidas = [];
   let empresas       = [];
@@ -61,7 +61,7 @@
   let msgValoracion  = '';
   let msgValoracionTipo = '';
 
-  // ── Alertas ───────────────────────────────────────────────
+  // ─ Alertas
   let alertas        = [];
   let alertaPalabras = '';
   let alertaUbicacion= '';
@@ -69,14 +69,14 @@
   let msgAlertas     = '';
   let msgAlertasTipo = '';
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!usuario) { window.location.href = '/login'; return; }
     await cargarPerfil();
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers 
   function formatFecha(f) {
     return new Date(f).toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' });
   }
@@ -89,7 +89,7 @@
   }
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
-  // ── Teléfono auto-formato XXXX-XXXX ─────────────────────
+  // - Teléfono auto-formato XXXX-XXXX 
   function handleTelefonoInput(e) {
     let val = e.target.value.replace(/[^\d-]/g, '');
     const soloDigitos = val.replace(/-/g, '');
@@ -103,7 +103,7 @@
     errores = errores;
   }
 
-  // ── Validaciones ─────────────────────────────────────────
+  // ─ Validaciones
   function validarPerfil() {
     const e = {};
     const esEmpresa = usuario?.rol === 'empresa';
@@ -178,7 +178,7 @@
     return Object.keys(e).length === 0;
   }
 
-  // ── Cambiar tab ───────────────────────────────────────────
+  // ─ Cambiar tab 
   function cambiarTab(t) {
     tab = t;
     errores = {};
@@ -192,7 +192,7 @@
     if (t === 'alertas')       cargarAlertas();
   }
 
-  // ── Perfil ────────────────────────────────────────────────
+  // ─ Perfil
   async function cargarPerfil() {
     try {
       let res;
@@ -312,7 +312,7 @@
     } catch (err) { console.error(err); }
   }
 
-  // ── Habilidades ───────────────────────────────────────────
+  // ─ Habilidades 
   async function cargarHabilidades() {
     try {
       const res = await fetch(`${API}/habilidades/usuario/${usuario.id}`);
@@ -343,7 +343,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Postulaciones ─────────────────────────────────────────
+  // ─ Postulaciones 
   async function cargarPostulaciones() {
     try {
       const res = await fetch(`${API}/postulaciones/usuario/${usuario.id}`);
@@ -364,7 +364,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Valoraciones ──────────────────────────────────────────
+  // ─ Valoraciones 
   async function cargarValoraciones() {
     try {
       const res = await fetch(`${API}/valoraciones/usuario/${usuario.id}`);
@@ -418,7 +418,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Alertas ───────────────────────────────────────────────
+  // ─ Alertas 
   async function cargarAlertas() {
     try {
       const res = await fetch(`${API}/alertas/usuario/${usuario.id}`);

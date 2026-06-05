@@ -11,32 +11,32 @@
     'Soft Skills','Liderazgo','Productividad'
   ];
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión
   let usuario = null;
 
-  // ── Form ──────────────────────────────────────────────────
+  // ─ Form 
   let titulo    = '';
   let contenido = '';
   let categoria = '';
   let categorias = [];
 
-  // ── Validación ────────────────────────────────────────────
+  // ─ Validación
   let errorTitulo    = false;
   let errorContenido = false;
   let errorCategoria = false;
 
-  // ── Tags ──────────────────────────────────────────────────
+  // ─ Tags 
   let tags         = [];
   let tagInput     = '';
   let sugerencias  = [];
   let mostrarSugs  = false;
 
-  // ── Estado ────────────────────────────────────────────────
+  // ─ Estado 
   let publicando   = false;
   let toastVisible = false;
   let toastMsg     = '';
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     await cargarCategorias();
@@ -49,7 +49,7 @@
     } catch (e) { categorias = []; }
   }
 
-  // ── Toast ─────────────────────────────────────────────────
+  // ─ Toast 
   function mostrarToast(msg) {
     toastMsg     = msg;
     toastVisible = true;
@@ -61,7 +61,7 @@
     window.location.href = '/login';
   }
 
-  // ── Tags ──────────────────────────────────────────────────
+  // ─ Tags 
   function actualizarSugerencias() {
     if (!tagInput.trim()) { sugerencias = POPULAR_TAGS.filter(t => !tags.includes(t)).slice(0, 10); }
     else {
@@ -91,7 +91,7 @@
 
   function quitarTag(t) { tags = tags.filter(x => x !== t); }
 
-  // ── Submit ────────────────────────────────────────────────
+  // ─ Submit
   async function publicar() {
     errorTitulo    = !titulo.trim();
     errorContenido = !contenido.trim();

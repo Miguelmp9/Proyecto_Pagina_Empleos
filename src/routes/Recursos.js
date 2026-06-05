@@ -9,11 +9,11 @@ const router     = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
-// ── Carpeta de destino para PDFs ──────────────────────────────────────────────
+// ─ Carpeta de destino para PDFs 
 const UPLOADS_DIR = path.join(__dirname, '../../contenido_multimedia/recursos');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
-// ── Configuración de Multer ───────────────────────────────────────────────────
+// ─ Configuración de Multer 
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, UPLOADS_DIR),
     filename:    (_req, file, cb) => {
@@ -37,7 +37,7 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }   // 10 MB máximo
 });
 
-// ── Rutas ─────────────────────────────────────────────────────────────────────
+// ─ Rutas 
 router.get('/',                   ctrl.getTodosLosRecursos);
 router.get('/:id',                ctrl.getRecursoPorId);
 router.post('/', upload.single('archivo'), ctrl.postCrearRecurso);

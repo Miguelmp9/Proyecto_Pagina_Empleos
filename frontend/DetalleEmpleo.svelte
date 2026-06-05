@@ -4,22 +4,22 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión 
   let usuario = null;
 
-  // ── Estado ────────────────────────────────────────────────
+  // ─ Estado
   let empleo        = null;
   let cargando      = true;
   let error         = '';
   let empleoId      = null;
 
-  // ── Listas parseadas ──────────────────────────────────────
+  // ─ Listas parseadas 
   let responsabilidades = [];
   let requisitos        = [];
   let requisitosDeseables = [];
   let beneficios        = [];
 
-  // ─────────────────────────────────────────────────────────
+  
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
 
@@ -36,7 +36,7 @@
     await cargarEmpleo();
   });
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ─ Helpers
   function calcularTiempo(fecha) {
     const diff = Math.floor((new Date() - new Date(fecha)) / 60000);
     if (diff < 60)   return `Hace ${diff} minutos`;
@@ -66,7 +66,7 @@
     window.location.href = '/login';
   }
 
-  // ── Carga ─────────────────────────────────────────────────
+  // ─ Carga 
   async function cargarEmpleo() {
     cargando = true;
     try {
@@ -85,7 +85,7 @@
     }
   }
 
-  // ── Postulación ───────────────────────────────────────────
+  // ─ Postulación 
   async function postularse() {
     if (!usuario) {
       alert('Debes iniciar sesión para postularte.');

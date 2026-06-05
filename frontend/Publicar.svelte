@@ -4,23 +4,23 @@
 
   const API = 'http://localhost:3000';
 
-  // ── Sesión ────────────────────────────────────────────────
+  // ─ Sesión
   let usuario = null;
 
-  // ── Vista ─────────────────────────────────────────────────
+  // ─ Vista 
   let vista = 'panel'; // 'panel' | 'formulario'
   let tab   = 'empleos'; // 'empleos' | 'candidatos'
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats 
   let statEmpleos      = 0;
   let statAplicaciones = 0;
   let statVistas       = 0;
 
-  // ── Listas ────────────────────────────────────────────────
+  // ─ Listas 
   let empleos      = [];
   let candidatos   = [];
 
-  // ── Formulario ────────────────────────────────────────────
+  // ─ Formulario
   let f = {
     titulo: '', ubicacion: '', tipo_contrato: 'Tiempo Completo',
     modalidad: 'Presencial', nivel_experiencia: 'Junior',
@@ -36,7 +36,7 @@
   const CONTRATOS  = ['Tiempo Completo','Medio Tiempo','Freelance'];
   const MODALIDADES= ['Presencial','Remoto','Híbrido'];
 
-  // ─────────────────────────────────────────────────────────
+  // ─ Funciones
   onMount(async () => {
     usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!usuario || usuario.rol !== 'empresa') { window.location.href = '/login'; return; }
@@ -48,7 +48,7 @@
 
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
-  // ── Stats ─────────────────────────────────────────────────
+  // ─ Stats
   async function cargarStats() {
     try {
       const res  = await fetch(`${API}/empleos/stats/${usuario.id}`);
@@ -59,7 +59,7 @@
     } catch (e) {}
   }
 
-  // ── Empleos ───────────────────────────────────────────────
+  // ─ Empleos 
   async function cargarEmpleos() {
     try {
       const res = await fetch(`${API}/empleos/empresa/${usuario.id}`);
@@ -76,7 +76,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Candidatos ────────────────────────────────────────────
+  // ─ Candidatos 
   async function cargarCandidatos() {
     try {
       const res = await fetch(`${API}/postulaciones/empresa/${usuario.id}`);
@@ -95,7 +95,7 @@
     } catch (e) { console.error(e); }
   }
 
-  // ── Publicar ──────────────────────────────────────────────
+  // ─ Publicar
   async function publicarEmpleo() {
     if (!f.titulo || !f.ubicacion || !f.descripcion) {
       alert('Por favor completa los campos obligatorios (*)'); return;

@@ -1,24 +1,24 @@
 import { pool } from '../db.js';
  
-// Obtener todos los usuarios
+//  - Obtener todos los usuarios
 export const getAllUsuarios = async () => {
     const [rows] = await pool.query('SELECT * FROM usuarios');
     return rows;
 };
  
-// Obtener usuario por ID
+// - Obtener usuario por ID
 export const getUsuarioById = async (id) => {
     const [rows] = await pool.query('SELECT * FROM usuarios WHERE id = ?', [id]);
     return rows[0];
 };
  
-// Obtener usuario por email
+// - Obtener usuario por email
 export const getUsuarioByEmail = async (email) => {
     const [rows] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
     return rows[0];
 };
  
-// Buscar por nombre
+//  - Buscar por nombre
 export const getUsuarioByNombre = async (nombre) => {
     const [rows] = await pool.query(
         'SELECT * FROM usuarios WHERE nombre_completo LIKE ?', [`%${nombre}%`]
@@ -26,7 +26,7 @@ export const getUsuarioByNombre = async (nombre) => {
     return rows;
 };
  
-// Buscar por sector preferido
+// - Buscar por sector preferido
 export const getUsuarioBySector = async (sector) => {
     const [rows] = await pool.query(
         'SELECT * FROM usuarios WHERE sector_preferido = ?', [sector]
@@ -63,7 +63,7 @@ export const createUsuario = async (usuario) => {
     return result;
 };
  
-// Actualizar usuario — ✅ solo actualiza contrasena si se envía una nueva
+// Actualizar usuario — solo actualiza contrasena si se envía una nueva
 export const updateUsuario = async (id, usuario) => {
     const {
         nombre_completo, contrasena, email, telefono, ubicacion, titulo_profesional,
@@ -73,7 +73,7 @@ export const updateUsuario = async (id, usuario) => {
         recibir_notificaciones, estado
     } = usuario;
  
-    // ✅ Si no viene contraseña, no la tocamos
+    // Si no viene contraseña, no la tocamos
     if (contrasena) {
         const [result] = await pool.query(
             `UPDATE usuarios SET
@@ -94,7 +94,7 @@ export const updateUsuario = async (id, usuario) => {
         );
         return result;
     } else {
-        // ✅ Sin contraseña — no se toca ese campo
+        // Sin contraseña — no se toca ese campo
         const [result] = await pool.query(
             `UPDATE usuarios SET
                 nombre_completo = ?, email = ?, telefono = ?, ubicacion = ?,
@@ -116,13 +116,13 @@ export const updateUsuario = async (id, usuario) => {
     }
 };
  
-// Eliminar usuario
+// - Eliminar usuario
 export const deleteUsuario = async (id) => {
     const [result] = await pool.query('DELETE FROM usuarios WHERE id = ?', [id]);
     return result;
 };
  
-// Incrementar visitas al perfil
+// - Incrementar visitas al perfil
 export const incrementarVisitas = async (id) => {
     const [result] = await pool.query(
         'UPDATE usuarios SET visitas_perfil = COALESCE(visitas_perfil, 0) + 1 WHERE id = ?',

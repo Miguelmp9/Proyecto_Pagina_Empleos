@@ -47,7 +47,7 @@ export const createEmpresa = async (empresa) => {
     return result;
 };
  
-// ✅ Actualizar empresa — solo actualiza los campos que existen en la tabla
+//  Actualizar empresa — solo actualiza los campos que existen en la tabla
 export const updateEmpresa = async (id, datos) => {
     // Columnas disponibles en la tabla empresas
     const camposPermitidos = [
@@ -66,7 +66,7 @@ export const updateEmpresa = async (id, datos) => {
         }
     }
  
-    // Si viene contraseña nueva, también la actualizamos
+    // - Si viene contraseña nueva, también la actualizamos
     if (datos.contrasena) {
         setClauses.push('contrasena = ?');
         valores.push(datos.contrasena);
@@ -85,7 +85,7 @@ export const updateEmpresa = async (id, datos) => {
     return result;
 };
  
-// Eliminar empresa
+//  - Eliminar empresa
 export const deleteEmpresa = async (id) => {
     const [result] = await pool.query('DELETE FROM empresas WHERE id = ?', [id]);
     return result;
