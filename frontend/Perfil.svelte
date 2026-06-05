@@ -88,6 +88,20 @@
   }
   function logout() { localStorage.removeItem('usuario'); window.location.href = '/login'; }
 
+  // ── Teléfono auto-formato XXXX-XXXX ─────────────────────
+  function handleTelefonoInput(e) {
+    let val = e.target.value.replace(/[^\d-]/g, '');
+    const soloDigitos = val.replace(/-/g, '');
+    if (soloDigitos.length <= 4) {
+      val = soloDigitos;
+    } else {
+      val = soloDigitos.slice(0, 4) + '-' + soloDigitos.slice(4, 8);
+    }
+    edit.telefono = val;
+    delete errores.telefono;
+    errores = errores;
+  }
+
   // ── Validaciones ─────────────────────────────────────────
   function validarPerfil() {
     const e = {};
@@ -109,7 +123,7 @@
       e.email = 'Ingresa un correo electrónico válido.';
     }
 
-    // Teléfono — opcional, pero si se llena debe tener formato XXXX-XXXX
+    // Teléfono — opcional, formato XXXX-XXXX
     if (edit.telefono?.trim() && !/^\d{4}-\d{4}$/.test(edit.telefono.trim())) {
       e.telefono = 'Formato inválido. Ej: 7777-8888';
     }
@@ -191,17 +205,25 @@
     try {
       let res;
       if (usuario.rol === 'empresa') {
-        res = await fetch(`${API}/empresas/por-usuario/${usuario.id}`);
+        res = await fetch(`${API}/empresas/${usuario.id}`);
       } else {
         res = await fetch(`${API}/usuarios/${usuario.id}`);
       }
       perfil = await res.json();
-      edit   = { ...perfil };
+
+      // ✅ FIX: Normalizar campos de empresa al mismo formato que usuario
+      if (usuario.rol === 'empresa') {
+        perfil.nombre_completo = perfil.nombre_completo || perfil.nombre || '';
+        perfil.sobre_mi        = perfil.sobre_mi        || perfil.descripcion || '';
+        perfil.github_url      = perfil.github_url      || perfil.sitio_web   || '';
+      }
+
+      edit       = { ...perfil };
       fotoPerfil = perfil.foto_perfil ? `/contenido_multimedia/${perfil.foto_perfil}` : '';
-      statVisitas = perfil.visitas_perfil || 0;
+      statVisitas     = perfil.visitas_perfil || 0;
       statCompletitud = completitud(perfil, perfil.foto_perfil);
 
-      const resG = await fetch(`${API}/postulaciones/guardados/${usuario.id}`);
+      const resG    = await fetch(`${API}/postulaciones/guardados/${usuario.id}`);
       const guardados = await resG.json();
       statGuardados = Array.isArray(guardados) ? guardados.length : 0;
     } catch (e) { console.error(e); }
@@ -221,13 +243,19 @@
 
       const body = usuario.rol === 'empresa'
         ? JSON.stringify({
-            nombre:       edit.nombre_completo || edit.nombre,
-            email:        edit.email,
-            telefono:     edit.telefono,
-            ubicacion:    edit.ubicacion,
-            descripcion:  edit.sobre_mi,
-            linkedin_url: edit.linkedin_url,
-            sitio_web:    edit.github_url,
+            nombre:          edit.nombre_completo,
+            email:           edit.email,
+            telefono:        edit.telefono,
+            ubicacion:       edit.ubicacion,
+            descripcion:     edit.sobre_mi,
+            linkedin_url:    edit.linkedin_url,
+            sitio_web:       edit.github_url,
+            disponibilidad:  edit.disponibilidad,
+            sector_preferido: edit.sector_preferido,
+            // Preservar campos que no edita el usuario
+            industria:       perfil.industria,
+            tamano:          perfil.tamano,
+            logo:            perfil.logo,
           })
         : JSON.stringify({
             nombre_completo:    edit.nombre_completo,
@@ -252,7 +280,14 @@
       if (!res.ok) { msgEditar = data.error || 'Error al guardar'; msgEditarTipo = 'error'; return; }
 
       perfil = { ...perfil, ...edit };
-      localStorage.setItem('usuario', JSON.stringify({ ...usuario, nombre_completo: edit.nombre_completo, email: edit.email }));
+
+      // ✅ FIX: Actualizar localStorage tanto para usuario como para empresa
+      localStorage.setItem('usuario', JSON.stringify({
+        ...usuario,
+        nombre_completo: edit.nombre_completo,
+        email: edit.email
+      }));
+
       statCompletitud = completitud(edit, perfil.foto_perfil);
       msgEditar = '✓ Perfil actualizado correctamente';
       msgEditarTipo = 'exito';
@@ -509,7 +544,7 @@
     {#if tab === 'general'}
       <div class="contenido-tab">
         <div class="seccion-perfil">
-          <h3>Sobre Mí</h3>
+          <h3>Sobre {usuario?.rol === 'empresa' ? 'la Empresa' : 'Mí'}</h3>
           <p>{perfil.sobre_mi || '-'}</p>
         </div>
         <div class="seccion-perfil">
@@ -572,7 +607,8 @@
             <div class="grupo-input" class:campo-error={errores.telefono}>
               <label>Teléfono</label>
               <input class="input" type="text" bind:value={edit.telefono}
-                on:input={() => { delete errores.telefono; errores = errores; }}
+                on:input={handleTelefonoInput}
+                maxlength="9"
                 placeholder="Ej: 7777-8888">
               {#if errores.telefono}<span class="error-msg">{errores.telefono}</span>{/if}
             </div>
@@ -632,12 +668,12 @@
               {#if errores.linkedin_url}<span class="error-msg">{errores.linkedin_url}</span>{/if}
             </div>
 
-            <!-- GitHub -->
+            <!-- GitHub / Sitio Web -->
             <div class="grupo-input" class:campo-error={errores.github_url}>
-              <label>GitHub</label>
+              <label>{usuario?.rol === 'empresa' ? 'Sitio Web' : 'GitHub'}</label>
               <input class="input" type="text" bind:value={edit.github_url}
                 on:input={() => { delete errores.github_url; errores = errores; }}
-                placeholder="https://github.com/tu-usuario">
+                placeholder="{usuario?.rol === 'empresa' ? 'https://tuempresa.com' : 'https://github.com/tu-usuario'}">
               {#if errores.github_url}<span class="error-msg">{errores.github_url}</span>{/if}
             </div>
 
@@ -919,4 +955,11 @@
   .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; cursor: pointer; border-radius: 8px; padding: 6px 14px; }
 
   footer .footer-bottom { text-align: center; padding: 0.75rem; font-size: 0.8rem; color: var(--texto3); border-top: 1px solid var(--borde); }
+
+  /* ── Teléfono con prefijo ── */
+  .input-telefono-wrap { display: flex; align-items: center; background: var(--input-bg, #1e1e2e); border: 1px solid var(--borde); border-radius: var(--radio, 8px); overflow: hidden; }
+  .campo-error .input-telefono-wrap { border-color: #ef4444 !important; background: #ef444408; }
+  .telefono-prefix { padding: 0 10px; font-size: 0.875rem; color: var(--texto2); border-right: 1px solid var(--borde); background: rgba(255,255,255,0.04); white-space: nowrap; height: 100%; display: flex; align-items: center; }
+  .input-telefono { border: none !important; border-radius: 0 !important; background: transparent !important; flex: 1; }
+  .input-telefono:focus { outline: none; box-shadow: none; }
 </style>
